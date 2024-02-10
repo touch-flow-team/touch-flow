@@ -1,3 +1,3 @@
 export default function Company() {
-    return
+  return <div>company</div>;
 }
