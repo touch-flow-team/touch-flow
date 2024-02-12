@@ -14,19 +14,18 @@ import {
   getMonth,
   isSunday,
 } from 'date-fns';
-import { Button } from '@/components/ui/button';
-import { useParams } from 'next/navigation';
-import Link from 'next/link';
 import { History } from '@/app/companies/[id]/calendar/page';
 import TotalRevenue from './TotalRevenue';
 import Header from './Header';
+import { Button } from '@/components/ui/button';
+
+import HistoryModal from './HistoryModal';
 
 type MOCK_DATA = {
   [key: string]: History[];
 };
 
 const Calendar = ({ history }: { history: History[] }) => {
-  const params = useParams();
   const [currentDate, setCurrentDate] = useState(new Date());
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
@@ -34,7 +33,7 @@ const Calendar = ({ history }: { history: History[] }) => {
   const endDate = endOfWeek(monthEnd);
   const weekMock = ['일', '월', '화', '수', '목', '금', '토'];
 
-  const FILTER_DATA = history.filter((e, idx) => {
+  const FILTER_DATA = history.filter((e) => {
     return format(e.payment_time, 'yyyyMM') === format(currentDate, 'yyyyMM');
   });
 
@@ -121,26 +120,12 @@ const Calendar = ({ history }: { history: History[] }) => {
                         }
 
                         return (
-                          <div
-                            key={`day${j}`}
-                            className={`flex flex-col gap-2 p-1 text-sm w-full rounded-md hover:bg-gray-100 cursor-pointer ${!isCurrentMonth && 'text-gray-400'}`}>
-                            <Link
-                              href={{
-                                pathname: `/companies/${params.id}/calendar/${format(v, 'yyyyMMdd')}`,
-                              }}>
-                              <div className="flex items-center gap-1">
-                                <span>{format(v, 'd')}</span>
-                                {isToday && (
-                                  <div className="text-white text-xs p-1 pl-2 pr-2 rounded-lg bg-red-400">
-                                    오늘
-                                  </div>
-                                )}
-                              </div>
-                            </Link>
-                            {isCurrentMonth && DAY_REVENUE && (
-                              <span>{DAY_REVENUE.toLocaleString()}</span>
-                            )}
-                          </div>
+                          <HistoryModal
+                            isCurrentMonth={isCurrentMonth}
+                            isToday={isToday}
+                            DAY_REVENUE={DAY_REVENUE}
+                            date={v}
+                          />
                         );
                       })}
                     </div>
