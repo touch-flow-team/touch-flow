@@ -6,6 +6,7 @@ import {
     CardFooter,
     CardTitle,
 } from "@/components/ui/card"
+import ConterButton from "./ConterButton"
 
 const MenuCard = () => {
     return (
@@ -24,13 +25,7 @@ const MenuCard = () => {
             <CardFooter className="mt-2">
                 <div className="flex w-full">
                     <div className=" w-[14rem] justify-between items-center flex">
-                        <button className="w-7 h-7 rounded-full border">
-                            -
-                        </button>
-                        <span className="px-4">1</span>
-                        <button className="w-7 h-7 rounded-full border hover:">
-                            +
-                        </button>
+                        <ConterButton />
                     </div>
                     <button className="ml-5 h-12 flex items-center justify-center transition duration-300 font-medium border text-main border-main hover:text-white hover:bg-main rounded-full w-full">카드에 담기</button>
                 </div>
