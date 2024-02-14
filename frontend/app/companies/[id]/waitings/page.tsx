@@ -1,11 +1,18 @@
 'use client';
-
+import { SetStateAction, useState } from 'react';
 import WaitConfirmModal from '@/components/companies/WaitConfirmModal';
 import PhonePad from '@/components/companies/PhonePad';
 import WaitingCard from '@/components/companies/WaitingCard';
 import Image from 'next/image';
+import { z } from "zod"
+
+export const phoneSchema = z.string().refine((value) => /^\d{3}-\d{4}-\d{4}$/g.test(value), {
+    message: "Invalid phone number. Please enter a valid format (e.g., 010-1234-5678).",
+});
 
 export default function WaitingPage() {
+
+    const [phoneNumber, setPhoneNumber] = useState("010-")
 
     return (
         <div className="flex flex-col sm:flex-row w-full min-h-screen">
@@ -21,13 +28,14 @@ export default function WaitingPage() {
                 </div>
             </div>
             <div className="flex flex-col w-full sm:w-[50%] h-[50%] sm:h-screen">
-                <div className='flex my-20 justify-center'>
+                <div className='flex flex-col space-y-10 my-20 justify-center items-center'>
                     <span className='font-medium text-[16px]'>웨이팅 안내를 받을 수 있도록 번호를 입력해주세요.</span>
+                    <span className='text-[40px] font-bold'>{phoneNumber}</span>
                 </div>
                 <div className='mt-auto'>
-                    <PhonePad />
+                    <PhonePad phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} />
                 </div>
-                <WaitConfirmModal />
+                <WaitConfirmModal phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} />
             </div>
         </div>
     );
