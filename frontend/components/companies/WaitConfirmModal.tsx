@@ -70,7 +70,7 @@ const WaitConfirmModal = ({ phoneNumber, setPhoneNumber }: WaitConfirmModalProps
             <button onClick={handleWaitingCheck} className='flex justify-center bg-background items-center py-12'>
                 <span className='font-bold text-[28px] text-main'>웨이팅 접수</span>
             </button>
-            <DialogContent className="flex flex-col max-w-[800px] rounded-lg flex justify-between p-16">
+            <DialogContent className="flex flex-col max-w-[800px] rounded-lg justify-between p-16">
                 {
                     validNumber ? (
                         <>
