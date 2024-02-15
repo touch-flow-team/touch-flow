@@ -3,7 +3,7 @@ interface PhonePadProps {
     setPhoneNumber: React.Dispatch<React.SetStateAction<string>>
 }
 
-const PhonePad = ({ phoneNumber, setPhoneNumber }: PhonePadProps) => {
+const PhonePad = ({ phoneNumber = "010-", setPhoneNumber }: PhonePadProps) => {
 
     const handleNumberClick = (number: string) => {
         if (phoneNumber.length === 3 || phoneNumber.length === 8) {
@@ -25,10 +25,6 @@ const PhonePad = ({ phoneNumber, setPhoneNumber }: PhonePadProps) => {
         setPhoneNumber((prev) => prev.slice(0, -1));
     };
 
-    const handleResetClick = () => {
-        setPhoneNumber("010-")
-    }
-
     return (
         <div className="grid grid-cols-3 gap-12 py-8 px-2 border-[1px] border-border">
             <button onClick={() => handleNumberClick("1")} className="text-[36px] font-bold hover:bg-border hover:rounded-[8px] py-2">1</button>
@@ -40,7 +36,7 @@ const PhonePad = ({ phoneNumber, setPhoneNumber }: PhonePadProps) => {
             <button onClick={() => handleNumberClick("7")} className="text-[36px] font-bold hover:bg-border hover:rounded-[8px] py-2">7</button>
             <button onClick={() => handleNumberClick("8")} className="text-[36px] font-bold hover:bg-border hover:rounded-[8px] py-2">8</button>
             <button onClick={() => handleNumberClick("9")} className="text-[36px] font-bold hover:bg-border hover:rounded-[8px] py-2">9</button>
-            <button onClick={() => handleResetClick()} className="flex justify-center items-center hover:bg-border hover:rounded-[8px] py-2">
+            <button onClick={() => setPhoneNumber("010-")} className="flex justify-center items-center hover:bg-border hover:rounded-[8px] py-2">
                 <div>
                     <svg xmlns="http://www.w3.org/2000/svg" fill="#000000" height="36px" width="36px" version="1.1" id="Capa_1" viewBox="0 0 489.533 489.533">
                         <g>

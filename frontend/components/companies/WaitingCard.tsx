@@ -9,7 +9,7 @@ interface WaitingCardProps {
 }
 
 
-const WaitingCard = ({ companyName, waitingNumber, waitingTime }: WaitingCardProps) => {
+const WaitingCard = ({ companyName = "", waitingNumber = 0, waitingTime = 0 }: WaitingCardProps) => {
     return (
         <Card className="flex flex-col w-full">
             <CardContent className="flex flex-row w-full p-8">
