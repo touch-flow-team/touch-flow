@@ -11,14 +11,16 @@ import { useState } from "react"
 import ConterButton from "./ConterButton"
 import { Button } from "../ui/button"
 import { phoneSchema } from "@/app/companies/[id]/waitings/page"
+import waitingService from "@/service/WaitingService"
+import { ManagementWaitConfirmParams } from "@/constants/interface"
 
 
 interface WaitConfirmModalProps {
     phoneNumber: string
-    setPhoneNumber: React.Dispatch<React.SetStateAction<string>>
+    manageData: ManagementWaitConfirmParams
 }
 
-const WaitConfirmModal = ({ phoneNumber, setPhoneNumber }: WaitConfirmModalProps) => {
+const WaitConfirmModal = ({ phoneNumber, manageData }: WaitConfirmModalProps) => {
     const [open, setOpen] = useState(false)
     const [validNumber, setValidNumber] = useState(true)
     const [openConfirm, setOpenConfirm] = useState(false)
@@ -31,14 +33,38 @@ const WaitConfirmModal = ({ phoneNumber, setPhoneNumber }: WaitConfirmModalProps
         setOpenConfirm(false)
     }
 
-    const handleClickConfirm = () => {
+    const handleClickConfirm = async () => {
         try {
             phoneSchema.parse(phoneNumber);
             console.log("Valid phone number:", phoneNumber);
+            const phoneNumberWithoutHyphen = phoneNumber.replace(/-/g, '');
 
             // API call - 웨이팅 확정 문자 발송 및 refetch 
+            const data = {
+                "user_phone_number": phoneNumberWithoutHyphen,
+                "admission_status": false,
+                "user_selected_persons": 2 // 프론트엔드 설정 로직 추가 필요
+            }
+
+            const idList: string[] = manageData.expand.user_waits.map(item => item.id);
+
+            const userWaitManageData = {
+                "company": manageData.company,
+                "waiting_enabled": manageData.waiting_enabled,
+                "estimated_waiting_time": manageData.estimated_waiting_time,
+                "limit_persons": manageData.limit_persons,
+                "rules_enabled": manageData.rules_enabled,
+                "rules_content": manageData.rules_content,
+                "user_waits": idList
+            }
+
+            try {
+                const record = await waitingService.createUserWait(data, manageData.id, userWaitManageData);
+                console.log('User wait created:', record);
+            } catch (error) {
+                console.error('Error creating user wait:', error);
+            }
             setOpen(false)
-            window.location.reload() // 임시적으로 설정
         } catch (error) {
             // API 에러
             setOpen(false)
