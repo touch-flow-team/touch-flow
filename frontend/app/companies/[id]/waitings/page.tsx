@@ -15,6 +15,7 @@ export const phoneSchema = z.string().refine((value) => /^\d{3}-\d{4}-\d{4}$/g.t
 export default function WaitingPage() {
     const [manageId, setManageId] = useState("")
     const [companyId, setCompanyId] = useState("") // company id
+    const [companyName, setCompanyName] = useState("")
     const [waitTime, setWaitTime] = useState(0) // estimated waiting time
     const [userWaitsNumber, setUserWaitsNumber] = useState(0) // 유효한 웨이팅 개수
     const [rulesContent, setRulesContent] = useState("") // rules
@@ -25,6 +26,7 @@ export default function WaitingPage() {
     useEffect(() => {
         const fetchData = async () => {
             try {
+                // data settings
                 const data = await waitingService.getUserWait()
                 setManageId(data.id)
 
@@ -39,6 +41,16 @@ export default function WaitingPage() {
                 }
                 
                 setLimitPerson(data.limit_persons)
+
+                console.log(data.company);
+                
+
+                if (data.company.length >= 1) {
+                    const companyNameInfo = await waitingService.getCompanyName(data.company)
+
+                    setCompanyName(companyNameInfo.name)
+                    
+                }
             } catch (error) {
                 console.error('Error fetching user waits:', error);
             }
@@ -72,7 +84,7 @@ export default function WaitingPage() {
                     <span className="font-bold text-[20px]">TouchFlow</span>
                 </div>
                 <div className='mx-12 mb-12 mt-auto'>
-                    <WaitingCard companyName={'런던베이글뮤지엄'} waitingNumber={userWaitsNumber} waitingTime={waitTime} />
+                    <WaitingCard companyName={companyName} waitingNumber={userWaitsNumber} waitingTime={waitTime} />
                 </div>
             </div>
             <div className="flex flex-col w-full sm:w-[50%] h-[50%] sm:h-screen">

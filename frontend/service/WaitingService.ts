@@ -28,8 +28,6 @@ const waitingService = {
         "user_waits": addedUserWaits
       }
 
-      console.log(ModifiedManageData);
-      
       const manageRecord = await pb.collection('management_waits').update(manageId, ModifiedManageData)
       return record;
     } catch (error) {
@@ -37,6 +35,18 @@ const waitingService = {
       throw error;
     }
   },
+  getCompanyName: async (companyId: string) => {
+    try {
+        const record = await pb.collection('companies').getOne(companyId, {
+            fields: 'name'
+        });
+        
+        return record;
+      } catch (error) {
+        console.error('Error creating user wait:', error);
+        throw error;
+      }
+  }
 };
 
 export default waitingService
