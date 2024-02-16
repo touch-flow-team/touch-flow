@@ -11,7 +11,7 @@ import { useState } from "react"
 import ConterButton from "./ConterButton"
 import { Button } from "../ui/button"
 import { phoneSchema } from "@/app/companies/[id]/waitings/page"
-import waitingService from "@/service/WaitingService"
+import waitingService, { pb } from "@/service/WaitingService"
 import { ManagementWaitConfirmParams } from "@/constants/interface"
 
 
@@ -61,6 +61,7 @@ const WaitConfirmModal = ({ phoneNumber, manageData }: WaitConfirmModalProps) =>
             try {
                 const record = await waitingService.createUserWait(data, manageData.id, userWaitManageData);
                 console.log('User wait created:', record);
+                window.location.reload()
             } catch (error) {
                 console.error('Error creating user wait:', error);
             }
