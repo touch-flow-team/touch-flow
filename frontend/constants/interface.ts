@@ -2,7 +2,8 @@ export interface UserWaitParams {
     id: string
     user_phone_number: string
     admission_status: boolean
-    user_selected_persons: number
+    adult_persons: number
+    child_persons: number
     collectionId: string
     collectionName: string
     created: Date
@@ -12,7 +13,8 @@ export interface UserWaitParams {
 export interface UserWaitCreateParams {
     user_phone_number: string
     admission_status: boolean
-    user_selected_persons: number
+    adult_persons: number
+    child_persons: number
 }
 
 export interface ManagementWaitParams {

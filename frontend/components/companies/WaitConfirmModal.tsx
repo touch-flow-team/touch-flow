@@ -8,11 +8,11 @@ import {
     DialogTrigger,
 } from "@/components/ui/dialog"
 import { useState } from "react"
-import ConterButton from "./ConterButton"
 import { Button } from "../ui/button"
 import { phoneSchema } from "@/app/companies/[id]/waitings/page"
 import waitingService, { pb } from "@/service/WaitingService"
 import { ManagementWaitConfirmParams } from "@/constants/interface"
+import CounterButton from "./CounterButton"
 
 
 interface WaitConfirmModalProps {
@@ -24,6 +24,9 @@ const WaitConfirmModal = ({ phoneNumber, manageData }: WaitConfirmModalProps) =>
     const [open, setOpen] = useState(false)
     const [validNumber, setValidNumber] = useState(true)
     const [openConfirm, setOpenConfirm] = useState(false)
+    const [adultCounter, setAdultCounter] = useState(0)
+    const [childCounter, setChildCounter] = useState(0)
+
 
     const handleClickOk = () => {
         setOpenConfirm(true)
@@ -35,6 +38,8 @@ const WaitConfirmModal = ({ phoneNumber, manageData }: WaitConfirmModalProps) =>
 
     const handleClickConfirm = async () => {
         try {
+            console.log('manageData', manageData);
+            
             phoneSchema.parse(phoneNumber);
             console.log("Valid phone number:", phoneNumber);
             const phoneNumberWithoutHyphen = phoneNumber.replace(/-/g, '');
@@ -43,10 +48,11 @@ const WaitConfirmModal = ({ phoneNumber, manageData }: WaitConfirmModalProps) =>
             const data = {
                 "user_phone_number": phoneNumberWithoutHyphen,
                 "admission_status": false,
-                "user_selected_persons": 2 // 프론트엔드 설정 로직 추가 필요
+                "adult_persons": adultCounter,
+                "child_persons": childCounter,
             }
 
-            const idList: string[] = manageData.expand.user_waits.map(item => item.id);
+            const idList: string[] = manageData.expand.user_waits ? manageData.expand.user_waits.map(item => item.id) : []
 
             const userWaitManageData = {
                 "company": manageData.company,
@@ -114,11 +120,11 @@ const WaitConfirmModal = ({ phoneNumber, manageData }: WaitConfirmModalProps) =>
                                             <ul className="flex w-full mt-10 space-x-12">
                                                 <li className="flex flex-row space-x-4 items-center">
                                                     <span className="font-medium text-small">성인 (중학생 이상)</span>
-                                                    <ConterButton />
+                                                    <CounterButton counter={adultCounter} setCounter={setAdultCounter} />
                                                 </li>
                                                 <li className="flex flex-row space-x-4 items-center">
                                                     <span className="font-medium text-small">아동 (초등학생 이하)</span>
-                                                    <ConterButton />
+                                                    <CounterButton counter={childCounter} setCounter={setChildCounter} />
                                                 </li>
                                             </ul>
                                         </>

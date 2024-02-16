@@ -21,8 +21,11 @@ const waitingService = {
   createUserWait: async (data: UserWaitCreateParams, manageId: string,  manageData: ManagementWaitCreateParams) => {
     try {
       const record = await pb.collection('user_waits').create(data);
-      const addedUserWaits = manageData.user_waits.concat(record.id);
+      const addedUserWaits = manageData.user_waits.concat(record.id)
+
+      console.log(addedUserWaits);
       
+
       const ModifiedManageData = {
         ...manageData,
         "user_waits": addedUserWaits

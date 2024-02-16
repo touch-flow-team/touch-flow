@@ -31,22 +31,19 @@ export default function WaitingPage() {
                 setManageId(data.id)
 
                 const trueAdmissionStatusList = data?.expand?.user_waits.filter((item: UserWaitParams) => item.admission_status === false);
-                setUserWaitsNumber(trueAdmissionStatusList.length ? trueAdmissionStatusList.length : 0)
+                setUserWaitsNumber(trueAdmissionStatusList?.length ? trueAdmissionStatusList.length : 0)
                 setWaitUserList(data?.expand?.user_waits)
-                setWaitTime(data.estimated_waiting_time)
-                setCompanyId(data.company)
+                setWaitTime(data?.estimated_waiting_time)
+                setCompanyId(data?.company)
 
-                if (data.rules_enabled) {
-                    setRulesContent(data.rules_content)
+                if (data?.rules_enabled) {
+                    setRulesContent(data?.rules_content)
                 }
                 
-                setLimitPerson(data.limit_persons)
-
-                console.log(data.company);
-                
+                setLimitPerson(data?.limit_persons)
 
                 if (data.company.length >= 1) {
-                    const companyNameInfo = await waitingService.getCompanyName(data.company)
+                    const companyNameInfo = await waitingService.getCompanyName(data?.company)
 
                     setCompanyName(companyNameInfo.name)
                     
