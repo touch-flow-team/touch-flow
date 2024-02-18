@@ -13,33 +13,36 @@ import { phoneSchema } from "@/app/companies/[id]/waitings/page"
 import waitingService, { pb } from "@/service/WaitingService"
 import { ManagementWaitConfirmParams } from "@/constants/interface"
 import CounterButton from "./CounterButton"
+import { Twilio } from "twilio";
+import { revalidateTag } from "next/cache"
+import createUserWait from "./action/CreateUserWait"
 
-
-interface WaitConfirmModalProps {
+export interface WaitConfirmModalProps {
     phoneNumber: string
+    setPhoneNumber: React.Dispatch<React.SetStateAction<string>>
     manageData: ManagementWaitConfirmParams
+    setIsFetching: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const WaitConfirmModal = ({ phoneNumber, manageData }: WaitConfirmModalProps) => {
+const WaitConfirmModal = ({ phoneNumber, setPhoneNumber, manageData, setIsFetching }: WaitConfirmModalProps) => {
     const [open, setOpen] = useState(false)
     const [validNumber, setValidNumber] = useState(true)
     const [openConfirm, setOpenConfirm] = useState(false)
     const [adultCounter, setAdultCounter] = useState(0)
     const [childCounter, setChildCounter] = useState(0)
 
-
     const handleClickOk = () => {
         setOpenConfirm(true)
     }
 
-    const handleClickBack = () => {
+    const handleClickBack = async () => {
         setOpenConfirm(false)
     }
 
     const handleClickConfirm = async () => {
         try {
             console.log('manageData', manageData);
-            
+
             phoneSchema.parse(phoneNumber);
             console.log("Valid phone number:", phoneNumber);
             const phoneNumberWithoutHyphen = phoneNumber.replace(/-/g, '');
@@ -65,9 +68,15 @@ const WaitConfirmModal = ({ phoneNumber, manageData }: WaitConfirmModalProps) =>
             }
 
             try {
-                const record = await waitingService.createUserWait(data, manageData.id, userWaitManageData);
+                const record = await createUserWait(data, manageData.id, userWaitManageData);
+                setIsFetching((prev) => !prev)
+                setPhoneNumber("010-")
+                setOpen(false)
+                setValidNumber(true)
+                setOpenConfirm(false)
+                setAdultCounter(0)
+                setChildCounter(0)
                 console.log('User wait created:', record);
-                window.location.reload()
             } catch (error) {
                 console.error('Error creating user wait:', error);
             }
@@ -136,15 +145,10 @@ const WaitConfirmModal = ({ phoneNumber, manageData }: WaitConfirmModalProps) =>
                                                     <DialogDescription>주의 사항을 확인해주세요.</DialogDescription>
                                                 </div>
                                             </DialogHeader>
-                                            <div className="flex w-full mt-4 rounded-[8px] bg-border">
-                                                <ul className="flex flex-col p-8 space-y-4">
-                                                    <li className="">
-                                                        <span className="font-medium text-small">웨이팅 5분전에 재알람 드립니다.</span>
-                                                    </li>
-                                                    <li className="">
-                                                        <span className="font-medium text-small">예상 대기 시간과 실제 입장 시간이 다를 수 있습니다.</span>
-                                                    </li>
-                                                </ul>
+                                            <div className="flex w-full mt-4 p-8 rounded-[8px] bg-border">
+                                                <span className="font-medium text-small">
+                                                    {manageData.rules_content}
+                                                </span>
                                             </div>
                                         </>
                                     )

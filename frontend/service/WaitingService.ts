@@ -1,4 +1,3 @@
-import { ManagementWaitCreateParams, UserWaitCreateParams, UserWaitParams } from '@/constants/interface';
 import PocketBase from 'pocketbase';
 
 export const pb = new PocketBase('http://127.0.0.1:8090');
@@ -6,49 +5,24 @@ export const pb = new PocketBase('http://127.0.0.1:8090');
 const waitingService = {
   getUserWait: async () => {
     try {
-        const record = await pb.collection('management_waits').getFullList({
-            sort: '-created',
-            expand: 'user_waits',
-            fields: 'id, company, waiting_enabled, limit_persons, estimated_waiting_time, rules_enabled, rules_content, expand.user_waits'
-        });
-
-        return record[0];
+      // company id 별로 가지고 와야 함 - 추후 company id 를 기반으로 getOne 을 사용하도록   
+      const response = await fetch(`http://127.0.0.1:8090/api/collections/companies/records?expand=management_waits&fields=id,name,expand.management_waits.id,expand.management_waits.waiting_enabled,expand.management_waits.limit_persons,expand.management_waits.estimated_waiting_time,expand.management_waits.rules_enabled,expand.management_waits.rules_content,expand.management_waits.user_waits`, { next: { revalidate: 1 } }).then((res) => res.json())
+      return response.items[0]
     } catch (error) {
-        console.error('Error fetching user wait:', error);
-        throw error;
-    }
-  }, 
-  createUserWait: async (data: UserWaitCreateParams, manageId: string,  manageData: ManagementWaitCreateParams) => {
-    try {
-      const record = await pb.collection('user_waits').create(data);
-      const addedUserWaits = manageData.user_waits.concat(record.id)
-
-      console.log(addedUserWaits);
-      
-
-      const ModifiedManageData = {
-        ...manageData,
-        "user_waits": addedUserWaits
-      }
-
-      const manageRecord = await pb.collection('management_waits').update(manageId, ModifiedManageData)
-      return record;
-    } catch (error) {
-      console.error('Error creating user wait:', error);
+      console.error('Error fetching user wait:', error);
       throw error;
     }
   },
-  getCompanyName: async (companyId: string) => {
+  getWaitUserList: async (manageId: string) => {
     try {
-        const record = await pb.collection('companies').getOne(companyId, {
-            fields: 'name'
-        });
-        
-        return record;
-      } catch (error) {
-        console.error('Error creating user wait:', error);
-        throw error;
-      }
+      const response = await fetch(`http://127.0.0.1:8090/api/collections/management_waits/records/${manageId}?expand=user_waits&fields=expand.user_waits.id,expand.user_waits.user_phone_number,expand.user_waits.admission_status`).then((res) => res.json())
+      
+      return response.expand?.user_waits
+      
+    } catch (error) {
+      console.error('Error fetching user wait:', error);
+      throw error;
+    }
   }
 };
 
