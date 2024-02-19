@@ -1,13 +1,12 @@
 "use client";
-import PocketBase from 'pocketbase'
-import { zodResolver } from "@hookform/resolvers/zod";
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import { SigninFormData, SignupFormData, signinSchema, signupSchema } from "@/lib/zodSchema";
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { AuthInput } from "./AuthInput";
-import client from '@/lib/pockebase';
-import useSignin from '@/hooks/useSignin';
 import useSignup from '@/hooks/useSignup';
+import useSignin from '@/hooks/useSignin';
+import { zodResolver } from "@hookform/resolvers/zod";
+import { SigninFormData, SignupFormData, signinSchema, signupSchema } from "@/lib/zodSchema";
+import { AuthInput } from "./AuthInput";
+import { useRouter } from "next/navigation";
+import { SubmitHandler, useForm } from 'react-hook-form';
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 
 interface AuthFormProps {
@@ -15,6 +14,7 @@ interface AuthFormProps {
 }
 
 export default function AuthForm({ isSignup }: AuthFormProps) {
+    const { push } = useRouter();
     const { handleSubmit, register, formState: { errors, isSubmitting }, } = useForm<SignupFormData | SigninFormData>({
         mode: "onChange",
         resolver: zodResolver(isSignup ? signupSchema : signinSchema),
@@ -24,10 +24,11 @@ export default function AuthForm({ isSignup }: AuthFormProps) {
         if (isSignup) {
             const signupData = data as SignupFormData;
             useSignup(signupData)
-
+            push('/auth/signin');
         } else {
             const signinData = data as SigninFormData;
             useSignin(signinData.email, signinData.password)
+            push('/');
         }
     };
 
@@ -86,9 +87,6 @@ export default function AuthForm({ isSignup }: AuthFormProps) {
                 </>
 
             )}
-
-
-
             <button type="submit" className="mt-10 block w-full cursor-pointer rounded-xl bg-gray-900 px-4 py-4 text-center font-semibold text-white hover:bg-main focus:outline-none focus:ring focus:ring-main focus:ring-opacity-80 focus:ring-offset-2 disabled:opacity-70" >
                 {isSubmitting ? (
                     <div role="status" className=" text-center">
@@ -99,9 +97,6 @@ export default function AuthForm({ isSignup }: AuthFormProps) {
 
                 )}
             </button>
-
-
-
         </form>
     );
 }
