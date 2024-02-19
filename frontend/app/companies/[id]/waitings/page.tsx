@@ -6,6 +6,8 @@ import WaitingCard from '@/components/companies/WaitingCard';
 import Image from 'next/image';
 import { z } from "zod"
 import { UserWaitParams } from '@/constants/interface';
+import GetCompanyInfo from '@/components/companies/action/GetCompanyInfo';
+import GetUserWait from '@/components/companies/action/GetUserWait';
 
 export const phoneSchema = z.string().refine((value) => /^\d{3}-\d{4}-\d{4}$/g.test(value), {
     message: "Invalid phone number. Please enter a valid format (e.g., 010-1234-5678).",
@@ -17,7 +19,7 @@ interface WaitingPageProps {
 }
 
 
-export default function WaitingPage () {
+export default function WaitingPage() {
     const [manageId, setManageId] = useState("")
     const [companyId, setCompanyId] = useState("") // company id
     const [companyName, setCompanyName] = useState("")
@@ -34,13 +36,13 @@ export default function WaitingPage () {
         const fetchData = async () => {
             try {
                 // data settings
-                const response = await fetch(`http://127.0.0.1:8090/api/collections/companies/records?expand=management_waits&fields=id,name,expand.management_waits.id,expand.management_waits.waiting_enabled,expand.management_waits.limit_persons,expand.management_waits.estimated_waiting_time,expand.management_waits.rules_enabled,expand.management_waits.rules_content,expand.management_waits.user_waits`, { next: { tags: ['WAIT'], revalidate: 10 } }).then((res) => res.json())
-                const data = response.items[0]
-                setManageId(data.expand.management_waits[0].id)
+                const data = await GetCompanyInfo()
 
-                if (data.expand.management_waits[0]?.id?.length >= 1) {
-                    const dataManageId = data.expand.management_waits[0]?.id
-                    const response = await fetch(`http://127.0.0.1:8090/api/collections/management_waits/records/${dataManageId}?expand=user_waits&fields=expand.user_waits.id,expand.user_waits.user_phone_number,expand.user_waits.admission_status`, { next: { tags: ['WAIT'], revalidate: 10 } }).then((res) => res.json())
+                setManageId(data?.expand?.management_waits[0]?.id)
+
+                if (data?.expand?.management_waits[0]?.id.length >= 1) {
+                    const dataManageId = data?.expand?.management_waits[0]?.id
+                    const response = await GetUserWait(dataManageId)
                     const userWaitData = response.expand?.user_waits
                     const trueAdmissionStatusList = userWaitData.filter((item: UserWaitParams) => item.admission_status === false);
                     setUserWaitsNumber(trueAdmissionStatusList?.length ? trueAdmissionStatusList.length : 0)
@@ -48,15 +50,15 @@ export default function WaitingPage () {
                 }
 
 
-                setWaitTime(data.expand.management_waits[0]?.estimated_waiting_time)
+                setWaitTime(data?.expand?.management_waits[0]?.estimated_waiting_time)
                 setCompanyId(data.id)
                 setCompanyName(data.name)
 
-                if (data.expand.management_waits[0]?.rules_enabled) {
-                    setRulesContent(data.expand.management_waits[0]?.rules_content)
+                if (data?.expand?.management_waits[0]?.rules_enabled) {
+                    setRulesContent(data?.expand?.management_waits[0]?.rules_content)
                 }
 
-                setLimitPerson(data.expand.management_waits[0]?.limit_persons)
+                setLimitPerson(data?.expand?.management_waits[0]?.limit_persons)
 
 
             } catch (error) {
