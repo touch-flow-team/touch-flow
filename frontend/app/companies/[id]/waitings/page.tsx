@@ -6,7 +6,6 @@ import WaitingCard from '@/components/companies/WaitingCard';
 import Image from 'next/image';
 import { z } from "zod"
 import { UserWaitParams } from '@/constants/interface';
-import useSWR from 'swr';
 
 export const phoneSchema = z.string().refine((value) => /^\d{3}-\d{4}-\d{4}$/g.test(value), {
     message: "Invalid phone number. Please enter a valid format (e.g., 010-1234-5678).",
