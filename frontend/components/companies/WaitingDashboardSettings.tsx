@@ -29,6 +29,7 @@ import { useSearchParams } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { ChevronRight } from "lucide-react"
 import { Textarea } from "../ui/textarea"
+import WaitingSettingsModal from "./WaitingSettingsModal"
 
 
 
@@ -107,18 +108,14 @@ export function WaitingDashboardSettings() {
                                         <FormLabel className="text-base">예상 대기 시간</FormLabel>
                                         <div className="ml-auto flex flex-row items-center space-x-2">
                                             <span className="text-black font-medium"> 팀 당 {estimatedWaitingTime} 분</span>
-                                            <Button className="h-6 w-6" variant="outline" size="icon">
-                                                <ChevronRight className="h-4 w-4" />
-                                            </Button>
+                                            <WaitingSettingsModal label={"예상 대기 시간"} description={"숫자로 입력해주세요"} />
                                         </div>
                                     </div>
                                     <div className="flex flex-row pl-1">
                                         <FormLabel className="text-base">최대 인원</FormLabel>
                                         <div className="ml-auto flex flex-row items-center space-x-2">
                                             <span className="text-black font-medium"> 팀 당 {limitPerson} 명</span>
-                                            <Button className="h-6 w-6" variant="outline" size="icon">
-                                                <ChevronRight className="h-4 w-4" />
-                                            </Button>
+                                            <WaitingSettingsModal label={"최대 인원"} description={"숫자로 입력해주세요"} />
                                         </div>
                                     </div>
                                     <FormField
