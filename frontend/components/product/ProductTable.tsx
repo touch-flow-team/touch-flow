@@ -7,7 +7,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { IResult } from '@/app/companies/[id]/(admin)/product/page';
-import PocketBase from 'pocketbase';
+import PoketBase from 'pocketbase';
+import { ICategory } from './Categories';
 interface IProduct {
   category: string;
   collectionId: string;
@@ -19,19 +20,17 @@ interface IProduct {
   name: string;
   price: number;
   updated: string;
+  expand: { category: ICategory };
 }
 
 const ProductTable = async () => {
-  const pb = new PocketBase('http://127.0.0.1:8090');
+  const pb = new PoketBase('http://127.0.0.1:8090');
   const products = await pb.collection('products').getList(1, 50, {
+    filter: 'category ="6lzdkbqgvwylesk"',
     expand: 'category',
   });
 
-  // const products: IResult<IProduct> = await fetch(
-  //   'http://127.0.0.1:8090/api/collections/products/records?expand=category',
-  //   { next: { tags: ['PRODUCT'], revalidate: 10 } },
-  // ).then((res) => res.json());
-  // console.log(products.items[0].expand.category.name);
+  console.log(products);
 
   return (
     <Table>
