@@ -7,6 +7,7 @@ import { AuthInput } from "./AuthInput";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
+import client from '@/lib/pockebase';
 
 
 interface AuthFormProps {
@@ -27,8 +28,10 @@ export default function AuthForm({ isSignup }: AuthFormProps) {
             push('/auth/signin');
         } else {
             const signinData = data as SigninFormData;
-            useSignin(signinData.email, signinData.password)
+            const pb_user = await useSignin(signinData.email, signinData.password)
+            document.cookie = client.authStore.exportToCookie({ httpOnly: false });
             push('/');
+            return pb_user;
         }
     };
 
