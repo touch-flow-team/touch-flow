@@ -1,7 +1,6 @@
 "use client"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import WaitingListCard, { WaitingListCardProps } from "./WaitingListCard"
-import GetCompanyInfo from "./action/GetCompanyInfo"
 import { useParams } from "next/navigation"
 import PocketBase from 'pocketbase'
 import { useEffect, useState } from "react"
@@ -25,12 +24,11 @@ const WaitingDashboardList = () => {
 
     const fetchUserWaits = async (manageId: string) => {
 
-        const response = await pb.collection('management_waits').getOne(manageId, {
+       const response = await pb.collection('management_waits').getOne(manageId, {
             expand: 'user_waits',
             fields: 'expand.user_waits.id, expand.user_waits.user_phone_number, expand.user_waits.admission_status, expand.user_waits.adult_persons, expand.user_waits.child_persons, expand.user_waits.created'
         });
         setData(response.expand?.user_waits)
-        return response.expand?.user_waits
     }
 
     useEffect(() => {
@@ -53,20 +51,22 @@ const WaitingDashboardList = () => {
                         {
                             progressData.map((item) => {
                                 return (
-                                    <WaitingListCard key={item.user_phone_number} user_phone_number={item.user_phone_number} adult_persons={item.adult_persons} child_persons={item.child_persons} created={item.created} admission_status={item.admission_status} />
+                                    <WaitingListCard key={item.user_phone_number} id={item.id} user_phone_number={item.user_phone_number} adult_persons={item.adult_persons} child_persons={item.child_persons} created={item.created} admission_status={item.admission_status} />
                                 )
                             })
                         }
                     </div>
                 </TabsContent>
                 <TabsContent value="완료">
-                    {
-                        completeData.map((item) => {
-                            return (
-                                <WaitingListCard key={item.user_phone_number} user_phone_number={item.user_phone_number} adult_persons={item.adult_persons} child_persons={item.child_persons} created={item.created} admission_status={item.admission_status} />
-                            )
-                        })
-                    }
+                    <div className="flex flex-col space-y-4">
+                        {
+                            completeData.map((item) => {
+                                return (
+                                    <WaitingListCard key={item.user_phone_number} id={item.id} user_phone_number={item.user_phone_number} adult_persons={item.adult_persons} child_persons={item.child_persons} created={item.created} admission_status={item.admission_status} />
+                                )
+                            })
+                        }
+                    </div>
                 </TabsContent>
             </Tabs>
 
