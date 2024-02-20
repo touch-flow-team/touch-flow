@@ -9,21 +9,21 @@ import {
 import { Button } from "@/components/ui/button"
 
 
-interface WaitingListCardProps {
-    phone_number: string
+export interface WaitingListCardProps {
+    user_phone_number: string
     adult_persons: number
     child_persons: number
     created: Date
     admission_status: boolean
 }
 
-const WaitingListCard = ({ phone_number, adult_persons, child_persons, created, admission_status }: WaitingListCardProps) => {
+const WaitingListCard = ({ user_phone_number, adult_persons, child_persons, created, admission_status }: WaitingListCardProps) => {
 
     // 출력 포맷 설정
     const options: Intl.DateTimeFormatOptions = { month: "short", day: "numeric", hour: "numeric", minute: "numeric" };
-    const formattedDate = created.toLocaleString("en-US", options);
+    const formattedDate = created?.toLocaleString("en-US", options);
 
-    const formattedPhoneNumber = phone_number.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+    const formattedPhoneNumber = user_phone_number?.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
     return (
         <Card className="p-8">
             <CardHeader className="mb-2">
