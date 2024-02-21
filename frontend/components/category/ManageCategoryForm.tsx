@@ -29,7 +29,7 @@ interface IProp {
   id?: string;
 }
 
-const CreateCategoryForm = ({ mode, name, id }: IProp) => {
+const ManageCategoryForm = ({ mode, name, id }: IProp) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
     defaultValues: {
@@ -75,4 +75,4 @@ const CreateCategoryForm = ({ mode, name, id }: IProp) => {
   );
 };
 
-export default CreateCategoryForm;
+export default ManageCategoryForm;
