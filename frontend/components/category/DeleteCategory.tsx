@@ -2,16 +2,24 @@
 import deleteCategory from '@/app/actions/category/deleteCategory';
 import { Button } from '@/components/ui/button';
 import Toast from '../common/Toast';
+import deleteProduct from '@/app/actions/product/deleteProduct';
 interface IProp {
   name: string;
   id: string;
+  mode: 'category' | 'product';
 }
 
-const DeleteCategory = ({ id, name }: IProp) => {
+const DeleteCategory = ({ id, name, mode }: IProp) => {
   const deleteHandler = async () => {
-    await deleteCategory({ id })
-      .then(() => Toast({ title: '삭제 완료', description: name, mode: 'success' }))
-      .catch(() => Toast({ title: '요청 실패', description: name, mode: 'fail' }));
+    if (mode === 'category') {
+      await deleteCategory({ id })
+        .then(() => Toast({ title: '삭제 완료', description: name, mode: 'success' }))
+        .catch(() => Toast({ title: '요청 실패', description: name, mode: 'fail' }));
+    } else {
+      await deleteProduct({ id })
+        .then(() => Toast({ title: '삭제 완료', description: name, mode: 'success' }))
+        .catch(() => Toast({ title: '요청 실패', description: name, mode: 'fail' }));
+    }
   };
   return (
     <>
