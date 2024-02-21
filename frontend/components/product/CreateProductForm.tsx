@@ -20,11 +20,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+
 import { ICategory } from '@/app/companies/[id]/(admin)/category/page';
 import Toast from '../common/Toast';
 import createProduct from '@/app/actions/product/createProduct';
 import { IProduct } from './ProductTable';
 import updateProduct from '@/app/actions/product/updateProduct';
+import ReusableFormField from '../common/ReusableFormField';
 interface IProps {
   categories: Pick<ICategory, 'name' | 'id'>[];
   product?: IProduct;
@@ -65,67 +67,37 @@ const CreateProductForm: React.FC<IProps> = ({ categories, product, mode }: IPro
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
-        <FormField
-          control={form.control}
-          name="name"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>상품명</FormLabel>
-              <FormControl>
-                <Input placeholder="상품명을 입력해 주세요." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="price"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>가격</FormLabel>
-              <FormControl>
-                <Input placeholder="가격을 입력해 주세요." {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
+        <ReusableFormField form={form} name="name" label="상품명">
+          <Input placeholder="상품명을 입력해 주세요.test123" />
+        </ReusableFormField>
+        <ReusableFormField form={form} name="price" label="가격">
+          <Input placeholder="가격을 입력해 주세요." />
+        </ReusableFormField>
         <FormField
           control={form.control}
           name="category"
           render={({ field }) => (
             <FormItem>
               <FormLabel>카테고리</FormLabel>
-              <Select onValueChange={field.onChange} defaultValue={field.value}>
-                <FormControl>
+              <FormControl>
+                <Select onValueChange={field.onChange} defaultValue={field.value}>
                   <SelectTrigger>
                     <SelectValue placeholder="카테고리를 선택하세요." />
                   </SelectTrigger>
-                </FormControl>
-                <SelectContent>
-                  {categories.map((category) => (
-                    <SelectItem value={category.id}>{category.name}</SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <FormField
-          control={form.control}
-          name="description"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>설명</FormLabel>
-              <FormControl>
-                <Input placeholder="설명을 입력해 주세요." {...field} />
+                  <SelectContent>
+                    {categories.map((category) => (
+                      <SelectItem value={category.id}>{category.name}</SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
               </FormControl>
               <FormMessage />
             </FormItem>
           )}
         />
+        <ReusableFormField form={form} name="description" label="설명">
+          <Input placeholder="설명을 입력해 주세요." />
+        </ReusableFormField>
 
         <div className="w-full flex justify-end">
           <Button type="submit" className="w-[120px]">
