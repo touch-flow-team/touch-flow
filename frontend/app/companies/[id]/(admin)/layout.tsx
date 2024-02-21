@@ -27,7 +27,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         <div className="w-[200px] h-full bg-gray-200 p-10 ">
           <ul>
             {MENU.map((e) => (
-              <li className="mb-3">
+              <li className="mb-3" key={e.url}>
                 <Link href={e.url}>{e.name}</Link>
               </li>
             ))}

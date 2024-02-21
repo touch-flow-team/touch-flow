@@ -12,11 +12,15 @@ interface IProp {
 const CategoryList = ({ categories, setSelectedCategory }: IProp) => {
   return (
     <ul className="flex gap-3">
-      <li>
+      <li key="all">
         <Button onClick={() => setSelectedCategory('all')}>전체</Button>
       </li>
       {categories.map((category) => {
-        return <Button onClick={() => setSelectedCategory(category.id)}>{category.name}</Button>;
+        return (
+          <Button key={category.id} onClick={() => setSelectedCategory(category.id)}>
+            {category.name}
+          </Button>
+        );
       })}
     </ul>
   );
