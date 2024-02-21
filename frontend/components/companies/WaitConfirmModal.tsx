@@ -5,40 +5,78 @@ import {
     DialogDescription,
     DialogHeader,
     DialogTitle,
-    DialogTrigger,
 } from "@/components/ui/dialog"
 import { useState } from "react"
-import ConterButton from "./ConterButton"
 import { Button } from "../ui/button"
 import { phoneSchema } from "@/app/companies/[id]/waitings/page"
+import { ManagementWaitConfirmParams } from "@/constants/interface"
+import CounterButton from "./CounterButton"
+import createUserWait from "./action/CreateUserWait"
 
-
-interface WaitConfirmModalProps {
+export interface WaitConfirmModalProps {
     phoneNumber: string
     setPhoneNumber: React.Dispatch<React.SetStateAction<string>>
+    manageData: ManagementWaitConfirmParams
+    setIsFetching: React.Dispatch<React.SetStateAction<boolean>>
 }
 
-const WaitConfirmModal = ({ phoneNumber, setPhoneNumber }: WaitConfirmModalProps) => {
+const WaitConfirmModal = ({ phoneNumber, setPhoneNumber, manageData, setIsFetching }: WaitConfirmModalProps) => {
     const [open, setOpen] = useState(false)
     const [validNumber, setValidNumber] = useState(true)
     const [openConfirm, setOpenConfirm] = useState(false)
+    const [adultCounter, setAdultCounter] = useState(0)
+    const [childCounter, setChildCounter] = useState(0)
 
     const handleClickOk = () => {
         setOpenConfirm(true)
     }
 
-    const handleClickBack = () => {
+    const handleClickBack = async () => {
         setOpenConfirm(false)
     }
 
-    const handleClickConfirm = () => {
+    const handleClickConfirm = async () => {
         try {
+            console.log('manageData', manageData);
+
             phoneSchema.parse(phoneNumber);
             console.log("Valid phone number:", phoneNumber);
+            const phoneNumberWithoutHyphen = phoneNumber.replace(/-/g, '');
 
             // API call - 웨이팅 확정 문자 발송 및 refetch 
+            const data = {
+                "user_phone_number": phoneNumberWithoutHyphen,
+                "admission_status": false,
+                "adult_persons": adultCounter,
+                "child_persons": childCounter,
+            }
+
+            const idList: string[] = manageData.expand.user_waits ? manageData.expand.user_waits.map(item => item.id) : []
+
+            const userWaitManageData = {
+                "company": manageData.company,
+                "waiting_enabled": manageData.waiting_enabled,
+                "estimated_waiting_time": manageData.estimated_waiting_time,
+                "limit_persons": manageData.limit_persons,
+                "rules_enabled": manageData.rules_enabled,
+                "rules_content": manageData.rules_content,
+                "user_waits": idList
+            }
+
+            try {
+                const record = await createUserWait(data, manageData.id, userWaitManageData);
+                setIsFetching((prev) => !prev)
+                setPhoneNumber("010-")
+                setOpen(false)
+                setValidNumber(true)
+                setOpenConfirm(false)
+                setAdultCounter(0)
+                setChildCounter(0)
+                console.log('User wait created:', record);
+            } catch (error) {
+                console.error('Error creating user wait:', error);
+            }
             setOpen(false)
-            window.location.reload() // 임시적으로 설정
         } catch (error) {
             // API 에러
             setOpen(false)
@@ -87,11 +125,11 @@ const WaitConfirmModal = ({ phoneNumber, setPhoneNumber }: WaitConfirmModalProps
                                             <ul className="flex w-full mt-10 space-x-12">
                                                 <li className="flex flex-row space-x-4 items-center">
                                                     <span className="font-medium text-small">성인 (중학생 이상)</span>
-                                                    <ConterButton />
+                                                    <CounterButton counter={adultCounter} setCounter={setAdultCounter} />
                                                 </li>
                                                 <li className="flex flex-row space-x-4 items-center">
                                                     <span className="font-medium text-small">아동 (초등학생 이하)</span>
-                                                    <ConterButton />
+                                                    <CounterButton counter={childCounter} setCounter={setChildCounter} />
                                                 </li>
                                             </ul>
                                         </>
@@ -103,15 +141,10 @@ const WaitConfirmModal = ({ phoneNumber, setPhoneNumber }: WaitConfirmModalProps
                                                     <DialogDescription>주의 사항을 확인해주세요.</DialogDescription>
                                                 </div>
                                             </DialogHeader>
-                                            <div className="flex w-full mt-4 rounded-[8px] bg-border">
-                                                <ul className="flex flex-col p-8 space-y-4">
-                                                    <li className="">
-                                                        <span className="font-medium text-small">웨이팅 5분전에 재알람 드립니다.</span>
-                                                    </li>
-                                                    <li className="">
-                                                        <span className="font-medium text-small">예상 대기 시간과 실제 입장 시간이 다를 수 있습니다.</span>
-                                                    </li>
-                                                </ul>
+                                            <div className="flex w-full mt-4 p-8 rounded-[8px] bg-border">
+                                                <span className="font-medium text-small">
+                                                    {manageData.rules_content}
+                                                </span>
                                             </div>
                                         </>
                                     )
