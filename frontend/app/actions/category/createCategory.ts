@@ -1,5 +1,6 @@
 'use server';
 import { revalidateTag } from 'next/cache';
+import { REVALIDATE_TAG } from '@/constants/revalidateTag';
 
 interface IProp {
   name: string;
@@ -14,7 +15,7 @@ const createCategory = async (data: IProp) => {
     body: JSON.stringify({ name }),
   })
     .then(() => {
-      revalidateTag('CATEGORY');
+      revalidateTag(REVALIDATE_TAG.CATEGORY);
     })
     .catch((err) => console.log(err));
 };

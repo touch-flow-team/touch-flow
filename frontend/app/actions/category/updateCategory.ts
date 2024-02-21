@@ -1,5 +1,5 @@
 'use server';
-import { Button } from '@/components/ui/button';
+import { REVALIDATE_TAG } from '@/constants/revalidateTag';
 import { revalidateTag } from 'next/cache';
 
 interface IProp {
@@ -14,7 +14,7 @@ const updateCategory = async ({ id, name }: IProp) => {
     body: JSON.stringify({ name }),
   })
     .then(() => {
-      revalidateTag('CATEGORY');
+      revalidateTag(REVALIDATE_TAG.CATEGORY);
     })
     .catch((err) => console.log(err));
 };
