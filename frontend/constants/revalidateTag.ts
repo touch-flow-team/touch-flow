@@ -1,0 +1,4 @@
+export const REVALIDATE_TAG = {
+  PRODUCT: 'PRODUCT',
+  CATEGORY: 'CATEGORY',
+};
