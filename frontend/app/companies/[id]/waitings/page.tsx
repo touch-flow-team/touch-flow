@@ -8,16 +8,11 @@ import { z } from "zod"
 import { UserWaitParams } from '@/constants/interface';
 import GetCompanyInfo from '@/components/companies/action/GetCompanyInfo';
 import GetUserWait from '@/components/companies/action/GetUserWait';
+import { useParams } from 'next/navigation';
 
 export const phoneSchema = z.string().refine((value) => /^\d{3}-\d{4}-\d{4}$/g.test(value), {
     message: "Invalid phone number. Please enter a valid format (e.g., 010-1234-5678).",
 });
-
-interface WaitingPageProps {
-    initialData: any,
-    userWaitData: any
-}
-
 
 export default function WaitingPage() {
     const [manageId, setManageId] = useState("")
@@ -30,13 +25,13 @@ export default function WaitingPage() {
     const [waitUserList, setWaitUserList] = useState<UserWaitParams[]>([])
     const [phoneNumber, setPhoneNumber] = useState("010-")
     const [isFetching, setIsFetching] = useState(false)
-
-
+    const params = useParams()
+    
     useEffect(() => {
         const fetchData = async () => {
             try {
                 // data settings
-                const data = await GetCompanyInfo()
+                const data = await GetCompanyInfo({ companyId: String(params?.id) })
 
                 setManageId(data?.expand?.management_waits[0]?.id)
 

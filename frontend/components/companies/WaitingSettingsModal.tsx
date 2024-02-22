@@ -20,20 +20,24 @@ import { z } from "zod"
 import { useToast } from "@/components/ui/use-toast"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-
+import PocketBase from 'pocketbase'
+import { ManagementWaitCreateParams } from "@/constants/interface"
 
 
 const FormSchema = z.object({
-    number: z.number().default(0)
+    number: z.coerce.number(),
 
 })
 
 interface WaitingSettingsModalProps {
     label: string
-    description: string
+    manageId: string
+    manageData: ManagementWaitCreateParams
+    name: string
 }
 
-const WaitingSettingsModal = ({ label, description }: WaitingSettingsModalProps) => {
+const WaitingSettingsModal = ({ label, manageId,  manageData, name }: WaitingSettingsModalProps) => {
+    const pb = new PocketBase('http://127.0.0.1:8090')
     const { toast } = useToast()
     const [open, setOpen] = useState(false)
 
@@ -44,15 +48,32 @@ const WaitingSettingsModal = ({ label, description }: WaitingSettingsModalProps)
         },
     })
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
-        toast({
-          title: "You submitted the following values:",
-          description: (
-            <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-              <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-            </pre>
-          ),
-        })
+    const onSubmitModal = async (data: z.infer<typeof FormSchema>) => {
+        console.log(data["number"]);
+
+        let newData: ManagementWaitCreateParams = {
+            ...manageData
+        }
+
+        if (name === "estimated_waiting_time") {
+            newData = {
+                ...manageData,
+                "estimated_waiting_time": Number(data["number"])
+            };
+        } else {
+            newData = {
+                ...manageData,
+                "limit_persons": Number(data["number"])
+            };
+        }
+
+        const record = await pb.collection('management_waits').update(manageId, newData);
+        if (record) {
+            setOpen(false)
+            toast({
+                title: "변경 사항이 저장되었습니다.",
+            })
+        }
     }
 
     return (
@@ -62,7 +83,7 @@ const WaitingSettingsModal = ({ label, description }: WaitingSettingsModalProps)
             </div>
             <DialogContent className="flex flex-col max-w-[600px] rounded-lg justify-between p-16">
                 <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmit)} className="w-2/3 space-y-6">
+                    <form onSubmit={form.handleSubmit(onSubmitModal)} className="w-2/3 space-y-6">
                         <FormField
                             control={form.control}
                             name="number"
@@ -70,11 +91,8 @@ const WaitingSettingsModal = ({ label, description }: WaitingSettingsModalProps)
                                 <FormItem>
                                     <FormLabel>{label}</FormLabel>
                                     <FormControl>
-                                        <Input placeholder={label} {...field} />
+                                        <Input type="number" placeholder={label} {...field} />
                                     </FormControl>
-                                    <FormDescription>
-                                        {}
-                                    </FormDescription>
                                     <FormMessage />
                                 </FormItem>
                             )}
