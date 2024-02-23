@@ -29,9 +29,9 @@ export interface IProduct {
 import Modal from '@/components/common/Modal';
 import { Button } from '@/components/ui/button';
 import CreateProductForm from './CreateProductForm';
-import DeleteCategory from '../category/DeleteCategory';
-import { IResult } from '@/app/companies/[id]/(admin)/product/page';
-import { ICategory } from '@/app/companies/[id]/(admin)/category/page';
+import DeleteCategory from '../categorys/DeleteCategory';
+import { IResult } from '@/app/companies/[id]/(dashboard-admin)/product/page';
+import { ICategory } from '@/app/companies/[id]/(dashboard-admin)/category/page';
 
 interface IProp {
   products: IResult<IProduct>;
@@ -43,8 +43,8 @@ const ProductTable = ({ products, categories, seletedCategory }: IProp) => {
   const filteredProducts =
     seletedCategory !== 'all'
       ? products.items.filter((e) => {
-          return e.expand.category.id === seletedCategory;
-        })
+        return e.expand.category.id === seletedCategory;
+      })
       : products.items;
 
   return (

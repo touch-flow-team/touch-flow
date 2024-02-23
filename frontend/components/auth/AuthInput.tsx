@@ -1,21 +1,7 @@
 "use client"
-import { UseFormRegister } from 'react-hook-form';
-import { SignupFormData, SigninFormData } from "@/lib/zodSchema";
 import { ChangeEvent, useState } from 'react';
+import { AuthInputProps } from '@/types/auth/type';
 
-type AuthInputFieldProps = {
-    id: keyof SignupFormData | keyof SigninFormData;
-    label: string;
-    type: string;
-    register: UseFormRegister<SignupFormData | SigninFormData>;
-    required?: boolean;
-    errors: {
-        [key: string]: {
-            message?: string;
-        };
-    };
-    placeholder?: string;
-};
 
 export function AuthInput({
     id,
@@ -25,7 +11,7 @@ export function AuthInput({
     required = false,
     errors,
     placeholder = ""
-}: AuthInputFieldProps) {
+}: AuthInputProps) {
 
     const [inputValue, setInputValue] = useState("");
 

@@ -2,11 +2,10 @@
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import WaitingListCard, { WaitingListCardProps } from "./WaitingListCard"
 import { useParams } from "next/navigation"
-import PocketBase from 'pocketbase'
 import { useEffect, useState } from "react"
+import client from "@/libs/pockebase"
 
 const WaitingDashboardList = () => {
-    const pb = new PocketBase('http://127.0.0.1:8090')
     const params = useParams()
     const [manageId, setManageId] = useState("")
     const [action, setAction] = useState("")
@@ -15,29 +14,29 @@ const WaitingDashboardList = () => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const company = await pb.collection('companies').getOne(String(params?.id), {
+            const company = await client.collection('companies').getOne(String(params?.id), {
                 expand: 'management_waits',
                 fields: 'expand.management_waits.id'
             });
             setManageId(company?.expand?.management_waits[0]?.id);
-    
+
             if (company?.expand?.management_waits[0]?.id.length >= 1) {
-                const response = await pb.collection('management_waits').getOne(company?.expand?.management_waits[0]?.id, {
+                const response = await client.collection('management_waits').getOne(company?.expand?.management_waits[0]?.id, {
                     expand: 'user_waits',
                     fields: 'expand.user_waits.id, expand.user_waits.user_phone_number, expand.user_waits.admission_status, expand.user_waits.adult_persons, expand.user_waits.child_persons, expand.user_waits.created'
                 });
                 setData(response.expand?.user_waits);
             }
         };
-    
+
         fetchData();
     }, [action == null]);
-    
+
     useEffect(() => {
         // 데이터 가져오기
         const fetchManageData = async () => {
             // Use manageId from the state 
-            const response = await pb.collection('management_waits').getOne(manageId, {
+            const response = await client.collection('management_waits').getOne(manageId, {
                 expand: 'user_waits',
                 fields: 'expand.user_waits.id, expand.user_waits.user_phone_number, expand.user_waits.admission_status, expand.user_waits.adult_persons, expand.user_waits.child_persons, expand.user_waits.created'
             });
@@ -46,25 +45,25 @@ const WaitingDashboardList = () => {
         };
 
         // manageId가 변경될 때마다 이전 구독을 취소하고 다시 구독
-        const userWaitSubscribe = pb.collection('user_waits').subscribe('*', function (e) {
+        const userWaitSubscribe = client.collection('user_waits').subscribe('*', function (e) {
             if (manageId.length >= 1) {
                 fetchManageData();
             }
         });
 
-        const managementWaitSubscribe = pb.collection('management_waits').subscribe('*', function (e) {
+        const managementWaitSubscribe = client.collection('management_waits').subscribe('*', function (e) {
             if (manageId.length >= 1) {
                 fetchManageData();
             }
         })
-    
+
         // 컴포넌트가 언마운트되거나 manageId가 변경될 때 이전 구독 취소
         return () => {
-            pb.collection('user_waits').unsubscribe()
-            pb.collection('management_waits').unsubscribe()
+            client.collection('user_waits').unsubscribe()
+            client.collection('management_waits').unsubscribe()
         };
     }, [manageId, action != null]);
-    
+
 
     const progressData = data.filter((item) => item.admission_status === false)
     const completeData = data.filter((item) => item.admission_status === true)

@@ -1,4 +1,4 @@
-import { History } from '@/app/companies/[id]/(admin)/calendar/page';
+import { History } from '@/app/companies/[id]/(dashboard-admin)/calendar/page';
 
 const TotalRevenue = ({ data }: { data: History[] }) => {
   let TOTAL_REVENUE = 0;

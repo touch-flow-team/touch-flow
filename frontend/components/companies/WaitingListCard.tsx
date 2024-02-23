@@ -1,13 +1,11 @@
 import {
     Card,
     CardContent,
-    CardDescription,
-    CardFooter,
     CardHeader,
     CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import PocketBase from 'pocketbase'
+import client from "@/libs/pockebase"
 
 export interface WaitingListCardProps {
     id: string
@@ -19,7 +17,6 @@ export interface WaitingListCardProps {
 }
 
 const WaitingListCard = ({ id, user_phone_number, adult_persons, child_persons, created, admission_status }: WaitingListCardProps) => {
-    const pb = new PocketBase('http://127.0.0.1:8090')
 
     const handleOnclick = async () => {
         if (!admission_status) {
@@ -30,7 +27,7 @@ const WaitingListCard = ({ id, user_phone_number, adult_persons, child_persons, 
                 child_persons
             }
 
-            await pb.collection('user_waits').update(id, data)
+            await client.collection('user_waits').update(id, data)
         }
     }
 

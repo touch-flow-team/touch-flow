@@ -19,9 +19,9 @@ import { useToast } from "@/components/ui/use-toast"
 import { useParams } from "next/navigation"
 import { Textarea } from "../ui/textarea"
 import WaitingSettingsModal from "./WaitingSettingsModal"
-import PocketBase from 'pocketbase'
 import { ManagementWaitCreateParams } from "@/constants/interface"
 import { Button } from "@/components/ui/button"
+import client from "@/libs/pockebase"
 
 const FormSchema = z.object({
     waiting_enabled: z.boolean().default(false).optional(),
@@ -32,7 +32,6 @@ const FormSchema = z.object({
 })
 
 export function WaitingDashboardSettings() {
-    const pb = new PocketBase('http://127.0.0.1:8090')
     const { toast } = useToast()
     const [waitingEnabled, setWaitingEnabled] = useState(false)
     const [estimatedWaitingTime, setEstimatedWaitingTime] = useState(0)
@@ -45,14 +44,14 @@ export function WaitingDashboardSettings() {
     const params = useParams()
 
     const fetchData = async () => {
-        const company = await pb.collection('companies').getOne(String(params?.id), {
+        const company = await client.collection('companies').getOne(String(params?.id), {
             expand: 'management_waits',
             fields: 'expand.management_waits.id'
         });
         setManageId(company?.expand?.management_waits[0]?.id);
 
         if (company?.expand?.management_waits[0]?.id.length >= 1) {
-            const response = await pb.collection('management_waits').getOne(company?.expand?.management_waits[0]?.id, {});
+            const response = await client.collection('management_waits').getOne(company?.expand?.management_waits[0]?.id, {});
             setUserWaits(response.user_waits)
             setWaitingEnabled(response.waiting_enabled)
             setEstimatedWaitingTime(response.estimated_waiting_time)
@@ -69,7 +68,7 @@ export function WaitingDashboardSettings() {
     useEffect(() => {
         // 데이터 가져오기
         // manageId가 변경될 때마다 이전 구독을 취소하고 다시 구독
-        const managementWaitSubscribe = pb.collection('management_waits').subscribe('*', function (e) {
+        const managementWaitSubscribe = client.collection('management_waits').subscribe('*', function (e) {
             if (manageId.length >= 1) {
                 fetchData();
             }
@@ -77,7 +76,7 @@ export function WaitingDashboardSettings() {
 
         // 컴포넌트가 언마운트되거나 manageId가 변경될 때 이전 구독 취소
         return () => {
-            pb.collection('management_waits').unsubscribe()
+            client.collection('management_waits').unsubscribe()
         };
     }, [manageId, action != null]);
 
@@ -96,7 +95,7 @@ export function WaitingDashboardSettings() {
     const updateManageInfo = async (manageId: string, data: ManagementWaitCreateParams) => {
         console.log(data);
 
-        const record = await pb.collection('management_waits').update(manageId, data);
+        const record = await client.collection('management_waits').update(manageId, data);
 
         return record
     }
@@ -174,7 +173,7 @@ export function WaitingDashboardSettings() {
                                         <FormLabel className="text-base">예상 대기 시간</FormLabel>
                                         <div className="ml-auto flex flex-row items-center space-x-2">
                                             <span className="text-black font-medium"> 팀 당 {estimatedWaitingTime} 분</span>
-                                            <WaitingSettingsModal label={"예상 대기 시간"} manageId={manageId} manageData={manageData} name={"estimated_waiting_time"}/>
+                                            <WaitingSettingsModal label={"예상 대기 시간"} manageId={manageId} manageData={manageData} name={"estimated_waiting_time"} />
                                         </div>
                                     </div>
                                     <div className="flex flex-row pl-1">
@@ -256,7 +255,7 @@ export function WaitingDashboardSettings() {
                                                                 "rules_content": rulesContent,
                                                                 "user_waits": userWaits
                                                             };
-                                                            
+
                                                             updateManageInfo(manageId, data)
                                                             toast({
                                                                 title: "변경 사항이 저장되었습니다.",
