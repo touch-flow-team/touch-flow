@@ -1,4 +1,4 @@
-import { Button } from '../ui/button';
+import Button from '../categorys/Button';
 import Modal from '../common/Modal';
 import CreateProductForm from './CreateProductForm';
 import { getCategories } from '@/server-actions/categorys/getCategory';
@@ -10,7 +10,7 @@ const Header = async () => {
       <strong className="text-2xl">상품</strong>
       <Modal
         title="상품 추가"
-        trigger={<Button>+ 상품 추가</Button>}
+        trigger={<Button text="상품 추가" size="md" />}
         InnerComponent={<CreateProductForm categories={category_info} mode="create" />}
       />
     </header>

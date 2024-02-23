@@ -27,7 +27,7 @@ export interface IProduct {
   };
 }
 import Modal from '@/components/common/Modal';
-import { Button } from '@/components/ui/button';
+import Button from '../categorys/Button';
 import CreateProductForm from './CreateProductForm';
 import DeleteCategory from '../categorys/DeleteCategory';
 import { IResult } from '@/app/companies/[id]/(dashboard-admin)/product/page';
@@ -43,8 +43,8 @@ const ProductTable = ({ products, categories, seletedCategory }: IProp) => {
   const filteredProducts =
     seletedCategory !== 'all'
       ? products.items.filter((e) => {
-        return e.expand.category.id === seletedCategory;
-      })
+          return e.expand.category.id === seletedCategory;
+        })
       : products.items;
 
   return (
@@ -68,10 +68,10 @@ const ProductTable = ({ products, categories, seletedCategory }: IProp) => {
                 <TableCell>{product.expand.category.name}</TableCell>
                 <TableCell>{product.price.toLocaleString()}원</TableCell>
                 <TableCell>
-                  <div className="flex gap-3 justify-center">
+                  <div className="flex gap-3 justify-end">
                     <Modal
                       title="상품 수정"
-                      trigger={<Button>수정</Button>}
+                      trigger={<Button text="수정" size="md" />}
                       InnerComponent={
                         <CreateProductForm
                           categories={categories}
@@ -82,7 +82,7 @@ const ProductTable = ({ products, categories, seletedCategory }: IProp) => {
                     />
                     <Modal
                       title="상품 삭제"
-                      trigger={<Button>삭제</Button>}
+                      trigger={<Button text="삭제" size="md" />}
                       InnerComponent={
                         <DeleteCategory id={product.id} name={product.name} mode="product" />
                       }
