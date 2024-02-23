@@ -6,7 +6,6 @@ import {
 import {
     Form,
     FormControl,
-    FormDescription,
     FormField,
     FormItem,
     FormLabel,
@@ -20,8 +19,8 @@ import { z } from "zod"
 import { useToast } from "@/components/ui/use-toast"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import PocketBase from 'pocketbase'
 import { ManagementWaitCreateParams } from "@/constants/interface"
+import client from "@/libs/pockebase"
 
 
 const FormSchema = z.object({
@@ -36,8 +35,7 @@ interface WaitingSettingsModalProps {
     name: string
 }
 
-const WaitingSettingsModal = ({ label, manageId,  manageData, name }: WaitingSettingsModalProps) => {
-    const pb = new PocketBase('http://127.0.0.1:8090')
+const WaitingSettingsModal = ({ label, manageId, manageData, name }: WaitingSettingsModalProps) => {
     const { toast } = useToast()
     const [open, setOpen] = useState(false)
 
@@ -67,7 +65,7 @@ const WaitingSettingsModal = ({ label, manageId,  manageData, name }: WaitingSet
             };
         }
 
-        const record = await pb.collection('management_waits').update(manageId, newData);
+        const record = await client.collection('management_waits').update(manageId, newData);
         if (record) {
             setOpen(false)
             toast({

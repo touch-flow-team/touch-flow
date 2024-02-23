@@ -1,5 +1,5 @@
 import { toast } from '@/components/ui/use-toast';
-import client from '@/lib/pockebase';
+import client from '@/libs/pockebase';
 
 export default async function useSignin(email: string, password: string) {
   try {

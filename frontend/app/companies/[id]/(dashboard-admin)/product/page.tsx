@@ -1,6 +1,6 @@
 import Header from '@/components/product/Header';
-import { getProduct } from '@/app/actions/product/getProduct';
-import { getCategories } from '@/app/actions/category/getCategory';
+import { getProduct } from '@/server-actions/products/getProduct';
+import { getCategories } from '@/server-actions/categorys/getCategory';
 import ClientLayer from '@/components/product/ClientLayer';
 
 export interface IResult<T> {

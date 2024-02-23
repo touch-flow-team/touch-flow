@@ -21,11 +21,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-import { ICategory } from '@/app/companies/[id]/(admin)/category/page';
+import { ICategory } from '@/app/companies/[id]/(dashboard-admin)/category/page';
 import Toast from '../common/Toast';
-import createProduct from '@/app/actions/product/createProduct';
+import createProduct from '@/server-actions/products/createProduct';
 import { IProduct } from './ProductTable';
-import updateProduct from '@/app/actions/product/updateProduct';
+import updateProduct from '@/server-actions/products/updateProduct';
 import ReusableFormField from '../common/ReusableFormField';
 interface IProps {
   categories: Pick<ICategory, 'name' | 'id'>[];

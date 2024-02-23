@@ -27,6 +27,3 @@ export const signinSchema = z.object({
   email: z.string().email({ message: '알맞지 않은 형식에 이메일 입니다.' }),
   password: z.string().min(8, { message: '최소 8글자 이상이여야 합니다.' }),
 });
-
-export type SignupFormData = z.infer<typeof signupSchema>;
-export type SigninFormData = z.infer<typeof signinSchema>;

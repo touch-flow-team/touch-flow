@@ -1,7 +1,7 @@
 'use client';
-import client from '@/lib/pockebase';
+import client from '@/libs/pockebase';
 import { toast } from '@/components/ui/use-toast';
-import { SignupFormData } from '@/lib/zodSchema';
+import { SignupFormData } from '@/types/auth/type';
 
 export default async function useSignup(signupFormData: SignupFormData) {
   try {

@@ -1,6 +1,6 @@
-import Header from '@/components/category/Header';
-import CategoryTable from '@/components/category/CategoryTable';
-import { getCategories } from '@/app/actions/category/getCategory';
+import Header from '@/components/categorys/Header';
+import CategoryTable from '@/components/categorys/CategoryTable';
+import { getCategories } from '@/server-actions/categorys/getCategory';
 
 export interface ICategory {
   collectionId: string;

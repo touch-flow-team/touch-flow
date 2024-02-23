@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-import { ICategory } from '@/app/companies/[id]/(admin)/category/page';
+import { ICategory } from '@/app/companies/[id]/(dashboard-admin)/category/page';
 import { Button } from '../ui/button';
 import Modal from '../common/Modal';
 import DeleteCategory from './DeleteCategory';

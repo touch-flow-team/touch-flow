@@ -1,9 +1,9 @@
 'use client';
 
-import { IResult } from '@/app/companies/[id]/(admin)/product/page';
+import { IResult } from '@/app/companies/[id]/(dashboard-admin)/product/page';
 import CategoryList from './CategoryList';
 import ProductTable, { IProduct } from './ProductTable';
-import { ICategory } from '@/app/companies/[id]/(admin)/category/page';
+import { ICategory } from '@/app/companies/[id]/(dashboard-admin)/category/page';
 import { useState } from 'react';
 
 interface IProp {

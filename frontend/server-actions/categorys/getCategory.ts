@@ -1,5 +1,5 @@
-import { IResult } from '@/app/companies/[id]/(admin)/product/page';
-import { ICategory } from '@/app/companies/[id]/(admin)/category/page';
+import { IResult } from '@/app/companies/[id]/(dashboard-admin)/product/page';
+import { ICategory } from '@/app/companies/[id]/(dashboard-admin)/category/page';
 
 export const getCategories = async () => {
   const categories: IResult<ICategory> = await fetch(

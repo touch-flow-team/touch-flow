@@ -6,8 +6,8 @@ import WaitingCard from '@/components/companies/WaitingCard';
 import Image from 'next/image';
 import { z } from "zod"
 import { UserWaitParams } from '@/constants/interface';
-import GetCompanyInfo from '@/components/companies/action/GetCompanyInfo';
-import GetUserWait from '@/components/companies/action/GetUserWait';
+import GetCompanyInfo from '@/server-actions/waits/GetCompanyInfo';
+import GetUserWait from '@/server-actions/waits/GetUserWait';
 import { useParams } from 'next/navigation';
 
 export const phoneSchema = z.string().refine((value) => /^\d{3}-\d{4}-\d{4}$/g.test(value), {
@@ -26,7 +26,7 @@ export default function WaitingPage() {
     const [phoneNumber, setPhoneNumber] = useState("010-")
     const [isFetching, setIsFetching] = useState(false)
     const params = useParams()
-    
+
     useEffect(() => {
         const fetchData = async () => {
             try {

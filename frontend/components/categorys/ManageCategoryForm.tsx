@@ -13,9 +13,9 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import updateCategory from '@/app/actions/category/updateCategory';
+import updateCategory from '@/server-actions/categorys/updateCategory';
 import Toast from '../common/Toast';
-import createCategory from '@/app/actions/category/createCategory';
+import createCategory from '@/server-actions/categorys/createCategory';
 
 const FormSchema = z.object({
   name: z.string().nonempty({

@@ -8,10 +8,10 @@ import {
 } from "@/components/ui/dialog"
 import { useState } from "react"
 import { Button } from "../ui/button"
-import { phoneSchema } from "@/app/companies/[id]/waitings/page"
+import { phoneSchema } from "@/app/companies/[id]/(waiting-admin)/waitings/page"
 import { ManagementWaitConfirmParams } from "@/constants/interface"
 import CounterButton from "./CounterButton"
-import createUserWait from "./action/CreateUserWait"
+import createUserWait from "../../server-actions/waits/CreateUserWait"
 
 export interface WaitConfirmModalProps {
     phoneNumber: string

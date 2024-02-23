@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import client from './lib/pockebase';
-import { getNextjsCookie } from '@/lib/server-cookie';
+import client from './libs/pockebase';
+import { getNextjsCookie } from '@/libs/server-cookie';
 
 export async function middleware(request: NextRequest) {
   const response = NextResponse.next();

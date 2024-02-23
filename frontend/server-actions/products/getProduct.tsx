@@ -1,12 +1,11 @@
-import { IResult } from '@/app/companies/[id]/(admin)/product/page';
-import PocketBase from 'pocketbase';
+import { IResult } from '@/app/companies/[id]/(dashboard-admin)/product/page';
 import { IProduct } from '@/components/product/ProductTable';
+import client from '@/libs/pockebase';
 import { REVALIDATE_TAG } from '@/constants/revalidateTag';
 
-const pb = new PocketBase('http://127.0.0.1:8090');
 
 // export const getProduct = async () => {
-//   const products: IResult<IProduct> = await pb.collection('products').getList(1, 50, {
+//   const products: IResult<IProduct> = await client.collection('products').getList(1, 50, {
 //     sort: '-created',
 //     expand: 'category',
 //   });

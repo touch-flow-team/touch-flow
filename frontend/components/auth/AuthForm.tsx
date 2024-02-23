@@ -1,18 +1,17 @@
 "use client";
-import useSignup from '@/hooks/useSignup';
-import useSignin from '@/hooks/useSignin';
+import useSignup from '@/hooks/auth/useSignup';
+import useSignin from '@/hooks/auth/useSignin';
 import { zodResolver } from "@hookform/resolvers/zod";
-import { SigninFormData, SignupFormData, signinSchema, signupSchema } from "@/lib/zodSchema";
+import { signinSchema, signupSchema } from "@/schemata/auth/validation";
+import { AuthFormProps, SigninFormData, SignupFormData } from '@/types/auth/type';
 import { AuthInput } from "./AuthInput";
 import { useRouter } from "next/navigation";
 import { SubmitHandler, useForm } from 'react-hook-form';
 import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import client from '@/lib/pockebase';
+import client from '@/libs/pockebase';
 
 
-interface AuthFormProps {
-    isSignup: boolean;
-}
+
 
 export default function AuthForm({ isSignup }: AuthFormProps) {
     const { push } = useRouter();

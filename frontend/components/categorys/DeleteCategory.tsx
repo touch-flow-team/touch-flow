@@ -1,8 +1,8 @@
 'use client';
-import deleteCategory from '@/app/actions/category/deleteCategory';
+import deleteCategory from '@/server-actions/categorys/deleteCategory';
 import { Button } from '@/components/ui/button';
 import Toast from '../common/Toast';
-import deleteProduct from '@/app/actions/product/deleteProduct';
+import deleteProduct from '@/server-actions/products/deleteProduct';
 interface IProp {
   name: string;
   id: string;
