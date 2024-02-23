@@ -1,45 +1,48 @@
 "use client";
+import { useRef } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useRouter } from 'next/navigation';
+import { AuthFormProps, SigninFormData, SignupFormData } from '@/types/auth/type';
+import { signinSchema, signupSchema } from '@/schemata/auth/validation';
+import { AuthInput } from './AuthInput';
+import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import useSignup from '@/hooks/auth/useSignup';
 import useSignin from '@/hooks/auth/useSignin';
-import { zodResolver } from "@hookform/resolvers/zod";
-import { signinSchema, signupSchema } from "@/schemata/auth/validation";
-import { AuthFormProps, SigninFormData, SignupFormData } from '@/types/auth/type';
-import { AuthInput } from "./AuthInput";
-import { useRouter } from "next/navigation";
-import { SubmitHandler, useForm } from 'react-hook-form';
-import { AiOutlineLoading3Quarters } from "react-icons/ai";
-import client from '@/libs/pockebase';
-
-
+import { Button } from '../ui/button';
 
 
 export default function AuthForm({ isSignup }: AuthFormProps) {
-    const { push } = useRouter();
-    const { handleSubmit, register, formState: { errors, isSubmitting }, } = useForm<SignupFormData | SigninFormData>({
-        mode: "onChange",
+    const router = useRouter();
+    const { push } = router;
+    const signup = useSignup();
+    const signin = useSignin();
+
+    const { handleSubmit, register, formState: { errors, isSubmitting } } = useForm<SignupFormData | SigninFormData>({
+        mode: 'onChange',
         resolver: zodResolver(isSignup ? signupSchema : signinSchema),
     });
 
-    const onSubmit: SubmitHandler<SignupFormData | SigninFormData> = async (data) => {
+    const onSubmit = async (data: SignupFormData | SigninFormData) => {
         if (isSignup) {
             const signupData = data as SignupFormData;
-            useSignup(signupData)
+            await signup(signupData);
             push('/auth/signin');
         } else {
             const signinData = data as SigninFormData;
-            const pb_user = await useSignin(signinData.email, signinData.password)
-            document.cookie = client.authStore.exportToCookie({ httpOnly: false });
-            push('/');
-            return pb_user;
+            try {
+                await signin(signinData.email, signinData.password);
+                push('/');
+            }
+            catch {
+                null
+            }
+
         }
     };
 
     return (
-        <form
-            action=""
-            method="POST"
-            onSubmit={handleSubmit(onSubmit)}
-        >
+        <form onSubmit={handleSubmit(onSubmit)} method="POST">
             <AuthInput
                 id="email"
                 label="Email"
@@ -55,7 +58,7 @@ export default function AuthForm({ isSignup }: AuthFormProps) {
                         label="Username"
                         type="text"
                         register={register}
-                        required={true}
+                        required
                         errors={errors}
                     />
                     <AuthInput
@@ -63,7 +66,7 @@ export default function AuthForm({ isSignup }: AuthFormProps) {
                         label="Phone number"
                         type="phone"
                         register={register}
-                        required={true}
+                        required
                         errors={errors}
                     />
                 </>
@@ -73,32 +76,19 @@ export default function AuthForm({ isSignup }: AuthFormProps) {
                 label="Password"
                 type="password"
                 register={register}
-                required={true}
+                required
                 errors={errors}
             />
-            {isSignup && (
-                <>
-                    <AuthInput
-                        id="passwordConfirm"
-                        label="Password confirm"
-                        type="password"
-                        register={register}
-                        required={true}
-                        errors={errors}
-                    />
-                </>
-
-            )}
-            <button type="submit" className="mt-10 block w-full cursor-pointer rounded-xl bg-gray-900 px-4 py-4 text-center font-semibold text-white hover:bg-main focus:outline-none focus:ring focus:ring-main focus:ring-opacity-80 focus:ring-offset-2 disabled:opacity-70" >
+            {isSignup &&
+                (<AuthInput id="passwordConfirm" label="Password confirm" type="password" register={register} required errors={errors} />)
+            }
+            <Button type="submit" className="submit-button w-full mt-10">
                 {isSubmitting ? (
-                    <div role="status" className=" text-center">
-                        <AiOutlineLoading3Quarters className="animate-spin" />
-                    </div>
+                    <AiOutlineLoading3Quarters className="animate-spin" />
                 ) : (
-                    isSignup ? ("회원 가입") : ("로그인")
-
+                    isSignup ? '회원 가입' : '로그인'
                 )}
-            </button>
+            </Button>
         </form>
     );
 }
