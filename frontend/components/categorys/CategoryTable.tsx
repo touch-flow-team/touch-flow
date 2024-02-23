@@ -1,5 +1,3 @@
-'use client';
-
 import {
   Table,
   TableBody,
@@ -13,10 +11,10 @@ import { Button } from '../ui/button';
 import Modal from '../common/Modal';
 import DeleteCategory from './DeleteCategory';
 import CreateCategoryForm from './ManageCategoryForm';
+import { getCategories } from '@/server-actions/categorys/getCategory';
 
-type Props = Pick<ICategory, 'name' | 'id'>[];
-
-const CategoryTable = ({ categories }: { categories: Props }) => {
+const CategoryTable = async () => {
+  const categories: Pick<ICategory, 'name' | 'id'>[] = await getCategories();
   return (
     <Table>
       <TableHeader>
