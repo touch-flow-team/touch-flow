@@ -1,7 +1,6 @@
 "use client"
-import { WaitingListCardProps } from "@/components/companies/WaitingListCard"
 import client from "@/libs/pocketbase"
-import { UseFetchWaitDashboardList } from "@/types/waits/types"
+import { UseFetchWaitDashboardList, WaitingListCardProps } from "@/types/waits/types"
 import { useParams } from "next/navigation"
 import { useEffect, useState } from "react"
 

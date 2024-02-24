@@ -4,11 +4,6 @@ import WaitConfirmModal from '@/components/companies/WaitConfirmModal';
 import PhonePad from '@/components/companies/PhonePad';
 import WaitingCard from '@/components/companies/WaitingCard';
 import Image from 'next/image';
-import { z } from "zod"
-import { UserWaitParams } from '@/types/waits/types'
-import GetCompanyInfo from '@/server-actions/waits/GetCompanyInfo';
-import GetUserWait from '@/server-actions/waits/GetUserWait';
-import { useParams } from 'next/navigation';
 import useFetchWaitList from '@/hooks/waits/useFetchWaitList';
 
 export default function WaitingPage() {
