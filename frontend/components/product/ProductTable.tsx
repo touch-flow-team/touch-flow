@@ -27,9 +27,9 @@ export interface IProduct {
   };
 }
 import Modal from '@/components/common/Modal';
-import Button from '../categorys/Button';
+import Button from '../categories/Button';
 import CreateProductForm from './CreateProductForm';
-import DeleteCategory from '../categorys/DeleteCategory';
+import DeleteCategory from '../categories/DeleteCategory';
 import { IResult } from '@/app/companies/[id]/(dashboard-admin)/product/page';
 import { ICategory } from '@/app/companies/[id]/(dashboard-admin)/category/page';
 

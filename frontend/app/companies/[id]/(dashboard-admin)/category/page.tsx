@@ -1,5 +1,5 @@
-import Header from '@/components/categorys/Header';
-import CategoryTable from '@/components/categorys/CategoryTable';
+import Header from '@/components/categories/Header';
+import CategoryTable from '@/components/categories/CategoryTable';
 
 export interface ICategory {
   collectionId: string;

@@ -10,7 +10,7 @@ import { ICategory } from '@/app/companies/[id]/(dashboard-admin)/category/page'
 import Modal from '../common/Modal';
 import DeleteCategory from './DeleteCategory';
 import CreateCategoryForm from './ManageCategoryForm';
-import { getCategories } from '@/server-actions/categorys/getCategory';
+import { getCategories } from '@/server-actions/categories/getCategory';
 import Button from './Button';
 
 const CategoryTable = async () => {

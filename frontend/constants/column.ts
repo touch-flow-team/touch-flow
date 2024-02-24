@@ -25,3 +25,7 @@ export const columns: ColumnDef<Payment>[] = [
     header: 'Time',
   },
 ];
+
+const obj = { red: 'apple', yellow: 'banana', green: 'cucumber' } as const;
+
+type Key = typeof obj[keyof typeof obj]

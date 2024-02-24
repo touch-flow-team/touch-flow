@@ -1,5 +1,5 @@
 'use client';
-import client from '@/libs/pockebase';
+import client from '@/libs/pocketbase';
 import { toast } from '@/components/ui/use-toast';
 import { SignupFormData } from '@/types/auth/type';
 

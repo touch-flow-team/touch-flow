@@ -1,5 +1,5 @@
 'use client';
-import deleteCategory from '@/server-actions/categorys/deleteCategory';
+import deleteCategory from '@/server-actions/categories/deleteCategory';
 import { Button } from '@/components/ui/button';
 import Toast from '../common/Toast';
 import deleteProduct from '@/server-actions/products/deleteProduct';
