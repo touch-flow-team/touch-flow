@@ -1,7 +1,7 @@
 'use server'
 
-import client from "@/libs/pockebase";
-import { ManagementWaitCreateParams, UserWaitCreateParams } from "@/constants/interface";
+import client from "@/libs/pocketbase";
+import { ManagementWaitCreateParams, UserWaitCreateParams } from "@/types/waits/types";
 import twilio from "twilio";
 
 const CreateUserWait = async (data: UserWaitCreateParams, manageId: string, manageData: ManagementWaitCreateParams) => {

@@ -19,34 +19,22 @@ import { z } from "zod"
 import { useToast } from "@/components/ui/use-toast"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
-import { ManagementWaitCreateParams } from "@/constants/interface"
-import client from "@/libs/pockebase"
-
-
-const FormSchema = z.object({
-    number: z.coerce.number(),
-
-})
-
-interface WaitingSettingsModalProps {
-    label: string
-    manageId: string
-    manageData: ManagementWaitCreateParams
-    name: string
-}
+import { ManagementWaitCreateParams, WaitingSettingsModalProps } from "@/types/waits/types"
+import client from "@/libs/pocketbase"
+import { waitSettingsNumberSchema } from "@/schemata/waits/schema"
 
 const WaitingSettingsModal = ({ label, manageId, manageData, name }: WaitingSettingsModalProps) => {
     const { toast } = useToast()
     const [open, setOpen] = useState(false)
 
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
+    const form = useForm<z.infer<typeof waitSettingsNumberSchema>>({
+        resolver: zodResolver(waitSettingsNumberSchema),
         defaultValues: {
             number: 0
         },
     })
 
-    const onSubmitModal = async (data: z.infer<typeof FormSchema>) => {
+    const onSubmitModal = async (data: z.infer<typeof waitSettingsNumberSchema>) => {
         console.log(data["number"]);
 
         let newData: ManagementWaitCreateParams = {

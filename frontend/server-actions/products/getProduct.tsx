@@ -1,6 +1,6 @@
 import { IResult } from '@/app/companies/[id]/(dashboard-admin)/product/page';
 import { IProduct } from '@/components/product/ProductTable';
-import client from '@/libs/pockebase';
+import client from '@/libs/pocketbase';
 import { REVALIDATE_TAG } from '@/constants/revalidateTag';
 
 

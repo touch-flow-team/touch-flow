@@ -5,16 +5,8 @@ import {
     CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import client from "@/libs/pockebase"
-
-export interface WaitingListCardProps {
-    id: string
-    user_phone_number: string
-    adult_persons: number
-    child_persons: number
-    created: Date
-    admission_status: boolean
-}
+import client from "@/libs/pocketbase"
+import { WaitingListCardProps } from "@/types/waits/types"
 
 const WaitingListCard = ({ id, user_phone_number, adult_persons, child_persons, created, admission_status }: WaitingListCardProps) => {
 

@@ -1,5 +1,5 @@
 'use client';
-import client from '@/libs/pockebase';
+import client from '@/libs/pocketbase';
 
 export default function useLogout() {
   return client.authStore.clear();
