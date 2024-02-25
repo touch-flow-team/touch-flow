@@ -1,13 +1,7 @@
 import {
     Card, CardContent, CardHeader
 } from "@/components/ui/card"
-
-interface WaitingCardProps {
-    companyName: string
-    waitingNumber: number
-    waitingTime: number
-}
-
+import { WaitingCardProps } from "@/types/waits/types"
 
 const WaitingCard = ({ companyName = "", waitingNumber = 0, waitingTime = 0 }: WaitingCardProps) => {
     return (

@@ -1,10 +1,12 @@
 "use client"
 import { Toaster } from "@/components/ui/toaster";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
-  // id 는 파라미터로부터 가져와야 함
   const router = useRouter()
+  const params = useParams()
+  const id = String(params?.id)
+
   return (
     <>
       <div className="flex h-lvh w-full">
@@ -12,7 +14,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <ul className="flex flex-col space-y-4">
             <li>
               <button className="font-bold text-[20px] text-white" onClick={() => {
-                router.push('/companies/1/waiting-dashboard/settings')
+                router.push(`/companies/${id}/waiting-dashboard/settings`)
               }}>
                 웨이팅 설정
               </button>
@@ -20,7 +22,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             <div className="w-full h-[1px] bg-white"></div>
             <li>
               <button className="font-bold text-[20px] text-white" onClick={() => {
-                router.push('/companies/1/waiting-dashboard/list')
+                router.push(`/companies/${id}/waiting-dashboard/list`)
               }}>
                 웨이팅 목록
               </button>

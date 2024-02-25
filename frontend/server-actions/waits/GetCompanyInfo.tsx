@@ -1,5 +1,5 @@
 'use server'
-import client from '@/libs/pockebase';
+import client from '@/libs/pocketbase';
 
 interface GetCompanyInfoProps {
     companyId: string

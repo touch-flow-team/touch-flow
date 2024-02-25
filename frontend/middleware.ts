@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
-import client from './libs/pockebase';
+import client from './libs/pocketbase';
 import { getNextjsCookie } from '@/libs/server-cookie';
 
 export async function middleware(request: NextRequest) {

@@ -8,17 +8,10 @@ import {
 } from "@/components/ui/dialog"
 import { useState } from "react"
 import { Button } from "../ui/button"
-import { phoneSchema } from "@/app/companies/[id]/(waiting-admin)/waitings/page"
-import { ManagementWaitConfirmParams } from "@/constants/interface"
+import { ManagementWaitConfirmParams, WaitConfirmModalProps } from "@/types/waits/types"
 import CounterButton from "./CounterButton"
 import createUserWait from "../../server-actions/waits/CreateUserWait"
-
-export interface WaitConfirmModalProps {
-    phoneNumber: string
-    setPhoneNumber: React.Dispatch<React.SetStateAction<string>>
-    manageData: ManagementWaitConfirmParams
-    setIsFetching: React.Dispatch<React.SetStateAction<boolean>>
-}
+import { phoneSchema } from "@/schemata/waits/schema"
 
 const WaitConfirmModal = ({ phoneNumber, setPhoneNumber, manageData, setIsFetching }: WaitConfirmModalProps) => {
     const [open, setOpen] = useState(false)

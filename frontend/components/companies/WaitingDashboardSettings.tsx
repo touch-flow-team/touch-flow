@@ -1,9 +1,8 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { zodResolver } from '@hookform/resolvers/zod';
-import { useForm } from 'react-hook-form';
-import { z } from 'zod';
+import { zodResolver } from "@hookform/resolvers/zod"
+import { useForm } from "react-hook-form"
+import { z } from "zod"
 
 import {
   Form,
@@ -12,96 +11,47 @@ import {
   FormField,
   FormItem,
   FormLabel,
-  FormMessage,
-} from '@/components/ui/form';
-import { Switch } from '@/components/ui/switch';
-import { useToast } from '@/components/ui/use-toast';
-import { useParams } from 'next/navigation';
-import { Textarea } from '../ui/textarea';
-import WaitingSettingsModal from './WaitingSettingsModal';
-import { ManagementWaitCreateParams } from '@/constants/interface';
-import { Button } from '@/components/ui/button';
-import client from '@/libs/pocketbase';
-
-const FormSchema = z.object({
-  waiting_enabled: z.boolean().default(false).optional(),
-  estimated_waiting_time: z.number().default(0).optional(),
-  rules_enabled: z.boolean().default(false).optional(),
-  rules_content: z.string().default(''),
-});
+  FormMessage
+} from "@/components/ui/form"
+import { Switch } from "@/components/ui/switch"
+import { useToast } from "@/components/ui/use-toast"
+import { useParams } from "next/navigation"
+import { Textarea } from "../ui/textarea"
+import WaitingSettingsModal from "./WaitingSettingsModal"
+import { ManagementWaitCreateParams } from "@/types/waits/types"
+import { Button } from "@/components/ui/button"
+import client from "@/libs/pocketbase"
+import useFetchWaitSettings from "@/hooks/waits/useFetchWaitSettings"
+import { waitSettingsSchema } from "@/schemata/waits/schema"
 
 export function WaitingDashboardSettings() {
-  const { toast } = useToast();
-  const [waitingEnabled, setWaitingEnabled] = useState(false);
-  const [estimatedWaitingTime, setEstimatedWaitingTime] = useState(0);
-  const [limitPerson, setLimitPerson] = useState(0);
-  const [rulesEnabled, setRulesEnabled] = useState(false);
-  const [rulesContent, setRulesContent] = useState('');
-  const [manageId, setManageId] = useState('');
-  const [userWaits, setUserWaits] = useState<Array<string>>([]);
-  const [action, setAction] = useState('');
-  const params = useParams();
+  const { toast } = useToast()
+  const params = useParams()
+  const [
+    waitingEnabled, estimatedWaitingTime, limitPerson,
+    rulesEnabled, rulesContent, manageId, userWaits, action,
+    setWaitingEnabled, setRulesEnabled, setRulesContent
+  ] = useFetchWaitSettings()
 
-  const fetchData = async () => {
-    const company = await client.collection('companies').getOne(String(params?.id), {
-      expand: 'management_waits',
-      fields: 'expand.management_waits.id',
-    });
-    setManageId(company?.expand?.management_waits[0]?.id);
 
-    if (company?.expand?.management_waits[0]?.id.length >= 1) {
-      const response = await client
-        .collection('management_waits')
-        .getOne(company?.expand?.management_waits[0]?.id, {});
-      setUserWaits(response.user_waits);
-      setWaitingEnabled(response.waiting_enabled);
-      setEstimatedWaitingTime(response.estimated_waiting_time);
-      setLimitPerson(response.limit_persons);
-      setRulesEnabled(response.rules_enabled);
-      setRulesContent(response.rules_content);
-    }
-  };
-
-  useEffect(() => {
-    fetchData();
-  }, [action == null]);
-
-  useEffect(() => {
-    // 데이터 가져오기
-    // manageId가 변경될 때마다 이전 구독을 취소하고 다시 구독
-    const managementWaitSubscribe = client
-      .collection('management_waits')
-      .subscribe('*', function (e) {
-        if (manageId.length >= 1) {
-          fetchData();
-        }
-      });
-
-    // 컴포넌트가 언마운트되거나 manageId가 변경될 때 이전 구독 취소
-    return () => {
-      client.collection('management_waits').unsubscribe();
-    };
-  }, [manageId, action != null]);
-
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof waitSettingsSchema>>({
+    resolver: zodResolver(waitSettingsSchema),
     defaultValues: {
       waiting_enabled: false,
-      rules_enabled: false,
+      rules_enabled: false
     },
-  });
+  })
 
-  function onSubmit(data: z.infer<typeof FormSchema>) {
+  function onSubmit(data: z.infer<typeof waitSettingsSchema>) {
     console.log('custom onSubmit 사용 예정');
   }
-
   const updateManageInfo = async (manageId: string, data: ManagementWaitCreateParams) => {
     console.log(data);
 
     const record = await client.collection('management_waits').update(manageId, data);
 
-    return record;
-  };
+    return record
+  }
 
   const manageData = {
     company: String(params?.id),
