@@ -6,19 +6,24 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import React from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 
 interface IProps {
   trigger: React.ReactElement;
   title: string;
   InnerComponent: React.ReactElement;
+  open: boolean;
+  setOpen: Dispatch<SetStateAction<boolean>>;
+  unique_key?: any;
 }
 
-const Modal = ({ title, trigger, InnerComponent }: IProps) => {
+const Modal = ({ title, trigger, InnerComponent, open, setOpen, unique_key }: IProps) => {
+  console.log(title, open);
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen} key={unique_key}>
       <DialogTrigger>{trigger}</DialogTrigger>
-      <DialogContent>
+      <DialogContent key={unique_key}>
         <DialogHeader>
           <DialogTitle className="mb-5">{title}</DialogTitle>
           <DialogDescription>{InnerComponent}</DialogDescription>

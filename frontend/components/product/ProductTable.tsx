@@ -8,29 +8,13 @@ import {
   TableHeader,
   TableRow,
 } from '@/components/ui/table';
-export interface IProduct {
-  category: string;
-  collectionId: string;
-  collectionName: string;
-  created: string;
-  description: string;
-  id: string;
-  image: string;
-  name: string;
-  price: number;
-  updated: string;
-  expand: {
-    category: {
-      name: string;
-      id: string;
-    };
-  };
-}
+import { IProduct } from '@/types/product/type';
+import { ICategory } from '@/types/category/type';
+import { useState } from 'react';
 import Modal from '@/components/common/Modal';
 import Button from '../categories/Button';
-import CreateProductForm from './CreateProductForm';
-import DeleteCategory from '../categories/DeleteCategory';
-import { ICategory } from '@/app/companies/[id]/(dashboard-admin)/category/page';
+import ProductManageForm from './ProductManageForm';
+import DeleteModal from '../categories/DeleteModal';
 
 interface IProp {
   products: IProduct[];
@@ -39,6 +23,9 @@ interface IProp {
 }
 
 const ProductTable = ({ products, categories, seletedCategory }: IProp) => {
+  const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [selectedProductId, setSelectedProductId] = useState<string>('');
   const filteredProducts =
     seletedCategory !== 'all'
       ? products.filter((e) => {
@@ -69,21 +56,53 @@ const ProductTable = ({ products, categories, seletedCategory }: IProp) => {
                 <TableCell>
                   <div className="flex gap-3 justify-end">
                     <Modal
+                      open={isUpdateModalOpen && selectedProductId === product.id}
+                      setOpen={(isOpen) => {
+                        setIsUpdateModalOpen(isOpen);
+                        if (!isOpen) {
+                          setSelectedProductId('');
+                        }
+                      }}
                       title="상품 수정"
-                      trigger={<Button text="수정" size="md" />}
+                      trigger={
+                        <Button
+                          text="수정"
+                          size="md"
+                          onClick={() => setSelectedProductId(product.id)}
+                        />
+                      }
                       InnerComponent={
-                        <CreateProductForm
+                        <ProductManageForm
                           categories={categories}
                           product={product}
                           mode="update"
+                          setModalOpen={setIsUpdateModalOpen}
                         />
                       }
                     />
                     <Modal
+                      open={isDeleteModalOpen && selectedProductId === product.id}
+                      setOpen={(isOpen) => {
+                        setIsDeleteModalOpen(isOpen);
+                        if (!isOpen) {
+                          setSelectedProductId('');
+                        }
+                      }}
                       title="상품 삭제"
-                      trigger={<Button text="삭제" size="md" />}
+                      trigger={
+                        <Button
+                          text="삭제"
+                          size="md"
+                          onClick={() => setSelectedProductId(product.id)}
+                        />
+                      }
                       InnerComponent={
-                        <DeleteCategory id={product.id} name={product.name} mode="product" />
+                        <DeleteModal
+                          id={product.id}
+                          name={product.name}
+                          mode="product"
+                          setModalOpen={setIsDeleteModalOpen}
+                        />
                       }
                     />
                   </div>
