@@ -1,7 +1,7 @@
 import Button from '../categories/Button';
 import Modal from '../common/Modal';
 import CreateProductForm from './CreateProductForm';
-import { getCategories } from '@/server-actions/categories/getCategory';
+import { getCategories } from '@/server-actions/categories/category';
 
 const Header = async () => {
   const category_info = await getCategories();

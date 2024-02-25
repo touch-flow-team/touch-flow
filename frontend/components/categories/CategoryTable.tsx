@@ -7,11 +7,11 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ICategory } from '@/app/companies/[id]/(dashboard-admin)/category/page';
-import Modal from '../common/Modal';
-import DeleteCategory from './DeleteCategory';
-import CreateCategoryForm from './ManageCategoryForm';
-import { getCategories } from '@/server-actions/categories/getCategory';
-import Button from './Button';
+import Modal from '@/components/common/Modal';
+import DeleteCategory from '@/components/categories/DeleteCategory';
+import CreateCategoryForm from '@/components/categories/ManageCategoryForm';
+import Button from '@/components/categories/Button';
+import { getCategories } from '@/server-actions/categories/category';
 
 const CategoryTable = async () => {
   const categories: Pick<ICategory, 'name' | 'id'>[] = await getCategories();
@@ -30,6 +30,7 @@ const CategoryTable = async () => {
               <TableCell className="font-medium">{category.name}</TableCell>
               <TableCell className="flex justify-end gap-2">
                 <Modal
+                  key={category.id}
                   title="카테고리 수정"
                   trigger={<Button text="수정" size="md" />}
                   InnerComponent={
@@ -37,6 +38,7 @@ const CategoryTable = async () => {
                   }
                 />
                 <Modal
+                  key={category.id}
                   title="카테고리 삭제"
                   trigger={<Button text="삭제" size="md" />}
                   InnerComponent={

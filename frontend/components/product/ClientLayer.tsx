@@ -7,7 +7,7 @@ import { ICategory } from '@/app/companies/[id]/(dashboard-admin)/category/page'
 import { useState } from 'react';
 
 interface IProp {
-  products: IResult<IProduct>;
+  products: IProduct[];
   categories: Pick<ICategory, 'name' | 'id'>[];
 }
 

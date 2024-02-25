@@ -30,11 +30,10 @@ import Modal from '@/components/common/Modal';
 import Button from '../categories/Button';
 import CreateProductForm from './CreateProductForm';
 import DeleteCategory from '../categories/DeleteCategory';
-import { IResult } from '@/app/companies/[id]/(dashboard-admin)/product/page';
 import { ICategory } from '@/app/companies/[id]/(dashboard-admin)/category/page';
 
 interface IProp {
-  products: IResult<IProduct>;
+  products: IProduct[];
   categories: Pick<ICategory, 'name' | 'id'>[];
   seletedCategory: string;
 }
@@ -42,10 +41,10 @@ interface IProp {
 const ProductTable = ({ products, categories, seletedCategory }: IProp) => {
   const filteredProducts =
     seletedCategory !== 'all'
-      ? products.items.filter((e) => {
+      ? products.filter((e) => {
           return e.expand.category.id === seletedCategory;
         })
-      : products.items;
+      : products;
 
   return (
     <>

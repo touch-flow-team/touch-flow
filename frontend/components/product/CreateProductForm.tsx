@@ -23,10 +23,10 @@ import {
 
 import { ICategory } from '@/app/companies/[id]/(dashboard-admin)/category/page';
 import Toast from '../common/Toast';
-import createProduct from '@/server-actions/products/createProduct';
+import { createProduct, updateProduct } from '@/server-actions/products/product';
 import { IProduct } from './ProductTable';
-import updateProduct from '@/server-actions/products/updateProduct';
 import ReusableFormField from '../common/ReusableFormField';
+
 interface IProps {
   categories: Pick<ICategory, 'name' | 'id'>[];
   product?: IProduct;
@@ -54,7 +54,7 @@ const CreateProductForm: React.FC<IProps> = ({ categories, product, mode }: IPro
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     if (mode === 'create') {
-      await createProduct(data)
+      await createProduct({ data })
         .then(() => Toast({ title: '등록완료', description: '완료', mode: 'success' }))
         .catch(() => Toast({ title: '요청실패', description: '실패', mode: 'fail' }));
     } else {

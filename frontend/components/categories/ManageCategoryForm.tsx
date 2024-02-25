@@ -13,10 +13,8 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import updateCategory from '@/server-actions/categories/updateCategory';
 import Toast from '../common/Toast';
-import createAction from '@/server-actions/categories/createCategory';
-import { REVALIDATE_TAG } from '@/constants/revalidateTag';
+import { createCategory, updateCategory } from '@/server-actions/categories/category';
 
 const FormSchema = z.object({
   name: z.string().nonempty({
@@ -40,11 +38,7 @@ const ManageCategoryForm = ({ mode, name, id }: IProp) => {
 
   const onSubmit = async (data: z.infer<typeof FormSchema>) => {
     if (mode === 'create') {
-      await createAction({
-        data: data.name,
-        collection: 'categorys',
-        revalidate_tag: 'CATEGORY',
-      })
+      await createCategory({ data })
         .then(() => Toast({ mode: 'success', title: '생성 완료', description: data.name }))
         .catch(() => Toast({ mode: 'fail', title: '생성 실패', description: data.name }));
     } else {
