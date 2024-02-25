@@ -21,16 +21,18 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 
-import { ICategory } from '@/app/companies/[id]/(dashboard-admin)/category/page';
+import { ICategory } from '@/types/category/type';
 import Toast from '../common/Toast';
 import { createProduct, updateProduct } from '@/server-actions/products/product';
-import { IProduct } from './ProductTable';
+import { IProduct } from '@/types/product/type';
 import ReusableFormField from '../common/ReusableFormField';
+import { Dispatch, SetStateAction } from 'react';
 
 interface IProps {
   categories: Pick<ICategory, 'name' | 'id'>[];
   product?: IProduct;
   mode?: 'create' | 'update';
+  setModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
 const FormSchema = z.object({
@@ -40,7 +42,12 @@ const FormSchema = z.object({
   description: z.string().max(30, { message: '30자 이내로 입력해 주세요.' }),
 });
 
-const CreateProductForm: React.FC<IProps> = ({ categories, product, mode }: IProps) => {
+const ProductManageForm: React.FC<IProps> = ({
+  categories,
+  product,
+  mode,
+  setModalOpen,
+}: IProps) => {
   const form = useForm<z.infer<typeof FormSchema>>({
     mode: 'onChange',
     resolver: zodResolver(FormSchema),
@@ -62,13 +69,15 @@ const CreateProductForm: React.FC<IProps> = ({ categories, product, mode }: IPro
         .then(() => Toast({ title: '수정완료', description: '완료', mode: 'success' }))
         .catch(() => Toast({ title: '요청실패', description: '실패', mode: 'fail' }));
     }
+
+    setModalOpen((prev) => !prev);
   };
 
   return (
     <Form {...form}>
       <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-6">
         <ReusableFormField form={form} name="name" label="상품명">
-          <Input placeholder="상품명을 입력해 주세요.test123" />
+          <Input placeholder="상품명을 입력해 주세요." />
         </ReusableFormField>
         <ReusableFormField form={form} name="price" label="가격">
           <Input placeholder="가격을 입력해 주세요." />
@@ -109,4 +118,4 @@ const CreateProductForm: React.FC<IProps> = ({ categories, product, mode }: IPro
   );
 };
 
-export default CreateProductForm;
+export default ProductManageForm;

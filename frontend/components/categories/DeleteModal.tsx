@@ -3,14 +3,16 @@ import { deleteCategory } from '@/server-actions/categories/category';
 import { Button } from '@/components/ui/button';
 import { deleteProduct } from '@/server-actions/products/product';
 import Toast from '@/components/common/Toast';
+import { Dispatch, SetStateAction } from 'react';
 
 interface IProp {
   name: string;
   id: string;
   mode: 'category' | 'product';
+  setModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const DeleteCategory = ({ id, name, mode }: IProp) => {
+const DeleteModal = ({ id, name, mode, setModalOpen }: IProp) => {
   const deleteHandler = async () => {
     if (mode === 'category') {
       await deleteCategory({ id })
@@ -21,6 +23,8 @@ const DeleteCategory = ({ id, name, mode }: IProp) => {
         .then(() => Toast({ title: '삭제 완료', description: name, mode: 'success' }))
         .catch(() => Toast({ title: '요청 실패', description: name, mode: 'fail' }));
     }
+
+    setModalOpen((prev) => !prev);
   };
   return (
     <>
@@ -34,4 +38,4 @@ const DeleteCategory = ({ id, name, mode }: IProp) => {
   );
 };
 
-export default DeleteCategory;
+export default DeleteModal;
