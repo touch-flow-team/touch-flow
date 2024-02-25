@@ -17,9 +17,11 @@ import ProductManageForm from './ProductManageForm';
 import DeleteModal from '../categories/DeleteModal';
 import Image from 'next/image';
 import { imageSrc } from '@/libs/utils';
+import PaginationDemo from '../common/Pagination';
+import { IResult } from '@/types/common/type';
 
 interface IProp {
-  products: IProduct[];
+  products: IResult<IProduct>;
   categories: Pick<ICategory, 'name' | 'id'>[];
   seletedCategory: string;
 }
@@ -30,10 +32,10 @@ const ProductTable = ({ products, categories, seletedCategory }: IProp) => {
   const [selectedProductId, setSelectedProductId] = useState<string>('');
   const filteredProducts =
     seletedCategory !== 'all'
-      ? products.filter((e) => {
+      ? products.items.filter((e) => {
           return e.expand.category.id === seletedCategory;
         })
-      : products;
+      : products.items;
 
   return (
     <>
@@ -133,6 +135,7 @@ const ProductTable = ({ products, categories, seletedCategory }: IProp) => {
           No Result
         </div>
       )}
+      <PaginationDemo current_page={products.page} total_page={products.totalPages} />
     </>
   );
 };
