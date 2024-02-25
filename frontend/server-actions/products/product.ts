@@ -46,8 +46,6 @@ const getProduct = async () => {
     next: { tags: [REVALIDATE_TAG.PRODUCT] },
   });
 
-  console.log(products);
-
   return products;
 };
 

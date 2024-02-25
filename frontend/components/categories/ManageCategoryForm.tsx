@@ -1,5 +1,5 @@
 'use client';
-
+import { CategorySchema } from '@/schemata/categorys/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -17,12 +17,6 @@ import Toast from '../common/Toast';
 import { createCategory, updateCategory } from '@/server-actions/categories/category';
 import { Dispatch, SetStateAction } from 'react';
 
-const FormSchema = z.object({
-  name: z.string().nonempty({
-    message: '카테고리명을 입력해 주세요.',
-  }),
-});
-
 interface IProp {
   mode: 'create' | 'update';
   setModalOpen: Dispatch<SetStateAction<boolean>>;
@@ -31,14 +25,14 @@ interface IProp {
 }
 
 const ManageCategoryForm = ({ mode, name, id, setModalOpen }: IProp) => {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+  const form = useForm<z.infer<typeof CategorySchema>>({
+    resolver: zodResolver(CategorySchema),
     defaultValues: {
       name: mode === 'create' ? '' : name,
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+  const onSubmit = async (data: z.infer<typeof CategorySchema>) => {
     if (mode === 'create') {
       await createCategory({ data })
         .then(() => Toast({ mode: 'success', title: '생성 완료', description: data.name }))
