@@ -3,11 +3,12 @@
 import CategoryList from './CategoryList';
 import ProductTable from './ProductTable';
 import { ICategory } from '@/types/category/type';
+import { IResult } from '@/types/common/type';
 import { IProduct } from '@/types/product/type';
 import { useState } from 'react';
 
 interface IProp {
-  products: IProduct[];
+  products: IResult<IProduct>;
   categories: Pick<ICategory, 'name' | 'id'>[];
 }
 

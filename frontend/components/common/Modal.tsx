@@ -18,8 +18,6 @@ interface IProps {
 }
 
 const Modal = ({ title, trigger, InnerComponent, open, setOpen, unique_key }: IProps) => {
-  console.log(title, open);
-
   return (
     <Dialog open={open} onOpenChange={setOpen} key={unique_key}>
       <DialogTrigger>{trigger}</DialogTrigger>

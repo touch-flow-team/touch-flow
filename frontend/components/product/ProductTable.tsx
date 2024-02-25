@@ -17,23 +17,19 @@ import ProductManageForm from './ProductManageForm';
 import DeleteModal from '../categories/DeleteModal';
 import Image from 'next/image';
 import { imageSrc } from '@/libs/utils';
+import { IResult } from '@/types/common/type';
+import ProductPagination from './Pagination';
 
 interface IProp {
-  products: IProduct[];
+  products: IResult<IProduct>;
   categories: Pick<ICategory, 'name' | 'id'>[];
-  seletedCategory: string;
+  filter: string;
 }
 
-const ProductTable = ({ products, categories, seletedCategory }: IProp) => {
+const ProductTable = ({ products, categories, filter }: IProp) => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string>('');
-  const filteredProducts =
-    seletedCategory !== 'all'
-      ? products.filter((e) => {
-          return e.expand.category.id === seletedCategory;
-        })
-      : products;
 
   return (
     <>
@@ -49,7 +45,7 @@ const ProductTable = ({ products, categories, seletedCategory }: IProp) => {
           </TableRow>
         </TableHeader>
         <TableBody>
-          {filteredProducts.map((product) => {
+          {products.items.map((product) => {
             return (
               <TableRow key={product.id}>
                 <TableCell className="font-medium">
@@ -128,11 +124,16 @@ const ProductTable = ({ products, categories, seletedCategory }: IProp) => {
           })}
         </TableBody>
       </Table>
-      {filteredProducts.length === 0 && (
+      {products.items.length === 0 && (
         <div className="text-3xl font-normal w-full h-[100px] flex justify-center items-center">
           No Result
         </div>
       )}
+      <ProductPagination
+        current_page={products.page}
+        total_page={products.totalPages}
+        filter={filter}
+      />
     </>
   );
 };
