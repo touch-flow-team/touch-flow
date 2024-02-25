@@ -1,24 +1,19 @@
 'use client';
-
+import Link from 'next/link';
 import { Button } from '../ui/button';
 import { ICategory } from '@/types/category/type';
+import { useRouter } from 'next/navigation';
 
-interface IProp {
-  categories: Pick<ICategory, 'name' | 'id'>[];
-  setSelectedCategory: React.Dispatch<React.SetStateAction<string>>;
-}
-
-// client
-const CategoryList = ({ categories, setSelectedCategory }: IProp) => {
+const CategoryList = ({ categories }: { categories: Pick<ICategory, 'name' | 'id'>[] }) => {
+  const router = useRouter();
   return (
     <ul className="flex gap-3">
-      <li key="all">
-        <Button onClick={() => setSelectedCategory('all')}>전체</Button>
-      </li>
+      <Button onClick={() => router.push('?page=1&category=all')}>전체</Button>
       {categories.map((category) => {
         return (
-          <Button key={category.id} onClick={() => setSelectedCategory(category.id)}>
+          <Button key={category.id} onClick={() => router.push(`?page=1&category=${category.id}`)}>
             {category.name}
+            <Link href={`?page=1&category=${category.id}`} />
           </Button>
         );
       })}

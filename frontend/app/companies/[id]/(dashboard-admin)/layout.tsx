@@ -11,7 +11,7 @@ const MENU = [
     name: '대시보드',
   },
   {
-    url: '/companies/1/product',
+    url: '/companies/1/product?page=0&category=all',
     name: '상품관리',
   },
   {

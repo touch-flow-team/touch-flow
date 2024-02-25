@@ -34,7 +34,27 @@ const deleteProduct = async ({ id }: IDelete) => {
     .then(() => revalidateTag(REVALIDATE_TAG.PRODUCT));
 };
 
-const getProduct = async ({ current_page }: { current_page: number }) => {
+const getProduct = async ({
+  current_page,
+  filtering,
+}: {
+  current_page: number;
+  filtering: string;
+}) => {
+  const products: IResult<IProduct> = await client
+    .collection('products')
+    .getList(current_page, PRODUCT_PAGINATION_SIZE, {
+      filter: `category = "${filtering}"`,
+      expand: 'category',
+      sort: 'created',
+      cache: 'no-store',
+      next: { tags: [REVALIDATE_TAG.PRODUCT] },
+    });
+
+  return products;
+};
+
+const getAllProduct = async ({ current_page }: { current_page: number }) => {
   const products: IResult<IProduct> = await client
     .collection('products')
     .getList(current_page, PRODUCT_PAGINATION_SIZE, {
@@ -55,4 +75,4 @@ const updateProduct = async ({ id, formData }: IUpdate) => {
     .then(() => revalidateTag(REVALIDATE_TAG.PRODUCT));
 };
 
-export { createProduct, getProduct, updateProduct, deleteProduct };
+export { createProduct, getProduct, updateProduct, deleteProduct, getAllProduct };
