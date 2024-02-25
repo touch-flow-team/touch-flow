@@ -6,12 +6,7 @@ import { REVALIDATE_TAG } from '@/constants/revalidateTag';
 import client from '@/libs/pocketbase';
 
 interface ICreate {
-  data: {
-    name: string;
-    price: number;
-    description: string;
-    category: string;
-  };
+  formData: FormData;
 }
 
 interface IDelete {
@@ -28,10 +23,10 @@ interface IUpdate {
   };
 }
 
-const createProduct = async ({ data }: ICreate) => {
+const createProduct = async ({ formData }: ICreate) => {
   await client
     .collection('products')
-    .create(data)
+    .create(formData)
     .then(() => revalidateTag(REVALIDATE_TAG.PRODUCT));
 };
 
@@ -50,6 +45,8 @@ const getProduct = async () => {
     cache: 'no-store',
     next: { tags: [REVALIDATE_TAG.PRODUCT] },
   });
+
+  console.log(products);
 
   return products;
 };

@@ -1,5 +1,7 @@
 'use client';
 
+import { ProductSchema } from '@/schemata/categorys/validation';
+import { getImageData } from '@/libs/getImageData';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -26,7 +28,8 @@ import Toast from '../common/Toast';
 import { createProduct, updateProduct } from '@/server-actions/products/product';
 import { IProduct } from '@/types/product/type';
 import ReusableFormField from '../common/ReusableFormField';
-import { Dispatch, SetStateAction } from 'react';
+import { Dispatch, SetStateAction, useState } from 'react';
+import Image from 'next/image';
 
 interface IProps {
   categories: Pick<ICategory, 'name' | 'id'>[];
@@ -35,22 +38,16 @@ interface IProps {
   setModalOpen: Dispatch<SetStateAction<boolean>>;
 }
 
-const FormSchema = z.object({
-  category: z.string(),
-  name: z.string().min(1, { message: '상품명을 입력해 주세요.' }),
-  price: z.coerce.number().min(3, { message: '상품 가격을 입력해 주세요.' }),
-  description: z.string().max(30, { message: '30자 이내로 입력해 주세요.' }),
-});
-
 const ProductManageForm: React.FC<IProps> = ({
   categories,
   product,
   mode,
   setModalOpen,
 }: IProps) => {
-  const form = useForm<z.infer<typeof FormSchema>>({
+  const [preview, setPreview] = useState('');
+  const form = useForm<z.infer<typeof ProductSchema>>({
     mode: 'onChange',
-    resolver: zodResolver(FormSchema),
+    resolver: zodResolver(ProductSchema),
     defaultValues: {
       name: mode && product?.name,
       price: mode && product?.price,
@@ -59,9 +56,15 @@ const ProductManageForm: React.FC<IProps> = ({
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+  const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
     if (mode === 'create') {
-      await createProduct({ data })
+      const formData = new FormData();
+      formData.append('name', data.name);
+      formData.append('price', data.price.toString());
+      formData.append('category', data.category);
+      formData.append('description', data.description);
+      formData.append('image', data.image);
+      await createProduct({ formData })
         .then(() => Toast({ title: '등록완료', description: '완료', mode: 'success' }))
         .catch(() => Toast({ title: '요청실패', description: '실패', mode: 'fail' }));
     } else {
@@ -107,6 +110,34 @@ const ProductManageForm: React.FC<IProps> = ({
         <ReusableFormField form={form} name="description" label="설명">
           <Input placeholder="설명을 입력해 주세요." />
         </ReusableFormField>
+        <FormField
+          control={form.control}
+          name="image"
+          render={({ field: { onChange, value, ...rest } }) => (
+            <FormItem>
+              <FormLabel>이미지</FormLabel>
+              <FormControl>
+                <div className="flex justify-between ">
+                  <Input
+                    type="file"
+                    {...rest}
+                    onChange={(event) => {
+                      const displayUrl = getImageData(event);
+                      setPreview(displayUrl);
+                      onChange(event.target.files![0]);
+                    }}
+                    className="w-[50%]"
+                  />
+                  <picture className="w-[150px] h-[150px] relative ">
+                    {preview && <Image src={preview} alt="product image" fill />}
+                  </picture>
+                </div>
+              </FormControl>
+
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <div className="w-full flex justify-end">
           <Button type="submit" className="w-[120px]">

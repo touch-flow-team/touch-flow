@@ -15,6 +15,8 @@ import Modal from '@/components/common/Modal';
 import Button from '../categories/Button';
 import ProductManageForm from './ProductManageForm';
 import DeleteModal from '../categories/DeleteModal';
+import Image from 'next/image';
+import { imageSrc } from '@/libs/utils';
 
 interface IProp {
   products: IProduct[];
@@ -38,6 +40,7 @@ const ProductTable = ({ products, categories, seletedCategory }: IProp) => {
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead>이미지</TableHead>
             <TableHead>이름</TableHead>
             <TableHead>설명</TableHead>
             <TableHead>카테고리</TableHead>
@@ -49,6 +52,19 @@ const ProductTable = ({ products, categories, seletedCategory }: IProp) => {
           {filteredProducts.map((product) => {
             return (
               <TableRow key={product.id}>
+                <TableCell className="font-medium">
+                  <div className="w-[100px] h-[100px] relative">
+                    <Image
+                      fill
+                      src={imageSrc({
+                        collection_id: 'products',
+                        record_id: product.id,
+                        file_name: product.image,
+                      })}
+                      alt={`${product.name}-image`}
+                    />
+                  </div>
+                </TableCell>
                 <TableCell className="font-medium">{product.name}</TableCell>
                 <TableCell>{product.description}</TableCell>
                 <TableCell>{product.expand.category.name}</TableCell>
