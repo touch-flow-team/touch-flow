@@ -31,6 +31,5 @@ export default function useSignin() {
       throw error;
     }
   };
-
   return signin;
 }

@@ -1,8 +1,5 @@
-"use client"
-import {
-    Dialog,
-    DialogContent,
-} from "@/components/ui/dialog"
+'use client';
+import { Dialog, DialogContent } from '@/components/ui/dialog';
 import {
     Form,
     FormControl,
@@ -24,8 +21,8 @@ import client from "@/libs/pocketbase"
 import { waitSettingsNumberSchema } from "@/schemata/waits/schema"
 
 const WaitingSettingsModal = ({ label, manageId, manageData, name }: WaitingSettingsModalProps) => {
-    const { toast } = useToast()
-    const [open, setOpen] = useState(false)
+  const { toast } = useToast();
+  const [open, setOpen] = useState(false);
 
     const form = useForm<z.infer<typeof waitSettingsNumberSchema>>({
         resolver: zodResolver(waitSettingsNumberSchema),
@@ -37,58 +34,58 @@ const WaitingSettingsModal = ({ label, manageId, manageData, name }: WaitingSett
     const onSubmitModal = async (data: z.infer<typeof waitSettingsNumberSchema>) => {
         console.log(data["number"]);
 
-        let newData: ManagementWaitCreateParams = {
-            ...manageData
-        }
+    let newData: ManagementWaitCreateParams = {
+      ...manageData,
+    };
 
-        if (name === "estimated_waiting_time") {
-            newData = {
-                ...manageData,
-                "estimated_waiting_time": Number(data["number"])
-            };
-        } else {
-            newData = {
-                ...manageData,
-                "limit_persons": Number(data["number"])
-            };
-        }
-
-        const record = await client.collection('management_waits').update(manageId, newData);
-        if (record) {
-            setOpen(false)
-            toast({
-                title: "변경 사항이 저장되었습니다.",
-            })
-        }
+    if (name === 'estimated_waiting_time') {
+      newData = {
+        ...manageData,
+        estimated_waiting_time: Number(data['number']),
+      };
+    } else {
+      newData = {
+        ...manageData,
+        limit_persons: Number(data['number']),
+      };
     }
 
-    return (
-        <Dialog open={open} onOpenChange={setOpen}>
-            <div className="h-5 w-5 flex items-center cursor-pointer" onClick={() => setOpen(true)}>
-                <ChevronRight className="h-5 w-5" />
-            </div>
-            <DialogContent className="flex flex-col max-w-[600px] rounded-lg justify-between p-16">
-                <Form {...form}>
-                    <form onSubmit={form.handleSubmit(onSubmitModal)} className="w-2/3 space-y-6">
-                        <FormField
-                            control={form.control}
-                            name="number"
-                            render={({ field }) => (
-                                <FormItem>
-                                    <FormLabel>{label}</FormLabel>
-                                    <FormControl>
-                                        <Input type="number" placeholder={label} {...field} />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <Button type="submit">저장</Button>
-                    </form>
-                </Form>
-            </DialogContent>
-        </Dialog>
-    )
-}
+    const record = await client.collection('management_waits').update(manageId, newData);
+    if (record) {
+      setOpen(false);
+      toast({
+        title: '변경 사항이 저장되었습니다.',
+      });
+    }
+  };
 
-export default WaitingSettingsModal
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <div className="h-5 w-5 flex items-center cursor-pointer" onClick={() => setOpen(true)}>
+        <ChevronRight className="h-5 w-5" />
+      </div>
+      <DialogContent className="flex flex-col max-w-[600px] rounded-lg justify-between p-16">
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmitModal)} className="w-2/3 space-y-6">
+            <FormField
+              control={form.control}
+              name="number"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{label}</FormLabel>
+                  <FormControl>
+                    <Input type="number" placeholder={label} {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <Button type="submit">저장</Button>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+export default WaitingSettingsModal;
