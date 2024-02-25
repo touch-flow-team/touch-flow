@@ -15,12 +15,7 @@ interface IDelete {
 
 interface IUpdate {
   id: string;
-  data: {
-    name: string;
-    price: number;
-    description: string;
-    category: string;
-  };
+  formData: FormData;
 }
 
 const createProduct = async ({ formData }: ICreate) => {
@@ -50,10 +45,10 @@ const getProduct = async () => {
 };
 
 // revalidateTag 없으면 데이터 무효화가 안됨
-const updateProduct = async ({ id, data }: IUpdate) => {
+const updateProduct = async ({ id, formData }: IUpdate) => {
   await client
     .collection('products')
-    .update(id, data)
+    .update(id, formData)
     .then(() => revalidateTag(REVALIDATE_TAG.PRODUCT));
 };
 

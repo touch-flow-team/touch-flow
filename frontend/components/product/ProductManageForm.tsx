@@ -30,6 +30,7 @@ import { IProduct } from '@/types/product/type';
 import ReusableFormField from '../common/ReusableFormField';
 import { Dispatch, SetStateAction, useState } from 'react';
 import Image from 'next/image';
+import { imageSrc } from '@/libs/utils';
 
 interface IProps {
   categories: Pick<ICategory, 'name' | 'id'>[];
@@ -44,7 +45,11 @@ const ProductManageForm: React.FC<IProps> = ({
   mode,
   setModalOpen,
 }: IProps) => {
-  const [preview, setPreview] = useState('');
+  const [preview, setPreview] = useState(
+    mode === 'update'
+      ? imageSrc({ collection_id: 'products', record_id: product?.id!, file_name: product!.image })
+      : '',
+  );
   const form = useForm<z.infer<typeof ProductSchema>>({
     mode: 'onChange',
     resolver: zodResolver(ProductSchema),
@@ -53,22 +58,23 @@ const ProductManageForm: React.FC<IProps> = ({
       price: mode && product?.price,
       description: mode && product?.description,
       category: mode && product?.category,
+      image: mode && product?.image,
     },
   });
 
   const onSubmit = async (data: z.infer<typeof ProductSchema>) => {
+    const formData = new FormData();
+    formData.append('name', data.name);
+    formData.append('price', data.price.toString());
+    formData.append('category', data.category);
+    formData.append('description', data.description);
+    formData.append('image', data.image);
     if (mode === 'create') {
-      const formData = new FormData();
-      formData.append('name', data.name);
-      formData.append('price', data.price.toString());
-      formData.append('category', data.category);
-      formData.append('description', data.description);
-      formData.append('image', data.image);
       await createProduct({ formData })
         .then(() => Toast({ title: '등록완료', description: '완료', mode: 'success' }))
         .catch(() => Toast({ title: '요청실패', description: '실패', mode: 'fail' }));
     } else {
-      await updateProduct({ data, id: product!.id })
+      await updateProduct({ formData, id: product!.id })
         .then(() => Toast({ title: '수정완료', description: '완료', mode: 'success' }))
         .catch(() => Toast({ title: '요청실패', description: '실패', mode: 'fail' }));
     }
@@ -122,7 +128,7 @@ const ProductManageForm: React.FC<IProps> = ({
                     type="file"
                     {...rest}
                     onChange={(event) => {
-                      const displayUrl = getImageData(event);
+                      const displayUrl = getImageData(event.target.files![0]);
                       setPreview(displayUrl);
                       onChange(event.target.files![0]);
                     }}
