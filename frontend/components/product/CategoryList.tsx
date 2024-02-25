@@ -1,7 +1,7 @@
 'use client';
 
 import { Button } from '../ui/button';
-import { ICategory } from '@/app/companies/[id]/(dashboard-admin)/category/page';
+import { ICategory } from '@/types/category/type';
 
 interface IProp {
   categories: Pick<ICategory, 'name' | 'id'>[];

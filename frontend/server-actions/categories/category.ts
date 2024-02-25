@@ -3,7 +3,7 @@
 import client from '@/libs/pocketbase';
 import { revalidateTag } from 'next/cache';
 import { REVALIDATE_TAG } from '@/constants/revalidateTag';
-import { ICategory } from '@/app/companies/[id]/(dashboard-admin)/category/page';
+import { ICategory } from '@/types/category/type';
 
 interface ICreateAction {
   data: { name: string };
@@ -20,13 +20,13 @@ interface IUpdateAction {
 
 const createCategory = async ({ data }: ICreateAction) => {
   await client
-    .collection('categorys')
+    .collection('categories')
     .create(data)
     .then(() => revalidateTag(REVALIDATE_TAG.CATEGORY));
 };
 
 const getCategories = async () => {
-  const categories: ICategory[] = await client.collection('categorys').getFullList({
+  const categories: ICategory[] = await client.collection('categories').getFullList({
     sort: 'created',
     cache: 'no-store',
     next: { tags: [REVALIDATE_TAG.CATEGORY], revalidate: 10 },
@@ -44,7 +44,7 @@ const getCategories = async () => {
 // TODO - 공통으로 사용 가능할 것으로 보임
 const deleteCategory = async ({ id }: IDeleteAction) => {
   await client
-    .collection('categorys')
+    .collection('categories')
     .delete(id)
     .then(() => revalidateTag(REVALIDATE_TAG.CATEGORY));
 };
@@ -52,7 +52,7 @@ const deleteCategory = async ({ id }: IDeleteAction) => {
 // TODO - 공통으로 사용 가능할 것으로 보임
 const updateCategory = async ({ id, name }: IUpdateAction) => {
   await client
-    .collection('categorys')
+    .collection('categories')
     .update(id, { name })
     .then(() => revalidateTag(REVALIDATE_TAG.CATEGORY));
 };

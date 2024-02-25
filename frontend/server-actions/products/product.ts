@@ -1,6 +1,6 @@
 'use server';
 
-import { IProduct } from '@/components/product/ProductTable';
+import { IProduct } from '@/types/product/type';
 import { revalidateTag } from 'next/cache';
 import { REVALIDATE_TAG } from '@/constants/revalidateTag';
 import client from '@/libs/pocketbase';
@@ -35,8 +35,12 @@ const createProduct = async ({ data }: ICreate) => {
     .then(() => revalidateTag(REVALIDATE_TAG.PRODUCT));
 };
 
+// revalidateTag 없으면 데이터 무효화가 안됨
 const deleteProduct = async ({ id }: IDelete) => {
-  await client.collection('products').delete(id);
+  await client
+    .collection('products')
+    .delete(id)
+    .then(() => revalidateTag(REVALIDATE_TAG.PRODUCT));
 };
 
 const getProduct = async () => {
