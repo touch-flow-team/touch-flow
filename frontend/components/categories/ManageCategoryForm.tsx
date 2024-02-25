@@ -1,5 +1,5 @@
 'use client';
-
+import { CategorySchema } from '@/schemata/categorys/validation';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
 import { z } from 'zod';
@@ -13,33 +13,28 @@ import {
   FormMessage,
 } from '@/components/ui/form';
 import { Input } from '@/components/ui/input';
-import updateCategory from '@/server-actions/categorys/updateCategory';
 import Toast from '../common/Toast';
-import createCategory from '@/server-actions/categorys/createCategory';
-
-const FormSchema = z.object({
-  name: z.string().nonempty({
-    message: '카테고리명을 입력해 주세요.',
-  }),
-});
+import { createCategory, updateCategory } from '@/server-actions/categories/category';
+import { Dispatch, SetStateAction } from 'react';
 
 interface IProp {
   mode: 'create' | 'update';
+  setModalOpen: Dispatch<SetStateAction<boolean>>;
   name?: string;
   id?: string;
 }
 
-const ManageCategoryForm = ({ mode, name, id }: IProp) => {
-  const form = useForm<z.infer<typeof FormSchema>>({
-    resolver: zodResolver(FormSchema),
+const ManageCategoryForm = ({ mode, name, id, setModalOpen }: IProp) => {
+  const form = useForm<z.infer<typeof CategorySchema>>({
+    resolver: zodResolver(CategorySchema),
     defaultValues: {
       name: mode === 'create' ? '' : name,
     },
   });
 
-  const onSubmit = async (data: z.infer<typeof FormSchema>) => {
+  const onSubmit = async (data: z.infer<typeof CategorySchema>) => {
     if (mode === 'create') {
-      await createCategory({ name: data.name })
+      await createCategory({ data })
         .then(() => Toast({ mode: 'success', title: '생성 완료', description: data.name }))
         .catch(() => Toast({ mode: 'fail', title: '생성 실패', description: data.name }));
     } else {
@@ -47,6 +42,8 @@ const ManageCategoryForm = ({ mode, name, id }: IProp) => {
         .then(() => Toast({ mode: 'success', title: '생성 완료', description: data.name }))
         .catch(() => Toast({ mode: 'fail', title: '생성 실패', description: data.name }));
     }
+
+    setModalOpen((prev) => !prev);
   };
 
   return (

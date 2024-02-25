@@ -1,25 +1,17 @@
-import Header from '@/components/categorys/Header';
-import CategoryTable from '@/components/categorys/CategoryTable';
-import { getCategories } from '@/server-actions/categorys/getCategory';
-
-export interface ICategory {
-  collectionId: string;
-  collectionName: string;
-  created: string;
-  id: string;
-  name: string;
-  updated: string;
-}
+import Header from '@/components/categories/Header';
+import CategoryTable from '@/components/categories/CategoryTable';
+import { ICategory } from '@/types/category/type';
+import { getCategories } from '@/server-actions/categories/category';
 
 export default async function Category() {
-  const category_info = await getCategories();
+  const categories: Pick<ICategory, 'name' | 'id'>[] = await getCategories();
 
   return (
     <div className="w-full flex justify-center">
       <div className="w-[80%] flex p-10 flex-col gap-10">
         <Header />
         <div className="h-[40px]"></div>
-        <CategoryTable categories={category_info} />
+        <CategoryTable categories={categories} />
       </div>
     </div>
   );
