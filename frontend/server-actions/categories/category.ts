@@ -2,7 +2,7 @@
 
 import client from '@/libs/pocketbase';
 import { revalidateTag } from 'next/cache';
-import { REVALIDATE_TAG } from '@/constants/revalidateTag';
+import { REVALIDATE_TAG } from '@/constants/constants';
 import { ICategory } from '@/types/category/type';
 
 interface ICreateAction {

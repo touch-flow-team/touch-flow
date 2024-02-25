@@ -23,8 +23,8 @@ const MENU = [
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <div className="flex h-lvh w-full">
-        <div className="w-[200px] h-full bg-gray-200 p-10 ">
+      <div className="flex w-full min-h-lvh">
+        <div className="w-[200px] bg-gray-200 p-10 flex-grow">
           <ul>
             {MENU.map((e) => (
               <li className="mb-3" key={e.url}>
