@@ -5,8 +5,8 @@ import useFetchWaitDashboardList from "@/hooks/waits/useFetchWaitDashboardList"
 
 const WaitingDashboardList = () => {
     const [ manageId, action, data, realData ] = useFetchWaitDashboardList()
-    const progressData = data.filter((item) => item.admission_status === false)
-    const completeData = data.filter((item) => item.admission_status === true)
+    const progressData = data?.filter((item) => item.admission_status === false)
+    const completeData = data?.filter((item) => item.admission_status === true)
 
     return (
       <div className="flex flex-col w-full">
@@ -42,8 +42,8 @@ const WaitingDashboardList = () => {
             <div className="flex flex-col space-y-4">
               {action != ''
                 ? realData
-                    .filter((item) => item.admission_status === false)
-                    .map((item) => {
+                    ?.filter((item) => item.admission_status === false)
+                    ?.map((item) => {
                       return (
                         <WaitingListCard
                           key={item.user_phone_number}
@@ -56,7 +56,7 @@ const WaitingDashboardList = () => {
                         />
                       );
                     })
-                : progressData.map((item) => {
+                : progressData?.map((item) => {
                     return (
                       <WaitingListCard
                         key={item.user_phone_number}
@@ -75,8 +75,8 @@ const WaitingDashboardList = () => {
             <div className="flex flex-col space-y-4">
               {action != ''
                 ? realData
-                    .filter((item) => item.admission_status === true)
-                    .map((item) => {
+                    ?.filter((item) => item.admission_status === true)
+                    ?.map((item) => {
                       return (
                         <WaitingListCard
                           key={item.user_phone_number}
@@ -89,7 +89,7 @@ const WaitingDashboardList = () => {
                         />
                       );
                     })
-                : completeData.map((item) => {
+                : completeData?.map((item) => {
                     return (
                       <WaitingListCard
                         key={item.user_phone_number}
