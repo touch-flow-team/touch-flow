@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from '@/components/ui/dialog';
-import { Payment, columns } from '@/constants/column';
+import { Payment, columns } from '@/constants/constants';
 import { format } from 'date-fns';
 import { DataTable } from './DataTable';
 const data: Payment[] = [

@@ -5,6 +5,7 @@ import { revalidateTag } from 'next/cache';
 import { IResult } from '@/types/common/type';
 import { PRODUCT_PAGINATION_SIZE, REVALIDATE_TAG } from '@/constants/constants';
 import client from '@/libs/pocketbase';
+import { PB_COLLECTIONS } from '@/constants/constants';
 
 interface ICreate {
   formData: FormData;
@@ -21,7 +22,7 @@ interface IUpdate {
 
 const createProduct = async ({ formData }: ICreate) => {
   await client
-    .collection('products')
+    .collection(PB_COLLECTIONS.PRODUCTS)
     .create(formData)
     .then(() => revalidateTag(REVALIDATE_TAG.PRODUCT));
 };
@@ -29,7 +30,7 @@ const createProduct = async ({ formData }: ICreate) => {
 // revalidateTag 없으면 데이터 무효화가 안됨
 const deleteProduct = async ({ id }: IDelete) => {
   await client
-    .collection('products')
+    .collection(PB_COLLECTIONS.PRODUCTS)
     .delete(id)
     .then(() => revalidateTag(REVALIDATE_TAG.PRODUCT));
 };
@@ -42,7 +43,7 @@ const getProduct = async ({
   filtering: string;
 }) => {
   const products: IResult<IProduct> = await client
-    .collection('products')
+    .collection(PB_COLLECTIONS.PRODUCTS)
     .getList(current_page, PRODUCT_PAGINATION_SIZE, {
       filter: `category = "${filtering}"`,
       expand: 'category',
@@ -56,7 +57,7 @@ const getProduct = async ({
 
 const getAllProduct = async ({ current_page }: { current_page: number }) => {
   const products: IResult<IProduct> = await client
-    .collection('products')
+    .collection(PB_COLLECTIONS.PRODUCTS)
     .getList(current_page, PRODUCT_PAGINATION_SIZE, {
       expand: 'category',
       sort: 'created',
@@ -70,7 +71,7 @@ const getAllProduct = async ({ current_page }: { current_page: number }) => {
 // revalidateTag 없으면 데이터 무효화가 안됨
 const updateProduct = async ({ id, formData }: IUpdate) => {
   await client
-    .collection('products')
+    .collection(PB_COLLECTIONS.PRODUCTS)
     .update(id, formData)
     .then(() => revalidateTag(REVALIDATE_TAG.PRODUCT));
 };
