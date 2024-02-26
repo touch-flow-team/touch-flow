@@ -30,16 +30,16 @@ const useFetchWaitList = (): UseFetchWaitListResult => {
                 if (data?.expand?.management_waits[0]?.id.length >= 1) {
                     const dataManageId = data?.expand?.management_waits[0]?.id
                     const response = await GetUserWait(dataManageId)
-                    const userWaitData = response.expand?.user_waits
-                    const trueAdmissionStatusList = userWaitData.filter((item: UserWaitParams) => item.admission_status === false);
+                    const userWaitData = response.expand?.user_waits ? response.expand?.user_waits : []
+                    const trueAdmissionStatusList = userWaitData?.filter((item: UserWaitParams) => item.admission_status === false);
                     setUserWaitsNumber(trueAdmissionStatusList?.length ? trueAdmissionStatusList.length : 0)
                     setWaitUserList(userWaitData)
                 }
 
 
                 setWaitTime(data?.expand?.management_waits[0]?.estimated_waiting_time)
-                setCompanyId(data.id)
-                setCompanyName(data.name)
+                setCompanyId(data?.id)
+                setCompanyName(data?.name)
 
                 setRulesEnabled(data?.expand?.management_waits[0]?.rules_enabled)
                 setRulesContent(data?.expand?.management_waits[0]?.rules_content)

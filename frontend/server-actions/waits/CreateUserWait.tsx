@@ -1,6 +1,7 @@
 'use server'
 
 import client from "@/libs/pocketbase";
+import twilioClient from "@/libs/twilio";
 import { ManagementWaitCreateParams, UserWaitCreateParams } from "@/types/waits/types";
 import twilio from "twilio";
 
@@ -18,14 +19,11 @@ const CreateUserWait = async (data: UserWaitCreateParams, manageId: string, mana
 
             const manageResponse = await client.collection('management_waits').update(manageId, ModifiedManageData);
 
-            // 추후 upgrade 하면 주석 제거 예정
-            // const twilioClient = twilio(process.env.NEXT_PUBLIC_TWILIO_ACCOUNT_SID, process.env.NEXT_PUBLIC_TWILIO_AUTH_TOKEN);
-
-            // const message = await twilioClient.messages.create({
-            //     body: `웨이팅 접수가 완료 되었습니다. 예상 대기 시간은 ${manageData.estimated_waiting_time}분 입니다.`,
-            //     to: `+82${user_phone_number}`, // 하이픈 없는 폰번호
-            //     from: process.env.NEXT_PUBLIC_PHONE_NUMBER, //  twilio 에서 발급된 번호
-            // });
+            const message = await twilioClient.messages.create({
+                body: `웨이팅 접수가 완료 되었습니다. 예상 대기 시간은 ${manageData.estimated_waiting_time}분 입니다.`,
+                to: `+82${data.user_phone_number}`, // 하이픈 없는 폰번호
+                from: process.env.NEXT_PUBLIC_PHONE_NUMBER, //  twilio 에서 발급된 번호
+            });
 
             return { "status": 200, "message": "전체 반영 되었습니다." }
         }

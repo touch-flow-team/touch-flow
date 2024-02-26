@@ -101,3 +101,8 @@ export interface WaitingSettingsModalProps {
     manageData: ManagementWaitCreateParams
     name: string
 }
+
+export interface CallUserProps {
+    companyId: string
+    user_phone_number: string
+}

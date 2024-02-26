@@ -1,12 +1,16 @@
 import {
-    Card,
-    CardContent,
-    CardHeader,
-    CardTitle,
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import client from "@/libs/pocketbase"
 import { WaitingListCardProps } from "@/types/waits/types"
+import twilioClient from "@/libs/twilio";
+import GetCompanyInfo from "@/server-actions/waits/GetCompanyInfo";
+import { useParams } from "next/navigation";
+import CallUser from "@/server-actions/waits/CallUser";
 
 const WaitingListCard = ({
   id,
@@ -16,6 +20,7 @@ const WaitingListCard = ({
   created,
   admission_status,
 }: WaitingListCardProps) => {
+  const params = useParams()
   const handleOnclick = async () => {
     if (!admission_status) {
       const data = {
@@ -28,6 +33,25 @@ const WaitingListCard = ({
       await client.collection('user_waits').update(id, data);
     }
   };
+
+  const handleClickCall = async () => {
+    const response = await CallUser({ companyId: String(params?.id), user_phone_number })
+
+    if (response.status === 200) {
+      const data = {
+        user_phone_number,
+        admission_status: true,
+        adult_persons,
+        child_persons,
+      };
+
+      await client.collection('user_waits').update(id, data);
+      
+      alert('호출 문자가 정상적으로 전달 되었습니다.')
+    } else {
+      alert('호출 문자가 전송되지 못했습니다. 새로고침 후 다시 시도 해주세요.')
+    }
+  }
 
   // 출력 포맷 설정
   const options: Intl.DateTimeFormatOptions = {
@@ -56,7 +80,7 @@ const WaitingListCard = ({
         </div>
         {!admission_status && (
           <div className="flex flex-row space-x-2 ml-auto">
-            <Button variant="secondary">고객 호출</Button>
+            <Button onClick={handleClickCall} variant="secondary">고객 호출</Button>
             <Button onClick={handleOnclick} variant="default">
               입장
             </Button>
