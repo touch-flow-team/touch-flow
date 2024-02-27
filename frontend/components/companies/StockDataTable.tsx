@@ -25,6 +25,7 @@ import { Button } from "../ui/button"
 import { ArrowUpDown, ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
 import { useState } from "react"
 import { Input } from "../ui/input"
+import { useParams, useRouter } from "next/navigation"
 
 export const stockColumns: ColumnDef<IStockItem>[] = [
   {
@@ -69,10 +70,12 @@ export const stockColumns: ColumnDef<IStockItem>[] = [
     id: 'action',
     cell: ({ row }) => {
       const stock = row.original
+      const router = useRouter()
+      const params = useParams()
 
       return (
         <div className="flex flex-row space-x-1 justify-center">
-          <Button variant="outline" className="h-8 w-12">
+          <Button onClick={() => router.push(`/companies/${String(params?.id)}/stocks/update/${stock.id}`)} variant="outline" className="h-8 w-12">
             수정
           </Button>
           <Button variant="outline" className="h-8 w-12">

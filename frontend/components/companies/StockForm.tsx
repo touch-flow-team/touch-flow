@@ -58,12 +58,12 @@ const StockForm = ({ data }: StockFormProps) => {
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full space-y-2">
-                <div className="flex flex-col space-y-2">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="w-full">
+                <div className="flex flex-col space-y-2 mb-2">
                     <h4 className="text-[16px] font-bold">제품 정보</h4>
                     <div className="w-full h-[1px] bg-border"></div>
                 </div>
-                <div className="flex w-full items-center space-x-5">
+                <div className="flex w-full items-center space-x-5 mb-2">
                     <div className="w-[10%]">
                         <span className="font-medium">제품명</span>
                     </div>
@@ -82,7 +82,7 @@ const StockForm = ({ data }: StockFormProps) => {
                         />
                     </div>
                 </div>
-                <div className="flex w-full items-center space-x-5">
+                <div className="flex w-full items-center space-x-5 mb-2">
                     <div className="w-[10%]">
                         <span className="font-medium">이미지</span>
                     </div>
@@ -146,11 +146,11 @@ const StockForm = ({ data }: StockFormProps) => {
                     </div>
                 </div>
 
-                <div className="flex flex-col space-y-2 pt-10">
+                <div className="flex flex-col space-y-2 mt-10 mb-2">
                     <h4 className="text-[16px] font-bold">제품 속성</h4>
                     <div className="w-full h-[1px] bg-border"></div>
                 </div>
-                <div className="flex w-full items-center space-x-5">
+                <div className="flex w-full items-center space-x-5 mb-2">
                     <div className="w-[10%]">
                         <span className="font-medium">카테고리</span>
                     </div>
@@ -189,7 +189,7 @@ const StockForm = ({ data }: StockFormProps) => {
                     </div>
                 </div>
 
-                <div className="flex flex-col space-y-2 pt-10">
+                <div className="flex flex-col space-y-2 mt-10 mb-2">
                     <h4 className="text-[16px] font-bold">재고 수량 설정</h4>
                     <div className="w-full h-[1px] bg-border"></div>
                 </div>
@@ -225,10 +225,16 @@ const StockForm = ({ data }: StockFormProps) => {
                         />
                     </div>
                 </div>
+                <div className="mt-8">
+                    {
+                        data ? (
+                            <Button type="submit">제품 수정</Button>
+                        ) : (
+                            <Button type="submit">제품 생성</Button>
+                        )
+                    }
+                </div>
             </form>
-            <div className="mt-10">
-                <Button type="submit">제품 생성</Button>
-            </div>
         </Form>
     )
 }
