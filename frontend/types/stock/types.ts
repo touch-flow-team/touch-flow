@@ -13,8 +13,18 @@ export interface IStockItem {
     imageUrl: string
     categoryName: string
     stockCount: number
+    purchaseAmount: number
+    buyAmount: number
+    brandName: string
+    initialCount: number
+    safeCount: number
 }
 
 export interface StockTableProps {
     stocks: IStockItem[]
+}
+
+
+export interface StockFormProps {
+    data?: IStockItem
 }
