@@ -8,18 +8,7 @@ const StockList = () => {
     
     return (
         <div className="container py-10">
-            {
-                stocks.length >= 1 ? (
-                    <StockDataTable
-                        data={stocks} columns={stockColumns} />
-                ) : (
-                    <div className="flex flex-col space-y-5">
-                        <Skeleton className="w-[800px] h-[200px]" />
-                        <Skeleton className="w-[800px] h-[200px]" />
-                        <Skeleton className="w-[800px] h-[200px]" />
-                    </div>
-                )
-            }
+            <StockDataTable data={stocks} columns={stockColumns} />
         </div>
 
     )

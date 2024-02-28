@@ -45,3 +45,7 @@ export interface StockTableProps {
 export interface StockFormProps {
     data?: IStockItem
 }
+
+export interface IStockList {
+    stocks: (undefined | IStock)[]
+}

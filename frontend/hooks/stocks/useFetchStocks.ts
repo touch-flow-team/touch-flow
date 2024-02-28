@@ -11,6 +11,7 @@ import { useEffect, useState } from "react"
 const useFetchStocks = () => {
     const params = useParams()
     const [stocks, setStocks] = useState<IStock[]>([])
+    const [action, setAction] = useState<string>("")
 
     const fetchData = async () => {
         const response = await getStocksByCompany(String(params?.id))
@@ -19,8 +20,19 @@ const useFetchStocks = () => {
 
     useEffect(() => {
         fetchData()
-    }, [])
+    }, [action == null])
 
+    useEffect(() => {
+        const subscribe = client.collection('stocks').subscribe('*', function (e) {
+            fetchData()
+        })
+
+        return () => {
+            client.collection('stocks').unsubscribe()
+        };
+    }, [action != null])
+
+    
     return stocks
 }
 

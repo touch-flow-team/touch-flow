@@ -4,7 +4,7 @@ import { Button } from "@/components/ui/button"
 import { useParams, useRouter } from "next/navigation"
 
 const Stocks = () => {
-    const router = useRouter()
+const router = useRouter()
     const params = useParams()
     return (
         <div className="flex flex-col w-full p-16">

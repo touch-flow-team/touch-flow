@@ -17,44 +17,61 @@ import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import Image from "next/image"
 import { StockFormProps } from "@/types/stock/types"
+import { imageSrc } from "@/libs/utils"
+import { getImageData } from "@/libs/getImageData"
+import { useParams, useRouter } from "next/navigation"
+import client from "@/libs/pocketbase"
+import { PB_COLLECTIONS } from "@/constants/constants"
 
 const StockForm = ({ data }: StockFormProps) => {
+    const params = useParams()
+    const router = useRouter()
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             productName: data ? data.productName : "",
-            image: data ? data.image : "",
+            image: data && data.image,
             categoryName: data ? data.categoryName : "",
-            purchaseAmount: data ? data.purchaseAmount : 0,
-            saleAmount: data ? data.saleAmount : 0,
+            purchaseAmount: data && String(data.purchaseAmount),
+            saleAmount: data && String(data.saleAmount),
             brandName: data ? data.brandName : "",
-            currentCount: data ? data.currentCount : 0,
-            safeCount: data ? data.safeCount : 0,
+            currentCount: data && String(data.currentCount),
+            safeCount: data && String(data.safeCount),
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
+    const [preview, setPreview] = useState(
+        data
+            ? imageSrc({ collection_id: 'products', record_id: data.id, file_name: data?.image })
+            : '',
+    );
+
+    async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values)
-    }
 
-    const [selectedFile, setSelectedFile] = useState<string | null>(null);
+        const data = {
+            "productName": values.productName,
+            "categoryName": values.categoryName,
+            "purchaseAmount": Number(values.purchaseAmount),
+            "saleAmount": Number(values.saleAmount),
+            "brandName": values.brandName,
+            "safeCount": Number(values.safeCount),
+            "currentCount": Number(values.currentCount),
+            "companies": String(params?.id),
+            "image": values.image
+        };
 
+        try {
+            const record = await client.collection(PB_COLLECTIONS.STOCKS).create(data);
 
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-
-        if (file) {
-            const reader = new FileReader();
-
-            reader.onloadend = () => {
-                // 파일 내용을 읽은 후의 동작
-                const result = reader.result as string;
-                setSelectedFile(result);
-            };
-
-            reader.readAsDataURL(file);
+            router.push(`/companies/${String(params?.id)}/stocks`)
+        } catch (e) {
+            alert(e)
         }
-    };
+
+
+    }
 
     return (
         <Form {...form}>
@@ -89,25 +106,27 @@ const StockForm = ({ data }: StockFormProps) => {
                     <div className="w-full ml-auto">
                         <FormField
                             control={form.control}
-                            name="productName"
-                            render={({ field }) => (
+                            name="image"
+                            render={({ field: { onChange, value, ...rest } }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <>
-                                            <Input id="picture" type="file" onChange={handleFileChange} />
-                                            {selectedFile && (
-                                                <div className="mt-2">
-                                                    <Image
-                                                        src={selectedFile}
-                                                        alt="Preview"
-                                                        className="rounded-md"
-                                                        width={500}
-                                                        height={500}
-                                                    />
-                                                </div>
-                                            )}
-                                        </>
+                                        <div className="flex items-center">
+                                            <Input
+                                                type="file"
+                                                {...rest}
+                                                onChange={(event) => {
+                                                    const displayUrl = getImageData(event.target.files![0]);
+                                                    setPreview(displayUrl);
+                                                    onChange(event.target.files![0]);
+                                                }}
+                                                className="w-[50%]"
+                                            />
+                                            <picture className="w-[150px] h-[150px] relative ">
+                                                {preview && <Image src={preview} alt="product image" fill />}
+                                            </picture>
+                                        </div>
                                     </FormControl>
+
                                     <FormMessage />
                                 </FormItem>
                             )}

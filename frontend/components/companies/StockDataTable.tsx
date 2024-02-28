@@ -30,6 +30,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import Image from "next/image"
 import { imageSrc } from "@/libs/utils"
 import { PB_COLLECTIONS } from "@/constants/constants"
+import StockDeleteModal from "./StockDeleteModal"
 
 export const stockColumns: ColumnDef<IStock | undefined, unknown>[] = [
   {
@@ -64,7 +65,7 @@ export const stockColumns: ColumnDef<IStock | undefined, unknown>[] = [
     cell: ({ row }) => {
       const record_id = row.original?.id ? row.original?.id : ""
       const file_name = row.original?.image
-      
+
       return (
         <Image src={imageSrc({ collection_id: 'stocks', record_id, file_name })} width={70} height={70} alt={"images"} />
       )
@@ -142,7 +143,7 @@ export default function StockDataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
-  })  
+  })
 
   return (
     <>
@@ -155,9 +156,7 @@ export default function StockDataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        <Button variant="secondary">
-          선택 요소 삭제
-        </Button>
+        <StockDeleteModal data={table.getFilteredSelectedRowModel().rows}/>
       </div>
       <div className="rounded-md border">
         <Table>
