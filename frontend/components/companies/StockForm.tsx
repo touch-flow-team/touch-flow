@@ -21,7 +21,9 @@ import { imageSrc } from "@/libs/utils"
 import { getImageData } from "@/libs/getImageData"
 import { useParams, useRouter } from "next/navigation"
 import client from "@/libs/pocketbase"
-import { PB_COLLECTIONS } from "@/constants/constants"
+import { PB_COLLECTIONS, REVALIDATE_TAG } from "@/constants/constants"
+import { revalidateTag } from "next/cache"
+import { updateStock } from "@/server-actions/stocks/stocks"
 
 const StockForm = ({ data }: StockFormProps) => {
     const params = useParams()
@@ -43,14 +45,14 @@ const StockForm = ({ data }: StockFormProps) => {
 
     const [preview, setPreview] = useState(
         data
-            ? imageSrc({ collection_id: 'products', record_id: data.id, file_name: data?.image })
+            ? imageSrc({ collection_id: 'stocks', record_id: data.id, file_name: data?.image })
             : '',
     );
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
         console.log(values)
 
-        const data = {
+        const newData = {
             "productName": values.productName,
             "categoryName": values.categoryName,
             "purchaseAmount": Number(values.purchaseAmount),
@@ -63,15 +65,21 @@ const StockForm = ({ data }: StockFormProps) => {
         };
 
         try {
-            const record = await client.collection(PB_COLLECTIONS.STOCKS).create(data);
-
-            router.push(`/companies/${String(params?.id)}/stocks`)
+            if (data) {
+                await updateStock({ id : data.id, newData })
+                        .then(() => {router.push(`/companies/${String(params?.id)}/stocks`)})
+            } else {
+                const record = await client.collection(PB_COLLECTIONS.STOCKS).create(newData)
+                                    .then(() => router.push(`/companies/${String(params?.id)}/stocks`)) 
+            }
         } catch (e) {
             alert(e)
         }
 
 
     }
+
+    const amountPlaceHolder = data ? "현재 수량을 입력하세요." : "초기 수량을 입력하세요."
 
     return (
         <Form {...form}>
@@ -224,7 +232,7 @@ const StockForm = ({ data }: StockFormProps) => {
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input type="number" placeholder="초기수량을 입력하세요." {...field} />
+                                        <Input type="number" placeholder={amountPlaceHolder} {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>

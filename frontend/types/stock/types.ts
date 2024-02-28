@@ -37,13 +37,30 @@ export interface IStockItem {
     safeCount: number
 }
 
+export interface IStockUpdateItem {
+    productName: string
+    image: any
+    categoryName: string
+    purchaseAmount: number
+    saleAmount: number
+    brandName: string
+    currentCount: number
+    safeCount: number
+    companies: string
+}
+
+export interface IStockUpdate {
+    id: string
+    newData: IStockUpdateItem
+}
+
 export interface StockTableProps {
     stocks: IStockItem[]
 }
 
 
 export interface StockFormProps {
-    data?: IStockItem
+    data?: IStock
 }
 
 export interface IStockList {
