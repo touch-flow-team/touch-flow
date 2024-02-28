@@ -2,58 +2,71 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import client from './libs/pockebase';
 import { getNextjsCookie } from '@/libs/server-cookie';
+import { SIGNIN_URL } from './constants/utils';
 
-export async function middleware(request: NextRequest) {
-  const response = NextResponse.next();
+function clearAuthStoreAndSetCookie(response: NextResponse) {
+  client.authStore.clear();
+  response.headers.set('set-cookie', client.authStore.exportToCookie({ httpOnly: false }));
+}
+
+function redirectTo(url: URL) {
+  return NextResponse.redirect(url);
+}
+
+function isCurrentUrl(url: string, request: NextRequest) {
+  return request.nextUrl.pathname.startsWith(url);
+}
+
+async function authenticateUser(request: NextRequest, response: NextResponse) {
   const request_cookie = request.cookies.get('pb_auth');
   const cookie = await getNextjsCookie(request_cookie);
-  const pathSegments = request.nextUrl.pathname.split('/');
-  const id = pathSegments[2];
-  const from = pathSegments[3];
   if (cookie) {
     try {
       client.authStore.loadFromCookie(cookie);
     } catch (error) {
-      client.authStore.clear();
-      response.headers.set('set-cookie', client.authStore.exportToCookie({ httpOnly: false }));
+      clearAuthStoreAndSetCookie(response);
     }
   }
   try {
-    client.authStore.isValid && (await client.collection('users').authRefresh());
+    if (client.authStore.isValid) {
+      await client.collection('users').authRefresh();
+    }
   } catch (err) {
-    client.authStore.clear();
-    response.headers.set('set-cookie', client.authStore.exportToCookie({ httpOnly: false }));
+    clearAuthStoreAndSetCookie(response);
   }
+}
 
-  // 로그인 ✅ - 본인 companies로 접근 여부 체크 로직
-  if (request.nextUrl.pathname.startsWith(`/companies/${id}/`) && client.authStore.model) {
-    const userCompanies = client.authStore.model['companies'];
-    if (userCompanies.includes(id)) {
-      console.log('자네는 합격✅');
-    } else {
-      console.log('자네는 불합격❌');
-      const redirect_to = new URL(request.nextUrl.pathname.replace(`/${from}`, ''), request.url);
-      return NextResponse.redirect(redirect_to);
+export async function middleware(request: NextRequest) {
+  const response = NextResponse.next();
+  await authenticateUser(request, response);
+
+  if (isCurrentUrl(`/auth/`, request)) {
+    if (client.authStore.model) {
+      const redirectUrl = new URL(`/`, request.url);
+      const response = NextResponse.redirect(redirectUrl);
+      response.cookies.set('message', `로그아웃 후 접속해주시길 바랍니다. 🙏`);
+      return response;
     }
   }
-  // 로그인 ❌ - companies로 접근 막는 로직
-  if (request.nextUrl.pathname.startsWith(`/companies/${id}/`) && !client.authStore.model) {
-    const redirect_to = new URL('/auth/signin', request.url);
-    if (request.nextUrl.pathname) {
-      redirect_to.search = new URLSearchParams({
-        next: request.nextUrl.pathname,
-      }).toString();
-    } else {
-      redirect_to.search = new URLSearchParams({
-        next: '/',
-      }).toString();
-    }
-    return NextResponse.redirect(redirect_to);
-  }
 
+  const pathSegments = request.nextUrl.pathname.split('/');
+  const companyId = pathSegments[2];
+  if (isCurrentUrl(`/companies/${companyId}/`, request)) {
+    if (client.authStore.model) {
+      const userCompanies = client.authStore.model['companies'];
+      if (!userCompanies.includes(companyId)) {
+        const redirectUrl = new URL(`/companies/${companyId}/`, request.url);
+        const response = NextResponse.redirect(redirectUrl);
+        response.cookies.set('message', `해당 회사의 관리자만 접근 할 수 있습니다. 😔`);
+        return response;
+      }
+    } else {
+      return redirectTo(new URL(SIGNIN_URL, request.url));
+    }
+  }
   return response;
 }
 
 export const config = {
-  matcher: ['/companies/:path*'],
+  matcher: ['/companies/:path*', '/auth/:path*'],
 };

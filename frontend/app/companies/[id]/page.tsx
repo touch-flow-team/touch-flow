@@ -1,15 +1,22 @@
+"use client"
 import CategoryList from "@/components/companies/CategoryList";
 import MenuCard from "@/components/companies/MenuCard";
 import PaymentModal from "@/components/companies/PaymentModal";
 import Search from "@/components/companies/Search";
 import ShopingCartItem from "@/components/companies/ShopingCartItem";
 import StepIndicator from "@/components/companies/StepIndicator";
+import { toast } from "@/components/ui/use-toast";
+import { CookieMessageName } from "@/constants/utils";
+import Cookies from 'js-cookie';
 
-interface IParams {
-    params: { id: string };
-}
 
-export default function Company({ params: { id } }: IParams) {
+export default function Company() {
+    const message = Cookies.get(CookieMessageName);
+    if (message) {
+        toast({ title: message, });
+        Cookies.remove(CookieMessageName);
+    }
+
     return (
         <>
             <div className='mx-auto max-w-[1250px] flex  bg-gray-50'>

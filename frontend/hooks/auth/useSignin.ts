@@ -12,7 +12,7 @@ export default function useSignin() {
         variant: 'default',
         title: `✅ 로그인 성공적으로 완료했습니다`,
       });
-      document.cookie = client.authStore.exportToCookie({ httpOnly: false });
+      document.cookie = client.authStore.exportToCookie({ httpOnly: false, secure: false });
       return authData;
     } catch (error) {
       if (error instanceof ClientResponseError) {
