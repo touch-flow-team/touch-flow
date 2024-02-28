@@ -23,12 +23,12 @@ const StockForm = ({ data }: StockFormProps) => {
         resolver: zodResolver(formSchema),
         defaultValues: {
             productName: data ? data.productName : "",
-            imageUrl: data ? data.imageUrl : "",
+            image: data ? data.image : "",
             categoryName: data ? data.categoryName : "",
             purchaseAmount: data ? data.purchaseAmount : 0,
-            buyAmount: data ? data.buyAmount : 0,
+            saleAmount: data ? data.saleAmount : 0,
             brandName: data ? data.brandName : "",
-            initialCount: data ? data.initialCount : 0,
+            currentCount: data ? data.currentCount : 0,
             safeCount: data ? data.safeCount : 0,
         },
     })
@@ -133,7 +133,7 @@ const StockForm = ({ data }: StockFormProps) => {
                         />
                         <FormField
                             control={form.control}
-                            name="buyAmount"
+                            name="saleAmount"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
@@ -201,7 +201,7 @@ const StockForm = ({ data }: StockFormProps) => {
                     <div className="w-full ml-auto flex flex-row space-x-2">
                         <FormField
                             control={form.control}
-                            name="initialCount"
+                            name="currentCount"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>

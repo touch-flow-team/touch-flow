@@ -7,16 +7,33 @@ export interface DataTableProps<TData, TValue> {
     data: TData[]
 }
 
+export interface IStock {
+    brandName: string
+    categoryName: string
+    collectionId: string
+    collectionName: string
+    companies: string
+    created: Date
+    currentCount: number
+    id: string
+    image: any
+    productName: string
+    purchaseAmount: number
+    safeCount: number
+    saleAmount: number
+    updated: number
+}
+
 export interface IStockItem {
     id: string
     productName: string
-    imageUrl: string
+    image: any
     categoryName: string
     stockCount: number
     purchaseAmount: number
-    buyAmount: number
+    saleAmount: number
     brandName: string
-    initialCount: number
+    currentCount: number
     safeCount: number
 }
 

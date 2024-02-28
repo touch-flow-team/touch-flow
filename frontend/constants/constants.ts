@@ -5,11 +5,13 @@ export const PB_COLLECTIONS = {
   MANAGEMENT_WAITS: 'management_waits',
   PRODUCTS: 'products',
   USER_WAITS: 'user_waits',
+  STOCKS: 'stocks',
 };
 
 export const REVALIDATE_TAG = {
   PRODUCT: 'PRODUCT',
   CATEGORY: 'CATEGORY',
+  STOCK: 'STOCK',
 };
 
 export const PRODUCT_PAGINATION_SIZE = 4;

@@ -20,15 +20,18 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { DataTableProps, IStockItem } from "@/types/stock/types"
+import { DataTableProps, IStock } from "@/types/stock/types"
 import { Button } from "../ui/button"
 import { ArrowUpDown, ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
 import { useState } from "react"
 import { Input } from "../ui/input"
 import { useParams, useRouter } from "next/navigation"
 import { Checkbox } from "@/components/ui/checkbox"
+import Image from "next/image"
+import { imageSrc } from "@/libs/utils"
+import { PB_COLLECTIONS } from "@/constants/constants"
 
-export const stockColumns: ColumnDef<IStockItem>[] = [
+export const stockColumns: ColumnDef<IStock | undefined, unknown>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -52,12 +55,20 @@ export const stockColumns: ColumnDef<IStockItem>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "imageUrl",
+    accessorKey: "image",
     header: ({ column }) => {
       return (
         <div>이미지</div>
       )
     },
+    cell: ({ row }) => {
+      const record_id = row.original?.id ? row.original?.id : ""
+      const file_name = row.original?.image
+      
+      return (
+        <Image src={imageSrc({ collection_id: 'stocks', record_id, file_name })} width={70} height={70} alt={"images"} />
+      )
+    }
   },
   {
     accessorKey: "productName",
@@ -76,7 +87,7 @@ export const stockColumns: ColumnDef<IStockItem>[] = [
     },
   },
   {
-    accessorKey: "stockCount",
+    accessorKey: "currentCount",
     header: ({ column }) => {
       return (
         <Button
@@ -98,7 +109,7 @@ export const stockColumns: ColumnDef<IStockItem>[] = [
 
       return (
         <div className="flex flex-row space-x-1 justify-center">
-          <Button onClick={() => router.push(`/companies/${String(params?.id)}/stocks/update/${stock.id}`)} variant="outline" className="h-8 w-12">
+          <Button onClick={() => router.push(`/companies/${String(params?.id)}/stocks/update/${stock?.id}`)} variant="outline" className="h-8 w-12">
             수정
           </Button>
         </div>
