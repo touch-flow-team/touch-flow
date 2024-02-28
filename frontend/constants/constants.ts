@@ -15,7 +15,7 @@ export const REVALIDATE_TAG = {
 export const PRODUCT_PAGINATION_SIZE = 4;
 
 export const SIGNIN_URL = '/auth/signin';
-export const CookieMessageName = 'message';
+export const COOKIE_MESSAGE_ID = 'message';
 
 /*
  ** --------------------------------

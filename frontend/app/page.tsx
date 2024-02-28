@@ -3,13 +3,13 @@
 import Image from "next/image";
 import Cookies from 'js-cookie';
 import { toast } from "@/components/ui/use-toast";
-import { CookieMessageName } from "@/constants/utils";
+import { COOKIE_MESSAGE_ID } from "@/constants/constants";
 
 export default function Home() {
-  const message = Cookies.get(CookieMessageName);
+  const message = Cookies.get(COOKIE_MESSAGE_ID);
   if (message) {
     toast({ title: message, });
-    Cookies.remove(CookieMessageName);
+    Cookies.remove(COOKIE_MESSAGE_ID);
   }
   return (
     <main className="flex min-h-screen flex-col items-center justify-between p-24">

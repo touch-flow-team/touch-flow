@@ -2,7 +2,7 @@ import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 import client from './libs/pocketbase';
 import { getNextjsCookie } from '@/libs/server-cookie';
-import { SIGNIN_URL } from './constants/utils';
+import { SIGNIN_URL } from './constants/constants';
 
 function clearAuthStoreAndSetCookie(response: NextResponse) {
   client.authStore.clear();
