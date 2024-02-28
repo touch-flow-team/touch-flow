@@ -14,6 +14,9 @@ export const REVALIDATE_TAG = {
 
 export const PRODUCT_PAGINATION_SIZE = 4;
 
+export const SIGNIN_URL = '/auth/signin';
+export const CookieMessageName = 'message';
+
 /*
  ** --------------------------------
  ** 이곳 하위에 있는 것은 임시 데이터입니다.
