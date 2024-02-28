@@ -50,27 +50,24 @@ const StockForm = ({ data }: StockFormProps) => {
     );
 
     async function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
-
-        const newData = {
-            "productName": values.productName,
-            "categoryName": values.categoryName,
-            "purchaseAmount": Number(values.purchaseAmount),
-            "saleAmount": Number(values.saleAmount),
-            "brandName": values.brandName,
-            "safeCount": Number(values.safeCount),
-            "currentCount": Number(values.currentCount),
-            "companies": String(params?.id),
-            "image": values.image
-        };
+        const newData = new FormData();
+        newData.append('productName', values.productName);
+        newData.append('categoryName', values.categoryName);
+        newData.append('purchaseAmount', Number(values.purchaseAmount).toString());
+        newData.append('saleAmount', Number(values.saleAmount).toString());
+        newData.append('brandName', values.brandName);
+        newData.append('safeCount', Number(values.safeCount).toString());
+        newData.append('currentCount', Number(values.currentCount).toString());
+        newData.append('companies', String(params?.id));
+        newData.append('image', values.image);
 
         try {
             if (data) {
-                await updateStock({ id : data.id, newData })
-                        .then(() => {router.push(`/companies/${String(params?.id)}/stocks`)})
+                await updateStock({ id: data.id, formData: newData })
+                    .then(() => { router.push(`/companies/${String(params?.id)}/stocks`) })
             } else {
                 const record = await client.collection(PB_COLLECTIONS.STOCKS).create(newData)
-                                    .then(() => router.push(`/companies/${String(params?.id)}/stocks`)) 
+                    .then(() => router.push(`/companies/${String(params?.id)}/stocks`))
             }
         } catch (e) {
             alert(e)

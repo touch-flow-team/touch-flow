@@ -31,6 +31,7 @@ import Image from "next/image"
 import { imageSrc } from "@/libs/utils"
 import { PB_COLLECTIONS } from "@/constants/constants"
 import StockDeleteModal from "./StockDeleteModal"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip"
 
 export const stockColumns: ColumnDef<IStock | undefined, unknown>[] = [
   {
@@ -100,6 +101,34 @@ export const stockColumns: ColumnDef<IStock | undefined, unknown>[] = [
         </Button>
       )
     },
+    cell: ({ row }) => {
+      const stock = row.original
+
+      return (
+        <div className="flex">
+          {
+            (Number(stock?.currentCount) < Number(stock?.safeCount)) ? (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="destructive" className="h-8 w-12">
+                      {stock?.currentCount}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="mb-2 rounded-[8px] bg-border p-2">
+                    <p className="font-bold">안전 수량이 현재 재고 개수보다 적습니다.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : (
+              <Button variant="outline" className="h-8 w-12">
+                {stock?.currentCount}
+              </Button>
+            )
+          }
+        </div>
+      )
+    }
   },
   {
     id: 'action',
@@ -156,7 +185,7 @@ export default function StockDataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        <StockDeleteModal data={table.getFilteredSelectedRowModel().rows}/>
+        <StockDeleteModal data={table.getFilteredSelectedRowModel().rows} />
       </div>
       <div className="rounded-md border">
         <Table>
