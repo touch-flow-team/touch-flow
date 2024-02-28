@@ -19,8 +19,6 @@ const OrderCard = ({
   order_number,
   order_menus,
 }: IProps) => {
-  console.log(`bg-${elapsedBgColor(order_elapsed)}`);
-
   const BADGE_BG = elapsedBgColor(order_elapsed);
 
   return (

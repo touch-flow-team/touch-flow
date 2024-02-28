@@ -5,6 +5,8 @@ export const PB_COLLECTIONS = {
   MANAGEMENT_WAITS: 'management_waits',
   PRODUCTS: 'products',
   USER_WAITS: 'user_waits',
+  ORDERS: 'orders',
+  MANAGEMENT_ORDERS: 'management_orders',
 };
 
 export const REVALIDATE_TAG = {
