@@ -14,3 +14,21 @@ interface ImageArg {
 export function imageSrc({ collection_id, record_id, file_name }: ImageArg) {
   return `${BASE_URL}/api/files/${collection_id}/${record_id}/${file_name}`;
 }
+
+export const elapsedBgColor = (time: number) => {
+  if (time < 5) {
+    return 'white';
+  } else if (time < 10) {
+    return 'orange-500';
+  } else {
+    return 'red-500';
+  }
+};
+
+export const elapsedTextColor = (time: number) => {
+  if (time < 5) {
+    return 'black';
+  } else {
+    return 'white';
+  }
+};
