@@ -2,11 +2,19 @@ import { z } from "zod"
  
 export const formSchema = z.object({
   productName: z.string().min(2).max(50),
-  imageUrl: z.string(),
-  purchaseAmount: z.number(),
-  buyAmount: z.number(),
+  image: z.any(),
+  purchaseAmount: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+    message: "Expected number, received a string"
+  }),
+  saleAmount: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+    message: "Expected number, received a string"
+  }),
   categoryName: z.string().min(2).max(50),
   brandName: z.string().min(2).max(50),
-  initialCount: z.number(),
-  safeCount: z.number(),
+  currentCount: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+    message: "Expected number, received a string"
+  }),
+  safeCount: z.string().refine((val) => !Number.isNaN(parseInt(val, 10)), {
+    message: "Expected number, received a string"
+  }),
 })

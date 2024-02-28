@@ -5,3 +5,16 @@ export interface IResult<T> {
   totalPages: number;
   items: T[];
 }
+
+export interface ICreate {
+  formData: FormData;
+}
+
+export interface IDelete {
+  id: string;
+}
+
+export interface IUpdate {
+  id: string;
+  formData: FormData;
+}

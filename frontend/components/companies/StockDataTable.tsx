@@ -20,15 +20,20 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table"
-import { DataTableProps, IStockItem } from "@/types/stock/types"
+import { DataTableProps, IStock } from "@/types/stock/types"
 import { Button } from "../ui/button"
 import { ArrowUpDown, ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
 import { useState } from "react"
 import { Input } from "../ui/input"
 import { useParams, useRouter } from "next/navigation"
 import { Checkbox } from "@/components/ui/checkbox"
+import Image from "next/image"
+import { imageSrc } from "@/libs/utils"
+import { PB_COLLECTIONS } from "@/constants/constants"
+import StockDeleteModal from "./StockDeleteModal"
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip"
 
-export const stockColumns: ColumnDef<IStockItem>[] = [
+export const stockColumns: ColumnDef<IStock | undefined, unknown>[] = [
   {
     id: "select",
     header: ({ table }) => (
@@ -52,12 +57,20 @@ export const stockColumns: ColumnDef<IStockItem>[] = [
     enableHiding: false,
   },
   {
-    accessorKey: "imageUrl",
+    accessorKey: "image",
     header: ({ column }) => {
       return (
         <div>이미지</div>
       )
     },
+    cell: ({ row }) => {
+      const record_id = row.original?.id ? row.original?.id : ""
+      const file_name = row.original?.image
+
+      return (
+        <Image src={imageSrc({ collection_id: 'stocks', record_id, file_name })} width={70} height={70} alt={"images"} />
+      )
+    }
   },
   {
     accessorKey: "productName",
@@ -76,7 +89,7 @@ export const stockColumns: ColumnDef<IStockItem>[] = [
     },
   },
   {
-    accessorKey: "stockCount",
+    accessorKey: "currentCount",
     header: ({ column }) => {
       return (
         <Button
@@ -88,6 +101,34 @@ export const stockColumns: ColumnDef<IStockItem>[] = [
         </Button>
       )
     },
+    cell: ({ row }) => {
+      const stock = row.original
+
+      return (
+        <div className="flex">
+          {
+            (Number(stock?.currentCount) < Number(stock?.safeCount)) ? (
+              <TooltipProvider>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <Button variant="destructive" className="h-8 w-12">
+                      {stock?.currentCount}
+                    </Button>
+                  </TooltipTrigger>
+                  <TooltipContent className="mb-2 rounded-[8px] bg-border p-2">
+                    <p className="font-bold">안전 수량이 현재 재고 개수보다 적습니다.</p>
+                  </TooltipContent>
+                </Tooltip>
+              </TooltipProvider>
+            ) : (
+              <Button variant="outline" className="h-8 w-12">
+                {stock?.currentCount}
+              </Button>
+            )
+          }
+        </div>
+      )
+    }
   },
   {
     id: 'action',
@@ -98,7 +139,7 @@ export const stockColumns: ColumnDef<IStockItem>[] = [
 
       return (
         <div className="flex flex-row space-x-1 justify-center">
-          <Button onClick={() => router.push(`/companies/${String(params?.id)}/stocks/update/${stock.id}`)} variant="outline" className="h-8 w-12">
+          <Button onClick={() => router.push(`/companies/${String(params?.id)}/stocks/update/${stock?.id}`)} variant="outline" className="h-8 w-12">
             수정
           </Button>
         </div>
@@ -131,7 +172,7 @@ export default function StockDataTable<TData, TValue>({
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
     onRowSelectionChange: setRowSelection,
-  })  
+  })
 
   return (
     <>
@@ -144,9 +185,7 @@ export default function StockDataTable<TData, TValue>({
           }
           className="max-w-sm"
         />
-        <Button variant="secondary">
-          선택 요소 삭제
-        </Button>
+        <StockDeleteModal data={table.getFilteredSelectedRowModel().rows} />
       </div>
       <div className="rounded-md border">
         <Table>

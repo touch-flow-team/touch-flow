@@ -17,44 +17,66 @@ import { Input } from "@/components/ui/input"
 import { useState } from "react"
 import Image from "next/image"
 import { StockFormProps } from "@/types/stock/types"
+import { imageSrc } from "@/libs/utils"
+import { getImageData } from "@/libs/getImageData"
+import { useParams, useRouter } from "next/navigation"
+import client from "@/libs/pocketbase"
+import { PB_COLLECTIONS, REVALIDATE_TAG } from "@/constants/constants"
+import { revalidateTag } from "next/cache"
+import { updateStock } from "@/server-actions/stocks/stocks"
 
 const StockForm = ({ data }: StockFormProps) => {
+    const params = useParams()
+    const router = useRouter()
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
             productName: data ? data.productName : "",
-            imageUrl: data ? data.imageUrl : "",
+            image: data && data.image,
             categoryName: data ? data.categoryName : "",
-            purchaseAmount: data ? data.purchaseAmount : 0,
-            buyAmount: data ? data.buyAmount : 0,
+            purchaseAmount: data && String(data.purchaseAmount),
+            saleAmount: data && String(data.saleAmount),
             brandName: data ? data.brandName : "",
-            initialCount: data ? data.initialCount : 0,
-            safeCount: data ? data.safeCount : 0,
+            currentCount: data && String(data.currentCount),
+            safeCount: data && String(data.safeCount),
         },
     })
 
-    function onSubmit(values: z.infer<typeof formSchema>) {
-        console.log(values)
+    const [preview, setPreview] = useState(
+        data
+            ? imageSrc({ collection_id: 'stocks', record_id: data.id, file_name: data?.image })
+            : '',
+    );
+
+    async function onSubmit(values: z.infer<typeof formSchema>) {
+        const newData = new FormData();
+        newData.append('productName', values.productName);
+        newData.append('categoryName', values.categoryName);
+        newData.append('purchaseAmount', Number(values.purchaseAmount).toString());
+        newData.append('saleAmount', Number(values.saleAmount).toString());
+        newData.append('brandName', values.brandName);
+        newData.append('safeCount', Number(values.safeCount).toString());
+        newData.append('currentCount', Number(values.currentCount).toString());
+        newData.append('companies', String(params?.id));
+        newData.append('image', values.image);
+
+        try {
+            if (data) {
+                await updateStock({ id: data.id, formData: newData })
+                    .then(() => { router.push(`/companies/${String(params?.id)}/stocks`) })
+            } else {
+                const record = await client.collection(PB_COLLECTIONS.STOCKS).create(newData)
+                    .then(() => router.push(`/companies/${String(params?.id)}/stocks`))
+            }
+        } catch (e) {
+            alert(e)
+        }
+
+
     }
 
-    const [selectedFile, setSelectedFile] = useState<string | null>(null);
-
-
-    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const file = e.target.files?.[0];
-
-        if (file) {
-            const reader = new FileReader();
-
-            reader.onloadend = () => {
-                // 파일 내용을 읽은 후의 동작
-                const result = reader.result as string;
-                setSelectedFile(result);
-            };
-
-            reader.readAsDataURL(file);
-        }
-    };
+    const amountPlaceHolder = data ? "현재 수량을 입력하세요." : "초기 수량을 입력하세요."
 
     return (
         <Form {...form}>
@@ -89,25 +111,27 @@ const StockForm = ({ data }: StockFormProps) => {
                     <div className="w-full ml-auto">
                         <FormField
                             control={form.control}
-                            name="productName"
-                            render={({ field }) => (
+                            name="image"
+                            render={({ field: { onChange, value, ...rest } }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <>
-                                            <Input id="picture" type="file" onChange={handleFileChange} />
-                                            {selectedFile && (
-                                                <div className="mt-2">
-                                                    <Image
-                                                        src={selectedFile}
-                                                        alt="Preview"
-                                                        className="rounded-md"
-                                                        width={500}
-                                                        height={500}
-                                                    />
-                                                </div>
-                                            )}
-                                        </>
+                                        <div className="flex items-center">
+                                            <Input
+                                                type="file"
+                                                {...rest}
+                                                onChange={(event) => {
+                                                    const displayUrl = getImageData(event.target.files![0]);
+                                                    setPreview(displayUrl);
+                                                    onChange(event.target.files![0]);
+                                                }}
+                                                className="w-[50%]"
+                                            />
+                                            <picture className="w-[150px] h-[150px] relative ">
+                                                {preview && <Image src={preview} alt="product image" fill />}
+                                            </picture>
+                                        </div>
                                     </FormControl>
+
                                     <FormMessage />
                                 </FormItem>
                             )}
@@ -133,7 +157,7 @@ const StockForm = ({ data }: StockFormProps) => {
                         />
                         <FormField
                             control={form.control}
-                            name="buyAmount"
+                            name="saleAmount"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
@@ -201,11 +225,11 @@ const StockForm = ({ data }: StockFormProps) => {
                     <div className="w-full ml-auto flex flex-row space-x-2">
                         <FormField
                             control={form.control}
-                            name="initialCount"
+                            name="currentCount"
                             render={({ field }) => (
                                 <FormItem>
                                     <FormControl>
-                                        <Input type="number" placeholder="초기수량을 입력하세요." {...field} />
+                                        <Input type="number" placeholder={amountPlaceHolder} {...field} />
                                     </FormControl>
                                     <FormMessage />
                                 </FormItem>
