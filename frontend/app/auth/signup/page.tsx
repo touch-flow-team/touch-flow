@@ -4,7 +4,6 @@ import Link from "next/link";
 
 export default function SigninPage() {
     return (
-
         <div className=" bg-slate-50 h-screen items-center flex justify-center">
             <main className="bg-white flex items-center rounded-[2rem] py-10 px-24 shadow-2xl">
                 <section className="w-[28rem]">
