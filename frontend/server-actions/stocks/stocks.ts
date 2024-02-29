@@ -9,6 +9,8 @@ export const getStocksByCompany = async (companyId: string) => {
     const response: IStock[] = await client
         .collection(PB_COLLECTIONS.STOCKS)
         .getFullList({
+            expand: "companies",
+            filter: `companies.id="${companyId}"`,
             cache: 'no-store',
         })
 
