@@ -8,7 +8,8 @@ export default async function StockUpdate({
     params: { id: string; stockId: string };
   }) {
 
-    const data = await getOneStock(params.stockId)
+    const data = await getOneStock(params.stockId, params.id)
+    console.log("data ==========>", data);
     
     return (
         <div className="flex flex-col w-full p-16">

@@ -15,8 +15,6 @@ const useFetchStocks = () => {
 
     const fetchData = async () => {
         const response = await getStocksByCompany(String(params?.id))
-        console.log('response ===========> ', response);
-        
         setStocks(response)
     }
 

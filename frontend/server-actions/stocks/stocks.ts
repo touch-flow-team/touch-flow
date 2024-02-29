@@ -4,6 +4,7 @@ import client from "@/libs/pocketbase"
 import { IUpdate } from "@/types/common/type"
 import { IStock, IStockUpdate } from "@/types/stock/types"
 import { revalidateTag } from "next/cache"
+import { redirect } from 'next/navigation'
 
 export const getStocksByCompany = async (companyId: string) => {
     const response: IStock[] = await client
@@ -17,16 +18,22 @@ export const getStocksByCompany = async (companyId: string) => {
     return response
 }
 
-export const getOneStock = async (stockId: string) => {
-    const response: IStock = await client
+export const getOneStock = async (stockId: string, companyId: string) => {
+    try {
+        const response: IStock = await client
         .collection(PB_COLLECTIONS.STOCKS)
         .getOne(stockId, {
             cache: 'no-store',
             next: { tags: [REVALIDATE_TAG.STOCK] },
         })
 
-
+    
     return response
+    } catch (error) {
+        console.error('Error fetching user wait:', error);
+        redirect(`/companies/${companyId}/stocks`)
+        throw error;
+    }
 }
 
 export const updateStock = async ({ id, formData }: IUpdate) => {
