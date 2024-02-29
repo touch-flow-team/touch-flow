@@ -35,7 +35,7 @@ const StockDeleteModal = ({ data }: IProp) => {
     return (
         <>
             <Dialog open={open} onOpenChange={setOpen}>
-                <Button onClick={() => setOpen(true)} variant="secondary">
+                <Button disabled={data.length <= 0} onClick={() => setOpen(true)} variant="secondary">
                     선택 요소 삭제
                 </Button>
                 <DialogContent className="flex flex-col max-w-[800px] rounded-lg justify-between p-16">
