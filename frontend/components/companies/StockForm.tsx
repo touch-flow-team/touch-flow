@@ -33,7 +33,7 @@ const StockForm = ({ data }: StockFormProps) => {
         resolver: zodResolver(formSchema),
         defaultValues: {
             productName: data ? data.productName : "",
-            image: data && data.image,
+            image: data && data?.image,
             categoryName: data ? data.categoryName : "",
             purchaseAmount: data && String(data.purchaseAmount),
             saleAmount: data && String(data.saleAmount),
@@ -120,9 +120,20 @@ const StockForm = ({ data }: StockFormProps) => {
                                                 type="file"
                                                 {...rest}
                                                 onChange={(event) => {
-                                                    const displayUrl = getImageData(event.target.files![0]);
-                                                    setPreview(displayUrl);
-                                                    onChange(event.target.files![0]);
+                                                    const selectedFile = event.target.files && event.target.files.length > 0
+                                                        ? event.target.files[0]
+                                                        : null;
+
+                                                    if (!selectedFile) {
+                                                        return
+                                                    }
+
+                                                    const displayUrl = getImageData(selectedFile);
+
+                                                    if (displayUrl !== "no file") {
+                                                        setPreview(displayUrl);
+                                                    }
+                                                    onChange(selectedFile);
                                                 }}
                                                 className="w-[50%]"
                                             />

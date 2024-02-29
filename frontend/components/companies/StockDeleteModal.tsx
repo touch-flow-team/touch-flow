@@ -21,8 +21,6 @@ interface IProp {
 }
 
 const StockDeleteModal = ({ data }: IProp) => {
-    console.log("delete data ==========>", data);
-    
     const [open, setOpen] = useState(false)
     const deleteHandler = async () => {
         data.map( async (d) => {
