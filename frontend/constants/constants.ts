@@ -21,6 +21,19 @@ export const COOKIE_MESSAGE_ID = 'message';
 
 export const ORDER_DISPLAY_PAGINATION_SIZE = 4;
 
+// Excel export (stocks)
+export const keysToExtract = ["brandName", "productName", "safeCount", "currentCount", "purchaseAmount", "saleAmount"];
+
+// Translation mapping
+export const keyTranslations: { [key: string]: string } = {
+  "brandName": "브랜드명",
+  "productName": "제품명",
+  "safeCount": "안전 재고 수",
+  "currentCount": "현 재고 수",
+  "purchaseAmount": "구매가",
+  "saleAmount": "판매가",
+};
+
 /*
  ** --------------------------------
  ** 이곳 하위에 있는 것은 임시 데이터입니다.
