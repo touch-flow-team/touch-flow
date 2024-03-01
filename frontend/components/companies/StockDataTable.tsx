@@ -29,9 +29,10 @@ import { useParams, useRouter } from "next/navigation"
 import { Checkbox } from "@/components/ui/checkbox"
 import Image from "next/image"
 import { imageSrc } from "@/libs/utils"
-import { PB_COLLECTIONS } from "@/constants/constants"
+import { PB_COLLECTIONS, keyTranslations, keysToExtract } from "@/constants/constants"
 import StockDeleteModal from "./StockDeleteModal"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip"
+import { downloadExcel } from "@/libs/exportToXlsx"
 
 export const stockColumns: ColumnDef<IStock | undefined, unknown>[] = [
   {
@@ -186,6 +187,17 @@ export default function StockDataTable<TData, TValue>({
           className="max-w-sm"
         />
         <StockDeleteModal data={table.getFilteredSelectedRowModel().rows} />
+        <Button variant="default" onClick={() => {
+          const extractedDataArray = (data as any[]).map((d) => {
+            const extractedData = Object.fromEntries(
+              Object.entries(d).filter(([key]) => keysToExtract.includes(key))
+                .map(([key, value]) => [keyTranslations[key] || key, value])
+            );
+            return extractedData;
+          });
+
+          downloadExcel(extractedDataArray)
+        }}>엑셀 내보내기</Button>
       </div>
       <div className="rounded-md border">
         <Table>
