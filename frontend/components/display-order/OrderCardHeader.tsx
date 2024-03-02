@@ -1,6 +1,6 @@
 import { CardHeader } from '@/components/ui/card';
 import { useEffect, useState } from 'react';
-import { elapsedBgColor, elapsedTextColor, getTime } from '@/libs/utils';
+import { elapsedBgColor, elapsedTextColor, getTime, kstTime } from '@/libs/utils';
 import { getElapsedMinutes } from '@/libs/utils';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '../ui/button';

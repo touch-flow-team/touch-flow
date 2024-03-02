@@ -50,3 +50,12 @@ export const getTime = (order_time: string) => {
   let minutes = date.getUTCMinutes();
   return `${hours}:${minutes < 10 ? '0' : ''}${minutes}`;
 };
+
+export const kstTime = () => {
+  const curr = new Date();
+  const utc = curr.getTime() + curr.getTimezoneOffset() * 60 * 1000;
+  const KR_TIME_DIFF = 9 * 60 * 60 * 1000;
+  console.log(new Date(utc + KR_TIME_DIFF));
+
+  return new Date(utc + KR_TIME_DIFF);
+};

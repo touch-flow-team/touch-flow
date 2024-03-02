@@ -4,11 +4,7 @@ import Header from '@/components/display-order/Header';
 import OrderList from '@/components/display-order/OrderList';
 import PageController from '@/components/display-order/PageController';
 import client from '@/libs/pocketbase';
-import {
-  ORDER_DISPLAY_PAGINATION_SIZE,
-  PB_COLLECTIONS,
-  REVALIDATE_TAG,
-} from '@/constants/constants';
+import { ORDER_DISPLAY_PAGINATION_SIZE, PB_COLLECTIONS } from '@/constants/constants';
 
 import { useEffect, useState } from 'react';
 export default function DisplayOrderPage({
@@ -23,9 +19,7 @@ export default function DisplayOrderPage({
 
   useEffect(() => {
     const getData = async () => {
-      const data: IOrderDisplay[] = await client
-        .collection(PB_COLLECTIONS.ORDERS)
-        .getFullList({ next: { tags: [REVALIDATE_TAG.DISPLAY] } });
+      const data: IOrderDisplay[] = await client.collection(PB_COLLECTIONS.ORDERS).getFullList();
       setOrders(data);
       setTotalPage(
         Math.ceil(

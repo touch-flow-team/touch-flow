@@ -1,9 +1,9 @@
 'use server';
 
-import { PB_COLLECTIONS, REVALIDATE_TAG } from '@/constants/constants';
+import { PB_COLLECTIONS } from '@/constants/constants';
 import client from '@/libs/pocketbase';
 import { OrderStatus } from '@/types/order-display';
-import { revalidateTag } from 'next/cache';
+import { redirect } from 'next/navigation';
 
 interface IUpdate {
   id: string;
@@ -14,8 +14,13 @@ interface IUpdate {
 }
 
 export const updateOrderStatus = async ({ id, data }: IUpdate) => {
-  await client
-    .collection(PB_COLLECTIONS.ORDERS)
-    .update(id, data)
-    .then(() => revalidateTag(REVALIDATE_TAG.DISPLAY));
+  await client.collection(PB_COLLECTIONS.ORDERS).update(id, data);
+};
+
+export const resetOrders = async () => {
+  const orders = await client.collection(PB_COLLECTIONS.ORDERS).getFullList();
+  orders.map(async (order) => {
+    await client.collection(PB_COLLECTIONS.ORDERS).delete(order.id);
+  });
+  redirect('display-order?status=receive&page=1');
 };

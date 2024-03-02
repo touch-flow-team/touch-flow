@@ -12,8 +12,8 @@ interface IProps {
   trigger: React.ReactElement;
   title: string;
   InnerComponent: React.ReactElement;
-  open: boolean;
-  setOpen: Dispatch<SetStateAction<boolean>>;
+  open?: boolean;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
   unique_key?: any;
 }
 
