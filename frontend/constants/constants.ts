@@ -7,12 +7,14 @@ export const PB_COLLECTIONS = {
   USER_WAITS: 'user_waits',
   ORDERS: 'orders',
   MANAGEMENT_ORDERS: 'management_orders',
+  STOCKS: 'stocks',
 };
 
 export const REVALIDATE_TAG = {
   PRODUCT: 'PRODUCT',
   CATEGORY: 'CATEGORY',
   DISPLAY: 'DISPLAY',
+  STOCK: 'STOCK',
 };
 
 export const PRODUCT_PAGINATION_SIZE = 4;
@@ -26,6 +28,18 @@ export const ORDER_STATUS = {
   RECEIVE: 'receive',
   COMPLETE: 'complete',
   CANCEL: 'cancel',
+}
+// Excel export (stocks)
+export const keysToExtract = ["brandName", "productName", "safeCount", "currentCount", "purchaseAmount", "saleAmount"];
+
+// Translation mapping
+export const keyTranslations: { [key: string]: string } = {
+  "brandName": "브랜드명",
+  "productName": "제품명",
+  "safeCount": "안전 재고 수",
+  "currentCount": "현 재고 수",
+  "purchaseAmount": "구매가",
+  "saleAmount": "판매가",
 };
 
 /*

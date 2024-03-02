@@ -1,24 +1,16 @@
-"use client"
-
 import StockForm from "@/components/companies/StockForm"
+import { getOneStock } from "@/server-actions/stocks/stocks";
 import { useParams } from "next/navigation"
 
-const StockUpdate = () => {
-    const params = useParams()
-    const data = {
-        id: "728ed52f",
-        productName: "냉동 한우",
-        imageUrl: "",
-        categoryName: "식품 / 재료",
-        stockCount: 10,
-        purchaseAmount: 0,
-        buyAmount: 0,
-        brandName: "--",
-        initialCount: 10,
-        safeCount: 5
-    }
+export default async function StockUpdate({
+    params,
+  }: {
+    params: { id: string; stockId: string };
+  }) {
 
-
+    const data = await getOneStock(params.stockId, params.id)
+    console.log("data ==========>", data);
+    
     return (
         <div className="flex flex-col w-full p-16">
             <div className="flex flex-row w-full items-center">
@@ -27,6 +19,6 @@ const StockUpdate = () => {
             <StockForm data={data} />
         </div>
     )
-}
+  }
+  
 
-export default StockUpdate

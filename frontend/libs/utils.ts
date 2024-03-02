@@ -33,6 +33,7 @@ export const elapsedTextColor = (time: number) => {
   }
 };
 
+
 export const getElapsedMinutes = (start: string) => {
   const startDate = new Date(start); // Date 객체 생성
   const now = new Date(); // 현재 시간
@@ -59,3 +60,16 @@ export const kstTime = () => {
 
   return new Date(utc + KR_TIME_DIFF);
 };
+
+export const getFormattedDateTime = () => {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = String(now.getMonth() + 1).padStart(2, '0');
+  const day = String(now.getDate()).padStart(2, '0');
+  const hours = String(now.getHours()).padStart(2, '0');
+  const minutes = String(now.getMinutes()).padStart(2, '0');
+  const seconds = String(now.getSeconds()).padStart(2, '0');
+  
+  return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
+};
+
