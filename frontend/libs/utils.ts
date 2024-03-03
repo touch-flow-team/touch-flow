@@ -1,6 +1,7 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { BASE_URL } from './pocketbase';
+import { ChangeEvent } from 'react';
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
@@ -43,4 +44,16 @@ export const getFormattedDateTime = () => {
   const seconds = String(now.getSeconds()).padStart(2, '0');
   
   return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
+};
+
+export const handleNumberInputChange = (event: ChangeEvent<HTMLInputElement>) => {
+  // 현재 입력된 값
+  const currentValue = event.target.valueAsNumber;
+
+  // 사용자가 내리려고 하는 값과 현재 값 비교
+  const nativeInputType = (event.nativeEvent as InputEvent).inputType;
+  if (nativeInputType === 'decrement' && Number(currentValue) > Number(event.target.min)) {
+    // 사용자가 내리려고 하는 경우, 값을 현재 값으로 유지
+    event.target.valueAsNumber = currentValue;
+  }
 };

@@ -18,3 +18,12 @@ export interface IUpdate {
   id: string;
   formData: FormData;
 }
+
+export interface IUpdateStockCount {
+  id: string,
+  data: any
+}
+
+export interface IDelete {
+  id: string
+}

@@ -34,6 +34,11 @@ export const keyTranslations: { [key: string]: string } = {
   "saleAmount": "판매가",
 };
 
+export const STOCK_MODE = {
+  IN: "입고",
+  OUT: "출고"
+}
+
 /*
  ** --------------------------------
  ** 이곳 하위에 있는 것은 임시 데이터입니다.
