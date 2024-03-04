@@ -1,7 +1,7 @@
 "use server"
 import { PB_COLLECTIONS, REVALIDATE_TAG } from "@/constants/constants"
 import client from "@/libs/pocketbase"
-import { IUpdate } from "@/types/common/type"
+import { IDelete, IUpdate, IUpdateStockCount } from "@/types/common/type"
 import { IStock, IStockUpdate } from "@/types/stock/types"
 import { revalidateTag } from "next/cache"
 import { redirect } from 'next/navigation'
@@ -41,3 +41,13 @@ export const updateStock = async ({ id, formData }: IUpdate) => {
         .update(id, formData)
         .then(() => revalidateTag(REVALIDATE_TAG.STOCK));
 };
+
+export const updateStockCount = async ({id, data}: IUpdateStockCount) => {
+    await client.collection(PB_COLLECTIONS.STOCKS).update(id, data)
+                    .then(() => revalidateTag(REVALIDATE_TAG.STOCK));
+}
+
+export const deleteStock = async ({ id }: IDelete) => {
+    await client.collection(PB_COLLECTIONS.STOCKS).delete(id)
+                .then(() => revalidateTag(REVALIDATE_TAG.STOCK));
+}

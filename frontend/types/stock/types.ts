@@ -1,5 +1,5 @@
-import { Button } from "@/components/ui/button"
 import { ColumnDef } from "@tanstack/react-table"
+import { Row } from '@tanstack/react-table';
 
 
 export interface DataTableProps<TData, TValue> {
@@ -65,4 +65,16 @@ export interface StockFormProps {
 
 export interface IStockList {
     stocks: (undefined | IStock)[]
+}
+
+export interface IProp {
+    data: Row<any>[]
+}
+
+export interface IUpdateProp extends IProp {
+    mode: string
+}
+
+export interface Idata {
+    data: Row<any>
 }

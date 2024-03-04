@@ -29,10 +29,11 @@ import { useParams, useRouter } from "next/navigation"
 import { Checkbox } from "@/components/ui/checkbox"
 import Image from "next/image"
 import { imageSrc } from "@/libs/utils"
-import { PB_COLLECTIONS, keyTranslations, keysToExtract } from "@/constants/constants"
+import { STOCK_MODE, keyTranslations, keysToExtract } from "@/constants/constants"
 import StockDeleteModal from "./StockDeleteModal"
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@radix-ui/react-tooltip"
 import { downloadExcel } from "@/libs/exportToXlsx"
+import StockUpdateModal from "./StockUpdateModal"
 
 export const stockColumns: ColumnDef<IStock | undefined, unknown>[] = [
   {
@@ -187,6 +188,8 @@ export default function StockDataTable<TData, TValue>({
           className="max-w-sm"
         />
         <StockDeleteModal data={table.getFilteredSelectedRowModel().rows} />
+        <StockUpdateModal mode={STOCK_MODE.IN} data={table.getFilteredSelectedRowModel().rows} />
+        <StockUpdateModal mode={STOCK_MODE.OUT} data={table.getFilteredSelectedRowModel().rows} />
         <Button variant="default" onClick={() => {
           const extractedDataArray = (data as any[]).map((d) => {
             const extractedData = Object.fromEntries(

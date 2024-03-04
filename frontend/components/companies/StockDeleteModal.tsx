@@ -1,31 +1,21 @@
 'use client';
-import { deleteCategory } from '@/server-actions/categories/category';
 import { Button } from '@/components/ui/button';
-import { deleteProduct } from '@/server-actions/products/product';
-import Toast from '@/components/common/Toast';
 import { useState } from 'react';
 import {
     Dialog,
     DialogContent,
-    DialogDescription,
-    DialogHeader,
-    DialogTitle,
 } from "@/components/ui/dialog"
-import { Row } from '@tanstack/react-table';
 import client from '@/libs/pocketbase';
 import { PB_COLLECTIONS, REVALIDATE_TAG } from '@/constants/constants';
 import { revalidateTag } from 'next/cache';
-
-interface IProp {
-    data: Row<any>[]
-}
+import { IProp } from '@/types/stock/types';
+import { deleteStock } from '@/server-actions/stocks/stocks';
 
 const StockDeleteModal = ({ data }: IProp) => {
     const [open, setOpen] = useState(false)
     const deleteHandler = async () => {
         data.map( async (d) => {
-            await client.collection(PB_COLLECTIONS.STOCKS).delete(d?.original?.id)
-                .then(() => revalidateTag(REVALIDATE_TAG.STOCK));
+            await deleteStock({id: d?.original?.id})
         })
 
         
