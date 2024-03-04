@@ -20,6 +20,8 @@ export default function DisplayOrderPage({
   useEffect(() => {
     const getData = async () => {
       const data: IOrderDisplay[] = await client.collection(PB_COLLECTIONS.ORDERS).getFullList();
+      console.log(data);
+
       setOrders(data);
       setTotalPage(
         Math.ceil(
@@ -35,6 +37,9 @@ export default function DisplayOrderPage({
     client.collection(PB_COLLECTIONS.ORDERS).subscribe('*', function (e) {
       setGetDataTrigger((prev) => !prev);
     });
+    return () => {
+      client.collection(PB_COLLECTIONS.ORDERS).unsubscribe();
+    };
   }, []);
   if (!orders) return <div>Loading..</div>;
   return (
