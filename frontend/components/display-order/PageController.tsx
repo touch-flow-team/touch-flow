@@ -4,11 +4,12 @@ import { useRouter } from 'next/navigation';
 import { Button } from '@/components/ui/button';
 import { FaAngleLeft } from 'react-icons/fa6';
 import { FaAngleRight } from 'react-icons/fa6';
+import { OrderStatus } from '@/types/order-display';
 
 interface IProp {
   page: number;
   total_page: number;
-  status: 'prepare' | 'complete';
+  status: OrderStatus;
 }
 
 const PageController = ({ page, total_page, status }: IProp) => {
