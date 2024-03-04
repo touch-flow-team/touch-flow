@@ -1,6 +1,5 @@
-import StockForm from "@/components/companies/StockForm"
+import StockForm from "@/components/companies/stocks/StockForm"
 import { getOneStock } from "@/server-actions/stocks/stocks";
-import { useParams } from "next/navigation"
 
 export default async function StockUpdate({
     params,

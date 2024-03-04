@@ -78,3 +78,28 @@ export interface IUpdateProp extends IProp {
 export interface Idata {
     data: Row<any>
 }
+
+export interface IStockHistory {
+    collectionId: string
+    collectionName: string
+    companies: string
+    stocks: string
+    created: Date
+    id: string
+    updated: number
+    past_count: number
+    current_count: number
+    mode: string
+}
+
+export interface IStockHistoryCardProps {
+    data: IStockHistory
+}
+
+export interface IStockHistoryCreate {
+    past_count: number,
+    mode: string,
+    companies: string,
+    current_count: number,
+    stocks: string
+}

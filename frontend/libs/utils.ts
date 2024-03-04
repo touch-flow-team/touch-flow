@@ -73,3 +73,9 @@ export const getFormattedDateTime = () => {
   
   return `${year}-${month}-${day}_${hours}-${minutes}-${seconds}`;
 };
+
+export function formatDate(dateString: string): string {
+  const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: '2-digit', day: '2-digit' };
+  const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
+  return formattedDate;
+}

@@ -5,21 +5,63 @@ import {
     Dialog,
     DialogContent,
 } from "@/components/ui/dialog";
-import { IUpdateProp } from '@/types/stock/types';
-import { Input } from '../ui/input';
-import { updateStockCount } from '@/server-actions/stocks/stocks';
+import { IStockHistoryCreate, IUpdateProp } from '@/types/stock/types';
+import { Input } from '../../ui/input';
+import { addStockHistory, updateStockCount } from '@/server-actions/stocks/stocks';
 import { STOCK_MODE } from '@/constants/constants';
+import { useToast } from '@/components/ui/use-toast';
 
 const StockUpdateModal = ({ data, mode }: IUpdateProp) => {
     const [open, setOpen] = useState(false)
     const [inputValues, setInputValues] = useState<{ [key: string]: number }>({});
+    const { toast } = useToast();
+
     const updateHandler = async () => {
+        let flag = true
+        data.map(async (d) => {
+            // validation
+            if (mode === STOCK_MODE.IN) {
+                if (inputValues[d?.original?.id] && inputValues[d?.original?.id] <= d?.original?.currentCount ) {
+                    toast({
+                        variant: "destructive",
+                        title: "입고량은 기존 수량보다 많아야 합니다."
+                    })
+                    flag = false
+                    return
+                }
+            } else {
+                if (inputValues[d?.original?.id] && inputValues[d?.original?.id] >= d?.original?.currentCount ) {
+                    toast({
+                        variant: "destructive",
+                        title: "출고량은 기존 수량보다 적어야 합니다."
+                    })
+                    flag = false
+                    return
+                }
+            }
+        })
+
+        // update 를 수행하지 않음
+        if (!flag) {
+            return 
+        }
+
         data.map(async (d) => {
             const new_d = {
                 ...d.original,
                 currentCount: inputValues[d?.original?.id] ? Number(inputValues[d?.original?.id]) : d?.original?.currentCount
             }
+
+            const new_history: IStockHistoryCreate = {
+                past_count: d?.original?.currentCount,
+                current_count: inputValues[d?.original?.id],
+                mode: mode === STOCK_MODE.IN ? 'in' : 'out',
+                companies: d.original?.companies,
+                stocks: d.original?.id
+            }
+
             await updateStockCount({ id: d?.original?.id, data: new_d })
+            await addStockHistory(new_history)
         })
 
         setOpen((prev) => !prev);
