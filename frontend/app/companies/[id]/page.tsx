@@ -42,6 +42,9 @@ export default function Company() {
     };
 
 
+    console.log()
+
+
     useEffect(() => {
         if (message) {
             toast({ title: message });

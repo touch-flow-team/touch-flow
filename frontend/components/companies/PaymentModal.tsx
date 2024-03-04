@@ -50,7 +50,7 @@ const PaymentModal = ({ products, carts, totalPrice, setOpen, setCarts }: Paymen
 
     return (
         <>
-            <div className="fixed flex w-screen h-screen top-0 left-0 justify-center bg-white ">
+            <div className="fixed flex w-screen h-screen z-50 top-0 left-0 justify-center bg-white ">
                 <div className="w-[850px]">
                     <div>
                         <h4 className="text-2xl">장바구니 목록</h4>
