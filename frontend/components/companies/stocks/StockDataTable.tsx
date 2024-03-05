@@ -113,19 +113,19 @@ export const stockColumns: ColumnDef<IStock | undefined, unknown>[] = [
               <TooltipProvider>
                 <Tooltip>
                   <TooltipTrigger asChild>
-                    <Button variant="destructive" className="h-8 w-12">
+                    <span className="h-4 w-12 font-bold text-destructive cursor-pointer">
                       {stock?.currentCount}
-                    </Button>
+                    </span>
                   </TooltipTrigger>
                   <TooltipContent className="mb-2 rounded-[8px] bg-border p-2">
-                    <p className="font-bold">안전 수량이 현재 재고 개수보다 적습니다.</p>
+                    <p className="font-bold">안전 수량이 현재 재고 개수보다 {Number(stock?.safeCount) - Number(stock?.currentCount)}개 적습니다.</p>
                   </TooltipContent>
                 </Tooltip>
               </TooltipProvider>
             ) : (
-              <Button variant="outline" className="h-8 w-12">
+              <span className="h-4 w-12 font-bold cursor-pointer">
                 {stock?.currentCount}
-              </Button>
+              </span>
             )
           }
         </div>
