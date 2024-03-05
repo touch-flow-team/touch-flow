@@ -12,6 +12,7 @@ import { ManagementWaitConfirmParams, WaitConfirmModalProps } from "@/types/wait
 import CounterButton from "./CounterButton"
 import createUserWait from "../../server-actions/waits/CreateUserWait"
 import { phoneSchema } from "@/schemata/waits/schema"
+import { useToast } from "../ui/use-toast"
 
 const WaitConfirmModal = ({ phoneNumber, setPhoneNumber, manageData, setIsFetching }: WaitConfirmModalProps) => {
     const [open, setOpen] = useState(false)
@@ -19,8 +20,18 @@ const WaitConfirmModal = ({ phoneNumber, setPhoneNumber, manageData, setIsFetchi
     const [openConfirm, setOpenConfirm] = useState(false)
     const [adultCounter, setAdultCounter] = useState(0)
     const [childCounter, setChildCounter] = useState(0)
+    const { toast } = useToast()
 
     const handleClickOk = () => {
+        if (manageData.limit_persons < adultCounter + childCounter) {
+            toast({
+                variant: "destructive",
+                title: "설정한 최대 인원 수보다 많아 웨이팅 진행이 불가합니다.",
+                description: `해당 지점은 ${manageData.limit_persons} 명 까지 웨이팅 설정이 가능합니다.`
+            })
+            setOpen(false)
+            return
+        }
         setOpenConfirm(true)
     }
 
