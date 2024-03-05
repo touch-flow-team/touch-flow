@@ -1,4 +1,4 @@
-import StockForm from "@/components/companies/StockForm"
+import StockForm from "@/components/companies/stocks/StockForm"
 
 
 const StockAdd = () => {

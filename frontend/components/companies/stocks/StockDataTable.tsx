@@ -21,10 +21,10 @@ import {
   TableRow,
 } from "@/components/ui/table"
 import { DataTableProps, IStock } from "@/types/stock/types"
-import { Button } from "../ui/button"
+import { Button } from "../../ui/button"
 import { ArrowUpDown, ChevronLeft, ChevronRight, MoreHorizontal } from "lucide-react"
 import { useState } from "react"
-import { Input } from "../ui/input"
+import { Input } from "../../ui/input"
 import { useParams, useRouter } from "next/navigation"
 import { Checkbox } from "@/components/ui/checkbox"
 import Image from "next/image"

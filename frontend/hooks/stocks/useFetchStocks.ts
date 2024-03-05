@@ -23,12 +23,12 @@ const useFetchStocks = () => {
     }, [action == null])
 
     useEffect(() => {
-        const subscribe = client.collection('stocks').subscribe('*', function (e) {
+        const subscribe = client.collection(PB_COLLECTIONS.STOCKS).subscribe('*', function (e) {
             fetchData()
         })
 
         return () => {
-            client.collection('stocks').unsubscribe()
+            client.collection(PB_COLLECTIONS.STOCKS).unsubscribe()
         };
     }, [action != null])
 

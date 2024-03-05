@@ -8,6 +8,7 @@ export const PB_COLLECTIONS = {
   ORDERS: 'orders',
   MANAGEMENT_ORDERS: 'management_orders',
   STOCKS: 'stocks',
+  STOCKS_HISTORY: 'stock_historys'
 };
 
 export const REVALIDATE_TAG = {
