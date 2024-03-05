@@ -124,16 +124,17 @@ const ProductTable = ({ products, categories, filter }: IProp) => {
           })}
         </TableBody>
       </Table>
-      {products.items.length === 0 && (
+      {products.items.length === 0 ? (
         <div className="text-3xl font-normal w-full h-[100px] flex justify-center items-center">
           No Result
         </div>
+      ) : (
+        <ProductPagination
+          current_page={products.page}
+          total_page={products.totalPages}
+          filter={filter}
+        />
       )}
-      <ProductPagination
-        current_page={products.page}
-        total_page={products.totalPages}
-        filter={filter}
-      />
     </>
   );
 };

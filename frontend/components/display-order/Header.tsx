@@ -49,6 +49,7 @@ const Header = ({ orders, param }: IProps) => {
           {TAB_TRIGGER_ELEMS.map((tab) => {
             return (
               <TabsTrigger
+                key={tab.title}
                 value={tab.value}
                 className="w-full"
                 onClick={() => router.push(`?status=${tab.router}&page=1`)}>
