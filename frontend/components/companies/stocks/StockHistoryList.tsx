@@ -1,6 +1,6 @@
 "use client"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import WaitingListCard from "../WaitingListCard"
+import WaitingListCard from "../waitings/WaitingListCard"
 import useFetchStocksHistory from "@/hooks/stocks/useFetchStocksHistory"
 import StockHistoryCard from "./StockHistoryCard"
 

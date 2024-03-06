@@ -1,4 +1,4 @@
-import WaitingDashboardList from "@/components/companies/WaitingDashboardList";
+import WaitingDashboardList from "@/components/companies/waitings/WaitingDashboardList";
 
 export default function WaitingDashboardListPage() {
     return (

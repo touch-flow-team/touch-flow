@@ -7,12 +7,12 @@ import {
     DialogTitle,
 } from "@/components/ui/dialog"
 import { useState } from "react"
-import { Button } from "../ui/button"
+import { Button } from "../../ui/button"
 import { ManagementWaitConfirmParams, WaitConfirmModalProps } from "@/types/waits/types"
-import CounterButton from "./CounterButton"
-import createUserWait from "../../server-actions/waits/CreateUserWait"
+import CounterButton from "../CounterButton"
+import createUserWait from "../../../server-actions/waits/CreateUserWait"
 import { phoneSchema } from "@/schemata/waits/schema"
-import { useToast } from "../ui/use-toast"
+import { useToast } from "../../ui/use-toast"
 
 const WaitConfirmModal = ({ phoneNumber, setPhoneNumber, manageData, setIsFetching }: WaitConfirmModalProps) => {
     const [open, setOpen] = useState(false)

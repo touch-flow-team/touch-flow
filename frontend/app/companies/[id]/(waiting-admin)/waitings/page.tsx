@@ -1,8 +1,8 @@
 'use client';
 import { useEffect, useState } from 'react';
-import WaitConfirmModal from '@/components/companies/WaitConfirmModal';
+import WaitConfirmModal from '@/components/companies/waitings/WaitConfirmModal';
 import PhonePad from '@/components/companies/PhonePad';
-import WaitingCard from '@/components/companies/WaitingCard';
+import WaitingCard from '@/components/companies/waitings/WaitingCard';
 import Image from 'next/image';
 import useFetchWaitList from '@/hooks/waits/useFetchWaitList';
 
