@@ -8,13 +8,13 @@ import {
 } from "@/components/ui/dialog"
 import { useState } from "react"
 import { Button } from "../../ui/button"
-import { ManagementWaitConfirmParams, WaitConfirmModalProps } from "@/types/waits/types"
+import { WaitConfirmModalProps } from "@/types/waits/types"
 import CounterButton from "../CounterButton"
-import createUserWait from "../../../server-actions/waits/CreateUserWait"
 import { phoneSchema } from "@/schemata/waits/schema"
 import { useToast } from "../../ui/use-toast"
+import { CreateUserWait } from "@/server-actions/waits/waits"
 
-const WaitConfirmModal = ({ phoneNumber, setPhoneNumber, manageData, setIsFetching }: WaitConfirmModalProps) => {
+const WaitConfirmModal = ({ phoneNumber, setPhoneNumber, manageData }: WaitConfirmModalProps) => {
     const [open, setOpen] = useState(false)
     const [validNumber, setValidNumber] = useState(true)
     const [openConfirm, setOpenConfirm] = useState(false)
@@ -68,8 +68,7 @@ const WaitConfirmModal = ({ phoneNumber, setPhoneNumber, manageData, setIsFetchi
             }
 
             try {
-                const record = await createUserWait(data, manageData.id, userWaitManageData);
-                setIsFetching((prev) => !prev)
+                const record = await CreateUserWait(data, manageData.id, userWaitManageData);
                 setPhoneNumber("010-")
                 setOpen(false)
                 setValidNumber(true)
@@ -139,17 +138,30 @@ const WaitConfirmModal = ({ phoneNumber, setPhoneNumber, manageData, setIsFetchi
                                         </>
                                     ) : (
                                         <>
-                                            <DialogHeader className="flex">
-                                                <div>
-                                                    <DialogTitle className="text-xl">웨이팅 확정</DialogTitle>
-                                                    <DialogDescription>주의 사항을 확인해주세요.</DialogDescription>
-                                                </div>
-                                            </DialogHeader>
-                                            <div className="flex w-full mt-4 p-8 rounded-[8px] bg-border">
-                                                <span className="font-medium text-small">
-                                                    {manageData.rules_content}
-                                                </span>
-                                            </div>
+                                            {
+                                                manageData?.rules_enabled ? (
+                                                    <>
+                                                        <DialogHeader className="flex">
+                                                            <div>
+                                                                <DialogTitle className="text-xl">웨이팅 확정</DialogTitle>
+                                                                <DialogDescription>주의 사항을 확인해주세요.</DialogDescription>
+                                                            </div>
+                                                        </DialogHeader>
+                                                        <div className="flex w-full mt-4 p-8 rounded-[8px] bg-border">
+                                                            <span className="font-medium text-small">
+                                                                {manageData.rules_content}
+                                                            </span>
+                                                        </div>
+                                                    </>
+                                                ) : (
+                                                    <DialogHeader className="flex">
+                                                        <div>
+                                                            <DialogTitle className="text-xl">웨이팅 확정</DialogTitle>
+                                                            <DialogDescription>웨이팅 확정 버튼을 눌러 웨이팅을 시작해보세요!</DialogDescription>
+                                                        </div>
+                                                    </DialogHeader>
+                                                )
+                                            }
                                         </>
                                     )
                                 }

@@ -5,9 +5,6 @@ import {
     Dialog,
     DialogContent,
 } from "@/components/ui/dialog"
-import client from '@/libs/pocketbase';
-import { PB_COLLECTIONS, REVALIDATE_TAG } from '@/constants/constants';
-import { revalidateTag } from 'next/cache';
 import { IProp } from '@/types/stock/types';
 import { deleteStock } from '@/server-actions/stocks/stocks';
 

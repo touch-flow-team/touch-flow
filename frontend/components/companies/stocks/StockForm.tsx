@@ -22,7 +22,6 @@ import { getImageData } from "@/libs/getImageData"
 import { useParams, useRouter } from "next/navigation"
 import client from "@/libs/pocketbase"
 import { PB_COLLECTIONS, REVALIDATE_TAG } from "@/constants/constants"
-import { revalidateTag } from "next/cache"
 import { updateStock } from "@/server-actions/stocks/stocks"
 
 const StockForm = ({ data }: StockFormProps) => {

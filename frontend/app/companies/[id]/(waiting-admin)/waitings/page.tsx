@@ -1,5 +1,4 @@
 'use client';
-import { useEffect, useState } from 'react';
 import WaitConfirmModal from '@/components/companies/waitings/WaitConfirmModal';
 import PhonePad from '@/components/companies/PhonePad';
 import WaitingCard from '@/components/companies/waitings/WaitingCard';
@@ -9,7 +8,7 @@ import useFetchWaitList from '@/hooks/waits/useFetchWaitList';
 export default function WaitingPage() {
     const [manageId, companyId, companyName, waitTime, userWaitsNumber, rulesEnabled,
         rulesContent, limitPerson, waitUserList, phoneNumber,
-        setPhoneNumber, setIsFetching 
+        setPhoneNumber, action
     ] = useFetchWaitList()
     
     const manageData = {
@@ -47,7 +46,7 @@ export default function WaitingPage() {
                 <div className='mt-auto'>
                     <PhonePad phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} />
                 </div>
-                <WaitConfirmModal phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} manageData={manageData} setIsFetching={setIsFetching} />
+                <WaitConfirmModal phoneNumber={phoneNumber} setPhoneNumber={setPhoneNumber} manageData={manageData} />
             </div>
         </div>
     );
