@@ -16,7 +16,7 @@ import {
 import { Switch } from "@/components/ui/switch"
 import { useToast } from "@/components/ui/use-toast"
 import { useParams } from "next/navigation"
-import { Textarea } from "../ui/textarea"
+import { Textarea } from "../../ui/textarea"
 import WaitingSettingsModal from "./WaitingSettingsModal"
 import { ManagementWaitCreateParams } from "@/types/waits/types"
 import { Button } from "@/components/ui/button"

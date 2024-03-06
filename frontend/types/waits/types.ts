@@ -19,7 +19,7 @@ export type UseFetchWaitListResult = [
     UserWaitParams[],  // waitUserList
     string,  // phoneNumber
     React.Dispatch<React.SetStateAction<string>>,  // setPhoneNumber
-    React.Dispatch<React.SetStateAction<boolean>>  // setIsFetching
+    string
 ];
 
 export type UseFetchWaitDashboardList = [
@@ -92,7 +92,6 @@ export interface WaitConfirmModalProps {
     phoneNumber: string
     setPhoneNumber: React.Dispatch<React.SetStateAction<string>>
     manageData: ManagementWaitConfirmParams
-    setIsFetching: React.Dispatch<React.SetStateAction<boolean>>
 }
 
 export interface WaitingSettingsModalProps {
@@ -105,4 +104,8 @@ export interface WaitingSettingsModalProps {
 export interface CallUserProps {
     companyId: string
     user_phone_number: string
+}
+
+export interface GetCompanyInfoProps {
+    companyId: string
 }

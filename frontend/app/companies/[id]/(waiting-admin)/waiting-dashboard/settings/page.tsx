@@ -1,4 +1,4 @@
-import { WaitingDashboardSettings } from "@/components/companies/WaitingDashboardSettings";
+import { WaitingDashboardSettings } from "@/components/companies/waitings/WaitingDashboardSettings";
 
 export default function WaitingDashboardSettingsPage() {
     return (

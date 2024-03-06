@@ -7,10 +7,8 @@ import {
 import { Button } from "@/components/ui/button"
 import client from "@/libs/pocketbase"
 import { WaitingListCardProps } from "@/types/waits/types"
-import twilioClient from "@/libs/twilio";
-import GetCompanyInfo from "@/server-actions/waits/GetCompanyInfo";
 import { useParams } from "next/navigation";
-import CallUser from "@/server-actions/waits/CallUser";
+import { CallUser } from "@/server-actions/waits/waits";
 
 const WaitingListCard = ({
   id,
