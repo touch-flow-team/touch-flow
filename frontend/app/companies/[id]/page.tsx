@@ -19,13 +19,14 @@ import { CategorySkeletonCard } from "@/components/categories/CategorySkeletonCa
 
 export default function Company() {
     const message = Cookies.get(COOKIE_MESSAGE_ID);
-    const { id } = useParams();
+    const { id: rawId } = useParams();
     const [open, setOpen] = useState(false);
     const [totalPrice, setTotalPrice] = useState(0);
     const [products, setProducts] = useState<KioskProductsArray>([]);
     const [categorise, setCategorise] = useState<KioskCategoriseArray>([]);
     const [carts, setCarts] = useState<KioskProductsArray>([]);
     const [selectedCategoryId, setSelectedCategoryId] = useState<string>('');
+    const id = Array.isArray(rawId) ? rawId[0] : rawId || '';
     const isCartEmpty = carts.length === 0;
 
     async function getProduct() {
@@ -109,7 +110,7 @@ export default function Company() {
                 </div>
             </div>
             {open &&
-                <PaymentModal setOpen={setOpen} products={products} totalPrice={totalPrice} carts={carts} setCarts={setCarts} />
+                <PaymentModal id={id} setOpen={setOpen} products={products} totalPrice={totalPrice} carts={carts} setCarts={setCarts} />
             }
         </>
     );

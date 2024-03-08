@@ -39,6 +39,7 @@ export type KioskCategoriseArray = KioskCategorise[];
 export type KioskProductsArray = KioskProduct[];
 
 export interface PaymentItemsProps {
+  id?: string;
   products?: KioskProductsArray;
   carts: KioskProductsArray;
   totalPrice?: number;

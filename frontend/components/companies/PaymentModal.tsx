@@ -4,13 +4,13 @@ import { useEffect, useRef, useState } from "react"
 import { nanoid } from "nanoid";
 import { PaymentItemsProps } from "@/types/product/type";
 import PaymentItems from "./PaymentItems";
+import { useRouter } from "next/navigation";
 
 const clientKey = "test_ck_vZnjEJeQVxGD914a4qvY3PmOoBN0";
 
-const PaymentModal = ({ products, carts, totalPrice, setOpen, setCarts }: PaymentItemsProps) => {
+const PaymentModal = ({ id, products, carts, totalPrice, setOpen, setCarts }: PaymentItemsProps) => {
     const [paymentWidget, setPaymentWidget] = useState<PaymentWidgetInstance | null>(null);
     const paymentMethodsWidgetRef = useRef<ReturnType<PaymentWidgetInstance["renderPaymentMethods"]> | null>(null);
-    const agreementsWidgetRef = useRef<ReturnType<PaymentWidgetInstance["renderAgreement"]> | null>(null);
     const agreementRef = useRef(null);
 
     useEffect(() => {
@@ -72,8 +72,8 @@ const PaymentModal = ({ products, carts, totalPrice, setOpen, setCarts }: Paymen
                                 await paymentWidget?.requestPayment({
                                     orderId: nanoid(),
                                     orderName: '아이스 아메리카노 외 1건',
-                                    successUrl: `${window.location.origin}/success`,
-                                    failUrl: `${window.location.origin}/fail`,
+                                    successUrl: `${window.location.origin}/companies/${id}/success`,
+                                    failUrl: `${window.location.origin}/companies/${id}/fail`,
                                 });
                             } catch (error) {
                                 console.error(error);
