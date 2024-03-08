@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction } from 'react';
-import { ProductsArray } from '@/types/product/type';
+import { KioskProductsArray } from '@/types/product/type';
 
 const useCartQuantity = (
-  carts: ProductsArray,
-  setCarts: Dispatch<SetStateAction<ProductsArray>>,
+  carts: KioskProductsArray,
+  setCarts: Dispatch<SetStateAction<KioskProductsArray>>,
 ) => {
   const decreaseQuantity = (productId: string) => {
     setCarts((currentCarts) => {
@@ -16,8 +16,6 @@ const useCartQuantity = (
       );
     });
   };
-
-  // 수량 증가 함수
   const increaseQuantity = (productId: string) => {
     setCarts((currentCarts) =>
       currentCarts.map((item) =>
@@ -26,8 +24,11 @@ const useCartQuantity = (
     );
   };
 
-  // 두 함수 반환
-  return { decreaseQuantity, increaseQuantity };
+  const removeFromCart = (productId: string) => {
+    setCarts((currentCarts) => currentCarts.filter((item) => item.id !== productId));
+  };
+
+  return { decreaseQuantity, increaseQuantity, removeFromCart };
 };
 
 export default useCartQuantity;

@@ -19,7 +19,12 @@ export interface IProduct {
   };
 }
 
-export type Product = {
+export type KioskCategorise = {
+  id: string;
+  name: string;
+};
+
+export type KioskProduct = {
   description: string;
   id: string;
   image: string;
@@ -27,14 +32,16 @@ export type Product = {
   price: number;
   collectionId: string;
   quantity?: number;
+  category?: string;
 };
 
-export type ProductsArray = Product[];
+export type KioskCategoriseArray = KioskCategorise[];
+export type KioskProductsArray = KioskProduct[];
 
 export interface PaymentItemsProps {
-  products?: ProductsArray;
-  carts: ProductsArray;
+  products?: KioskProductsArray;
+  carts: KioskProductsArray;
   totalPrice?: number;
-  setCarts: Dispatch<SetStateAction<ProductsArray>>;
+  setCarts: Dispatch<SetStateAction<KioskProductsArray>>;
   setOpen: Dispatch<SetStateAction<boolean>>;
 }
