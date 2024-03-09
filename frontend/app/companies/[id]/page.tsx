@@ -6,7 +6,6 @@ import PaymentModal from "@/components/companies/PaymentModal";
 import Search from "@/components/companies/Search";
 import ShopingCartItems from "@/components/companies/ShopingCartItems";
 import StepIndicator from "@/components/companies/StepIndicator";
-
 import { toast } from "@/components/ui/use-toast";
 import { COOKIE_MESSAGE_ID } from "@/constants/constants";
 import client from "@/libs/pocketbase";
@@ -14,18 +13,19 @@ import { KioskCategoriseArray, KioskProductsArray } from "@/types/product/type";
 import Cookies from 'js-cookie';
 import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Skeleton } from "@/components/ui/skeleton";
 import { CategorySkeletonCard } from "@/components/categories/CategorySkeletonCard";
 
 export default function Company() {
     const message = Cookies.get(COOKIE_MESSAGE_ID);
-    const { id } = useParams();
+    const { id: rawId } = useParams();
     const [open, setOpen] = useState(false);
     const [totalPrice, setTotalPrice] = useState(0);
     const [products, setProducts] = useState<KioskProductsArray>([]);
     const [categorise, setCategorise] = useState<KioskCategoriseArray>([]);
     const [carts, setCarts] = useState<KioskProductsArray>([]);
     const [selectedCategoryId, setSelectedCategoryId] = useState<string>('');
+    const [step, setStep] = useState<number>(1);
+    const id = Array.isArray(rawId) ? rawId[0] : rawId || '';
     const isCartEmpty = carts.length === 0;
 
     async function getProduct() {
@@ -37,7 +37,7 @@ export default function Company() {
             setProducts(expand?.products);
             setCategorise(expand?.categories);
             if (expand?.categories?.length > 0) {
-                setSelectedCategoryId(expand?.categories[0].id); // 첫번째 카테고리 선택
+                setSelectedCategoryId(expand?.categories[0].id);
             }
         } catch (error) {
             throw error;
@@ -86,7 +86,7 @@ export default function Company() {
                 </div>
                 <div className="w-[25%]">
                     <div className='h-[95px] flex justify-around border border-l-0 bg-white'>
-                        <StepIndicator />
+                        <StepIndicator step={step} />
                     </div>
                     <div className="p-7">
                         <h4 className="flex justify-between items-center text-xl font-bold">장바구니<span className="text-sm font-normal text-gray-400">order #3252</span></h4>
@@ -109,7 +109,7 @@ export default function Company() {
                 </div>
             </div>
             {open &&
-                <PaymentModal setOpen={setOpen} products={products} totalPrice={totalPrice} carts={carts} setCarts={setCarts} />
+                <PaymentModal id={id} setOpen={setOpen} totalPrice={totalPrice} carts={carts} setCarts={setCarts} />
             }
         </>
     );

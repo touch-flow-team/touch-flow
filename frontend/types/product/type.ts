@@ -39,7 +39,7 @@ export type KioskCategoriseArray = KioskCategorise[];
 export type KioskProductsArray = KioskProduct[];
 
 export interface PaymentItemsProps {
-  products?: KioskProductsArray;
+  id?: string;
   carts: KioskProductsArray;
   totalPrice?: number;
   setCarts: Dispatch<SetStateAction<KioskProductsArray>>;

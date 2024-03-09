@@ -13,8 +13,12 @@ function redirectTo(url: URL) {
   return NextResponse.redirect(url);
 }
 
-function isCurrentUrl(url: string, request: NextRequest) {
+function isCurrentStartUrl(url: string, request: NextRequest) {
   return request.nextUrl.pathname.startsWith(url);
+}
+
+function isCurrentEndUrl(url: string, request: NextRequest) {
+  return request.nextUrl.pathname.endsWith(url);
 }
 
 async function authenticateUser(request: NextRequest, response: NextResponse) {
@@ -40,7 +44,11 @@ export async function middleware(request: NextRequest) {
   const response = NextResponse.next();
   await authenticateUser(request, response);
 
-  if (isCurrentUrl(`/auth/`, request)) {
+  if (isCurrentEndUrl('/success', request) || isCurrentEndUrl('/fail', request)) {
+    return response;
+  }
+
+  if (isCurrentStartUrl(`/auth/`, request)) {
     if (client.authStore.model) {
       const redirectUrl = new URL(`/`, request.url);
       const response = NextResponse.redirect(redirectUrl);
@@ -51,7 +59,7 @@ export async function middleware(request: NextRequest) {
 
   const pathSegments = request.nextUrl.pathname.split('/');
   const companyId = pathSegments[2];
-  if (isCurrentUrl(`/companies/${companyId}/`, request)) {
+  if (isCurrentStartUrl(`/companies/${companyId}/`, request)) {
     if (client.authStore.model) {
       const userCompanies = client.authStore.model['companies'];
       if (!userCompanies.includes(companyId)) {
@@ -64,6 +72,7 @@ export async function middleware(request: NextRequest) {
       return redirectTo(new URL(SIGNIN_URL, request.url));
     }
   }
+
   return response;
 }
 

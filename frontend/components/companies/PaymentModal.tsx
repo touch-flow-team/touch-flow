@@ -4,13 +4,14 @@ import { useEffect, useRef, useState } from "react"
 import { nanoid } from "nanoid";
 import { PaymentItemsProps } from "@/types/product/type";
 import PaymentItems from "./PaymentItems";
+import { useRouter } from "next/navigation";
+import StepIndicator from "./StepIndicator";
 
 const clientKey = "test_ck_vZnjEJeQVxGD914a4qvY3PmOoBN0";
 
-const PaymentModal = ({ products, carts, totalPrice, setOpen, setCarts }: PaymentItemsProps) => {
+const PaymentModal = ({ id, carts, totalPrice, setOpen, setCarts }: PaymentItemsProps) => {
     const [paymentWidget, setPaymentWidget] = useState<PaymentWidgetInstance | null>(null);
     const paymentMethodsWidgetRef = useRef<ReturnType<PaymentWidgetInstance["renderPaymentMethods"]> | null>(null);
-    const agreementsWidgetRef = useRef<ReturnType<PaymentWidgetInstance["renderAgreement"]> | null>(null);
     const agreementRef = useRef(null);
 
     useEffect(() => {
@@ -61,6 +62,9 @@ const PaymentModal = ({ products, carts, totalPrice, setOpen, setCarts }: Paymen
                     </ul>
                 </div>
                 <div className="p-10 items-center border shadow-lg ml-10 w-[600px] rounded-2xl">
+                    <div className=" w-72 mx-auto">
+                        <StepIndicator step={2} />
+                    </div>
                     <div ref={agreementRef} className="mt-10" style={{ width: "100%" }} />
                     <div id="payment-widget" style={{ width: "100%" }} />
                     <div id="agreement" style={{ width: "100%" }} />
@@ -72,8 +76,8 @@ const PaymentModal = ({ products, carts, totalPrice, setOpen, setCarts }: Paymen
                                 await paymentWidget?.requestPayment({
                                     orderId: nanoid(),
                                     orderName: '아이스 아메리카노 외 1건',
-                                    successUrl: `${window.location.origin}/success`,
-                                    failUrl: `${window.location.origin}/fail`,
+                                    successUrl: `${window.location.origin}/companies/${id}/success`,
+                                    failUrl: `${window.location.origin}/companies/${id}/fail`,
                                 });
                             } catch (error) {
                                 console.error(error);
