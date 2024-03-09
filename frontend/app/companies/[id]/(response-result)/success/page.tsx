@@ -6,7 +6,7 @@ export default function SuccessPage({ params: { id } }: { params: { id: string }
     return (
         <div className="flex flex-col items-center justify-center h-screen">
             <div className="flex w-72 mb-8">
-                <StepIndicator />
+                <StepIndicator step={3} />
             </div>
             <div className=' my-12'>
                 <Image className=' rounded-full border' src="/logo.png" alt="Success" width={140} height={140} />
