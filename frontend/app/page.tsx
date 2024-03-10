@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Cookies from 'js-cookie';
+import { motion, useAnimation, useInView } from 'framer-motion';
 import { toast } from "@/components/ui/use-toast";
 import { COOKIE_MESSAGE_ID } from "@/constants/constants";
 import {
@@ -13,8 +14,10 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu"
+import { FaLongArrowAltRight } from "react-icons/fa";
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import Slide from "@/components/main/Slide";
 
 export default function Home() {
   const message = Cookies.get(COOKIE_MESSAGE_ID);
@@ -24,24 +27,24 @@ export default function Home() {
   }
 
   const [isScrolled, setIsScrolled] = useState(false);
+  const controls = useAnimation();
 
   useEffect(() => {
     const handleScroll = () => {
+
       if (window.scrollY > 50) {
         setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
       }
+
     };
+
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  }, [controls]);
 
 
   return (
-
-
 
     <main className="w-[1100px] mx-auto">
       <nav className={`fixed z-50 w-screen left-0 top-0 transition duration-200 ease-in-out ${isScrolled ? ' border-b border-gray-300 bg-white/70 backdrop-blur-xl' : 'bg-white'}  `}>
@@ -317,9 +320,49 @@ export default function Home() {
           </li>
         </ul>
       </section>
-      <section className="mt-56 text-center space-y-6">
+      <section className="mt-64 text-center space-y-6">
         <h2 className="text-6xl font-black">Who created the Touchflow?</h2>
-        <p className="text-2xl text-gray-600 tracking-[-0.4px] leading-10">It was created with the goal of becoming a kiosk for everyone</p>
+        <p className="text-2xl text-gray-600 tracking-[-0.4px] leading-10">It was created with the goal of becoming a kiosk for everyone.</p>
+      </section>
+      <section className="mt-36 space-y-36">
+        <Slide delay={0.4} className="flex justify-between items-center">
+          <div>
+            <div className="space-y-5">
+              <span className=" text-main text-xl font-semibold">1 • CHRIS</span>
+              <h3 className=" font-semibold text-4xl">Creating a kiosk.</h3>
+              <p className=" text-2xl text-gray-600">He managed the kiosk page and payment module <br /> generation middleware used by the user <br /> and headed the overall project</p>
+            </div>
+            <Link href="/" className="  decoration-slice mt-9 text-main text-lg flex items-center">Representative Page<FaLongArrowAltRight /></Link>
+            <p className=" mt-10 text-gray-400">"I would rather that everyone were betrayed by me<br /> instead of me being betrayed by everyone."</p>
+          </div>
+          <div className=" bg-slate-200 w-[500px] h-[500px] rounded-2xl"></div>
+        </Slide>
+        <Slide delay={0.4} className="flex justify-between items-center">
+          <div className=" bg-slate-200 w-[500px] h-[500px] rounded-2xl"></div>
+          <div>
+            <div className="space-y-5">
+              <span className=" text-main text-xl font-semibold">2 • XERAPH</span>
+              <h3 className=" font-semibold text-4xl">Creating a kiosk.</h3>
+              <p className=" text-2xl text-gray-600">He managed the kiosk page and payment module <br /> generation middleware used by the user <br /> and headed the overall project</p>
+            </div>
+            <Link href="/" className="  decoration-slice mt-9 text-main text-lg flex items-center">Representative Page<FaLongArrowAltRight /></Link>
+            <p className=" mt-10 text-gray-400">"I would rather that everyone were betrayed by me<br /> instead of me being betrayed by everyone."</p>
+          </div>
+
+        </Slide>
+        <Slide delay={0.4} className="flex justify-between items-center">
+          <div>
+            <div className="space-y-5">
+              <span className=" text-main text-xl font-semibold">3 • Sumin</span>
+              <h3 className=" font-semibold text-4xl">Creating a kiosk.</h3>
+              <p className=" text-2xl text-gray-600">He managed the kiosk page and payment module <br /> generation middleware used by the user <br /> and headed the overall project</p>
+            </div>
+            <Link href="/" className="  decoration-slice mt-9 text-main text-lg flex items-center">Representative Page<FaLongArrowAltRight /></Link>
+            <p className=" mt-10 text-gray-400">"I would rather that everyone were betrayed by me<br /> instead of me being betrayed by everyone."</p>
+          </div>
+          <div className=" bg-slate-200 w-[500px] h-[500px] rounded-2xl"></div>
+
+        </Slide>
       </section>
     </main >
   );
