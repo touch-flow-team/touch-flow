@@ -7,7 +7,11 @@ import { ClientResponseError } from 'pocketbase';
 export default function useSignin() {
   const signin = async (email: string, password: string) => {
     try {
-      const authData = await client.collection('users').authWithPassword(email, password);
+      const authData = await client.collection('users').authWithPassword(email, password, {
+        expand: 'companies',
+        fields:
+          'token,record.id,record.username,record.expand.companies.id,record.expand.companies.name,record.expand.companies.logo',
+      });
       toast({
         variant: 'default',
         title: `✅ 로그인 성공적으로 완료했습니다`,

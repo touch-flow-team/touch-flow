@@ -3,6 +3,7 @@ import type { NextRequest } from 'next/server';
 import client from './libs/pocketbase';
 import { getNextjsCookie } from '@/libs/server-cookie';
 import { SIGNIN_URL } from './constants/constants';
+import { MESSAGE_LOGOUT_PLS } from './constants/errormessage';
 
 function clearAuthStoreAndSetCookie(response: NextResponse) {
   client.authStore.clear();
@@ -52,7 +53,10 @@ export async function middleware(request: NextRequest) {
     if (client.authStore.model) {
       const redirectUrl = new URL(`/`, request.url);
       const response = NextResponse.redirect(redirectUrl);
-      response.cookies.set('message', `로그아웃 후 접속해주시길 바랍니다. 🙏`);
+      response.cookies.set('message', MESSAGE_LOGOUT_PLS);
+      return response;
+    } else {
+      response.cookies.delete('message');
       return response;
     }
   }

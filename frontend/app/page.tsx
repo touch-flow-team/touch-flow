@@ -1,51 +1,60 @@
 "use client"
 
 import Image from "next/image";
-import Cookies from 'js-cookie';
-import { motion, useAnimation, useInView } from 'framer-motion';
-import { toast } from "@/components/ui/use-toast";
-import { COOKIE_MESSAGE_ID } from "@/constants/constants";
-import {
-  NavigationMenu,
-  NavigationMenuContent,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  NavigationMenuList,
-  NavigationMenuTrigger,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu"
-import { FaLongArrowAltRight } from "react-icons/fa";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
+import { useAnimation } from 'framer-motion';
+import { FaLongArrowAltRight } from "react-icons/fa";
 import Slide from "@/components/main/Slide";
+import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
+import { onClickCheckSignUser } from "@/libs/errorHandler";
+import NavMenu from "@/components/main/NavMenu";
+import { Skeleton } from "@/components/ui/skeleton"
+import client from "@/libs/pocketbase";
+import { Combobox } from "@/components/main/Combobox";
+import { Companies } from "@/types/companies/type";
+
 
 export default function Home() {
-  const message = Cookies.get(COOKIE_MESSAGE_ID);
-  if (message) {
-    toast({ title: message, });
-    Cookies.remove(COOKIE_MESSAGE_ID);
-  }
-
   const [isScrolled, setIsScrolled] = useState(false);
+  const [isIogin, setIsIogin] = useState<boolean | null>(null)
+  const [companies, setCompanies] = useState<Companies>([])
+  const [currentCompany, setCurrentCompany] = useState<string>("")
   const controls = useAnimation();
 
-  useEffect(() => {
-    const handleScroll = () => {
 
+  useEffect(() => {
+    setIsIogin(client.authStore.isValid)
+    const userId = client.authStore.model?.id
+    const getIoginUserCompanies = async () => {
+      try {
+        const company = await client.collection('users').getOne(userId, { expand: "companies", fields: "expand.companies.id,expand.companies.name,expand.companies.logo" });
+        setCompanies(company?.expand?.companies)
+      }
+      catch (error) {
+        console.error('Error fetching user wait:', error);
+        throw error;
+      }
+
+    }
+    getIoginUserCompanies()
+  }, [])
+
+  console.log(companies)
+
+  useEffect(() => {
+    /** 상단 메인 이미지 뒤에 있는 BG의 색상이 스크롤에 위치에 따라 생상 뚜렷하게 만드는 함수 **/
+    const handleScroll = () => {
       if (window.scrollY > 50) {
         setIsScrolled(true);
       }
-
     };
-
 
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [controls]);
 
-
   return (
-
     <main className="w-[1100px] mx-auto">
       <nav className={`fixed z-50 w-screen left-0 top-0 transition duration-200 ease-in-out ${isScrolled ? ' border-b border-gray-300 bg-white/70 backdrop-blur-xl' : 'bg-white'}  `}>
         <div className="w-[1100px] mx-auto py-8 px-10 flex justify-between">
@@ -53,205 +62,23 @@ export default function Home() {
             <Image className=" rounded-3xl" src="/logo.png" alt="logo" width={35} height={35} />
             <h1 className=" text-xl text-gray-900 font-black">TouchFlow</h1>
           </div>
-          <NavigationMenu>
-            <NavigationMenuList>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Companyies</NavigationMenuTrigger>
-                <NavigationMenuContent className="p-2 flex">
-                  <div>
-                    <NavigationMenuLink className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
-                      <div className="w-10 h-10 rounded-md bg-slate-300"></div>
-                      <div>
-                        <span className="text-sm font-medium transition-colors">Calendar</span>
-                        <p className=" text-gray-500 text-xs">You can test the calendar.</p>
-                      </div>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
-                      <div className="w-10 h-10 rounded-md bg-slate-300"></div>
-                      <div>
-                        <span className="text-sm font-medium transition-colors">Category</span>
-                        <p className=" text-gray-500 text-xs">You can test the category.</p>
-                      </div>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
-                      <div className="w-10 h-10 rounded-md bg-slate-300"></div>
-                      <div>
-                        <span className="text-sm font-medium transition-colors">Dashboard</span>
-                        <p className=" text-gray-500 text-xs">You can test the dashboard.</p>
-                      </div>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
-                      <div className="w-10 h-10 rounded-md bg-slate-300"></div>
-                      <div>
-                        <span className="text-sm font-medium transition-colors">Product</span>
-                        <p className=" text-gray-500 text-xs">You can test the product.</p>
-                      </div>
-                    </NavigationMenuLink>
-                  </div>
-                  <ul className="ml-3 grid gap-3 w-[320px] ">
-                    <li className=" row-span-3 flex h-full w-full select-none flex-col justify-end rounded-md  bg-slate-50 p-6 no-underline outline-none focus:shadow-md">
-                      <div className="mb-2 mt-4 text-lg font-medium">
-                        Companyies
-                      </div>
-                      <p className="text-sm leading-tight text-muted-foreground">
-                        Beautifully designed components built with Radix UI and
-                        Tailwind CSS.
-                      </p>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Stocks</NavigationMenuTrigger>
-                <NavigationMenuContent className="p-2 flex">
-                  <div>
-                    <NavigationMenuLink className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
-                      <div className="w-10 h-10 rounded-md bg-slate-300"></div>
-                      <div>
-                        <span className="text-sm font-medium transition-colors">Calendar</span>
-                        <p className=" text-gray-500 text-xs">You can test the calendar.</p>
-                      </div>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
-                      <div className="w-10 h-10 rounded-md bg-slate-300"></div>
-                      <div>
-                        <span className="text-sm font-medium transition-colors">Category</span>
-                        <p className=" text-gray-500 text-xs">You can test the category.</p>
-                      </div>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
-                      <div className="w-10 h-10 rounded-md bg-slate-300"></div>
-                      <div>
-                        <span className="text-sm font-medium transition-colors">Dashboard</span>
-                        <p className=" text-gray-500 text-xs">You can test the dashboard.</p>
-                      </div>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
-                      <div className="w-10 h-10 rounded-md bg-slate-300"></div>
-                      <div>
-                        <span className="text-sm font-medium transition-colors">Product</span>
-                        <p className=" text-gray-500 text-xs">You can test the product.</p>
-                      </div>
-                    </NavigationMenuLink>
-                  </div>
-                  <ul className="ml-3 grid gap-3 w-[320px] ">
-                    <li className=" row-span-3 flex h-full w-full select-none flex-col justify-end rounded-md  bg-slate-50 p-6 no-underline outline-none focus:shadow-md">
-                      <div className="mb-2 mt-4 text-lg font-medium">
-                        Companyies
-                      </div>
-                      <p className="text-sm leading-tight text-muted-foreground">
-                        Beautifully designed components built with Radix UI and
-                        Tailwind CSS.
-                      </p>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Waitings</NavigationMenuTrigger>
-                <NavigationMenuContent className="p-2 flex">
-                  <div>
-                    <NavigationMenuLink className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
-                      <div className="w-10 h-10 rounded-md bg-slate-300"></div>
-                      <div>
-                        <span className="text-sm font-medium transition-colors">Calendar</span>
-                        <p className=" text-gray-500 text-xs">You can test the calendar.</p>
-                      </div>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
-                      <div className="w-10 h-10 rounded-md bg-slate-300"></div>
-                      <div>
-                        <span className="text-sm font-medium transition-colors">Category</span>
-                        <p className=" text-gray-500 text-xs">You can test the category.</p>
-                      </div>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
-                      <div className="w-10 h-10 rounded-md bg-slate-300"></div>
-                      <div>
-                        <span className="text-sm font-medium transition-colors">Dashboard</span>
-                        <p className=" text-gray-500 text-xs">You can test the dashboard.</p>
-                      </div>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
-                      <div className="w-10 h-10 rounded-md bg-slate-300"></div>
-                      <div>
-                        <span className="text-sm font-medium transition-colors">Product</span>
-                        <p className=" text-gray-500 text-xs">You can test the product.</p>
-                      </div>
-                    </NavigationMenuLink>
-                  </div>
-                  <ul className="ml-3 grid gap-3 w-[320px] ">
-                    <li className=" row-span-3 flex h-full w-full select-none flex-col justify-end rounded-md  bg-slate-50 p-6 no-underline outline-none focus:shadow-md">
-                      <div className="mb-2 mt-4 text-lg font-medium">
-                        Companyies
-                      </div>
-                      <p className="text-sm leading-tight text-muted-foreground">
-                        Beautifully designed components built with Radix UI and
-                        Tailwind CSS.
-                      </p>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <NavigationMenuTrigger>Orders</NavigationMenuTrigger>
-                <NavigationMenuContent className="p-2 flex">
-                  <div>
-                    <NavigationMenuLink className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
-                      <div className="w-10 h-10 rounded-md bg-slate-300"></div>
-                      <div>
-                        <span className="text-sm font-medium transition-colors">Calendar</span>
-                        <p className=" text-gray-500 text-xs">You can test the calendar.</p>
-                      </div>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
-                      <div className="w-10 h-10 rounded-md bg-slate-300"></div>
-                      <div>
-                        <span className="text-sm font-medium transition-colors">Category</span>
-                        <p className=" text-gray-500 text-xs">You can test the category.</p>
-                      </div>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
-                      <div className="w-10 h-10 rounded-md bg-slate-300"></div>
-                      <div>
-                        <span className="text-sm font-medium transition-colors">Dashboard</span>
-                        <p className=" text-gray-500 text-xs">You can test the dashboard.</p>
-                      </div>
-                    </NavigationMenuLink>
-                    <NavigationMenuLink className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
-                      <div className="w-10 h-10 rounded-md bg-slate-300"></div>
-                      <div>
-                        <span className="text-sm font-medium transition-colors">Product</span>
-                        <p className=" text-gray-500 text-xs">You can test the product.</p>
-                      </div>
-                    </NavigationMenuLink>
-                  </div>
-                  <ul className="ml-3 grid gap-3 w-[320px] ">
-                    <li className=" row-span-3 flex h-full w-full select-none flex-col justify-end rounded-md  bg-slate-50 p-6 no-underline outline-none focus:shadow-md">
-                      <div className="mb-2 mt-4 text-lg font-medium">
-                        Companyies
-                      </div>
-                      <p className="text-sm leading-tight text-muted-foreground">
-                        Beautifully designed components built with Radix UI and
-                        Tailwind CSS.
-                      </p>
-                    </li>
-                  </ul>
-                </NavigationMenuContent>
-              </NavigationMenuItem>
-              <NavigationMenuItem>
-                <Link href="/docs" legacyBehavior passHref>
-                  <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                    Developers
-                  </NavigationMenuLink>
-                </Link>
-              </NavigationMenuItem>
-            </NavigationMenuList>
-          </NavigationMenu>
-          <div className=" space-x-1">
-            <Link href="/auth/signin" className={navigationMenuTriggerStyle()}>sign in</Link>
-            <Link href="/auth/signup" className={navigationMenuTriggerStyle() + "hover:bg-main focus:bg-main bg-main hover:text-white text-white "}>sign up</Link>
-          </div>
+          <NavMenu currentCompany={currentCompany} />
+          {isIogin == null && (
+            <div className=" flex items-center space-x-3">
+              <Skeleton className="w-[150px] bg-slate-200 h-[35px] rounded-full" />
+              <Skeleton className="w-[90px] bg-slate-200 h-[35px] rounded-full" />
+            </div>
+          )
+          }
+          {isIogin && (<Combobox companies={companies} setCurrentCompany={setCurrentCompany} />)}
+          {isIogin == false && (
+            <div className="space-x-1">
+              <Link href="/auth/signin" onClick={onClickCheckSignUser} className={navigationMenuTriggerStyle()}>sign in</Link>
+              <Link href="/auth/signup" onClick={onClickCheckSignUser} className={navigationMenuTriggerStyle() + "hover:bg-main focus:bg-main bg-main hover:text-white text-white "}>sign up</Link>
+            </div>
+          )}
+
+
         </div>
       </nav>
       <section className=" relative text-center mt-56">
@@ -259,7 +86,7 @@ export default function Home() {
           <h4 className=" text-6xl font-black tracking-[-0.5px]">Why pay more?  It's free.</h4>
           <p className="text-2xl text-gray-600 tracking-[-0.4px] leading-10">government of the people, by the people, for the people, <br />shall not perish from the earth.</p>
         </div>
-        <Link href={"/"} className=" bg-main text-white font-semibold py-4 px-6 rounded-lg inline-block mt-10">Get Started</Link>
+        <Link href="" className=" bg-main text-white font-semibold py-4 px-6 rounded-lg inline-block mt-10">Get Started</Link>
         <div className="absolute z-[-10] right-10 top-24">
           <div
             className={`transition duration-700 ease-in-out ${isScrolled ? 'opacity-90' : 'opacity-40'} w-[570px] h-[820px] rounded-full mx-auto blur-3xl bg-gradient-to-t  from-white via-purple-500 to-white`}>
