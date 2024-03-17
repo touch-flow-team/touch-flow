@@ -152,7 +152,7 @@ export default function Home() {
         <p className="text-2xl text-gray-600 tracking-[-0.4px] leading-10">It was created with the goal of becoming a kiosk for everyone.</p>
       </section>
       <section className="mt-36 space-y-36">
-        <Slide delay={0.4} className="flex justify-between items-center">
+        <Slide delay={0.3} className="flex justify-between items-center">
           <div>
             <div className="space-y-5">
               <span className=" text-main text-xl font-semibold">1 • CHRIS</span>
@@ -164,7 +164,7 @@ export default function Home() {
           </div>
           <div className=" bg-slate-200 w-[500px] h-[500px] rounded-2xl"></div>
         </Slide>
-        <Slide delay={0.4} className="flex justify-between items-center">
+        <Slide delay={0.3} className="flex justify-between items-center">
           <div className=" bg-slate-200 w-[500px] h-[500px] rounded-2xl"></div>
           <div>
             <div className="space-y-5">
@@ -177,7 +177,7 @@ export default function Home() {
           </div>
 
         </Slide>
-        <Slide delay={0.4} className="flex justify-between items-center">
+        <Slide delay={0.3} className="flex justify-between items-center">
           <div>
             <div className="space-y-5">
               <span className=" text-main text-xl font-semibold">3 • Sumin</span>
@@ -191,6 +191,172 @@ export default function Home() {
 
         </Slide>
       </section>
+      <section className="mt-64 text-center">
+        <div className="flex justify-between w-[500px] mx-auto">
+          <Image src={"/main/chris.jpeg"} alt="chris" width={140} height={140} className="shadow-slate-500 shadow-2xl rounded-lg" />
+          <Image src={"/main/xeraph.png"} alt="xeraph" width={140} height={140} className="shadow-slate-500 shadow-2xl rounded-lg" />
+          <Image src={"/main/sumin.jpeg"} alt="sumin" width={140} height={140} className="shadow-slate-500 shadow-2xl rounded-lg" />
+        </div>
+        <p className=" text-center mt-12 text-5xl font-extrabold bg-clip-text">"It's a <span className="text-5xl font-extrabold bg-clip-text text-transparent bg-[linear-gradient(to_right,theme(colors.pink.600),theme(colors.orange.300),theme(colors.orange.500),theme(colors.orange.400),theme(colors.orange.700),theme(colors.main),theme(colors.purple.400))] bg-[length:200%_auto] animate-gradient">Touch Flow</span> project for everyone"</p>
+        <span className="mt-6 block text-xl text-gray-500">Marketing <Link href={"https://github.com/touch-flow-team/touch-flow"}>@github.com/touch-flow-team</Link></span>
+      </section>
+      <section className="mt-64 relative h-[67rem] rounded-3xl px-24 py-20 text-white text-center bg-slate-900">
+        <h3 className=" text-6xl font-semibold">Actual user reviews.</h3>
+        <span className=" block mt-7 text-3xl text-gray-400">This is a proven review of the companies that actually used it.</span>
+        <button className="mt-7 hover:bg-gray-600 duration-300 bg-gray-700 px-12 py-4 rounded-lg text-xl font-semibold">Join us</button>
+        <ul className="mt-10 flex justify-between">
+          <li>
+            <h6 className="text-9xl text-outline text-slate-900 font-bold">6k</h6>
+            <span className=" block text-sm mt-3">Companies Use Touch Flow</span>
+          </li>
+          <li>
+            <h6 className="text-9xl text-outline text-slate-900 font-bold">4.8</h6>
+            <span className="block text-sm mt-3">Average Review Rating</span>
+          </li>
+          <li>
+            <h6 className="text-9xl text-outline text-slate-900 font-bold">9k</h6>
+            <span className="block text-sm mt-3">Number Mentioned</span>
+          </li>
+          <li>
+            <h6 className="text-9xl text-outline text-slate-900 font-bold">2m</h6>
+            <span className="block text-sm mt-3">Subscription Rate</span>
+          </li>
+        </ul>
+        <div className="columns-3 mt-20 left-0 px-24 absolute">
+          <div className="bg-white mb-6 w-full rounded-lg p-7 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Avatar>
+                  <AvatarImage src="https://github.com/shadcn.png" alt="@shadcn" />
+                </Avatar>
+                <div className=" text-left ml-3">
+                  <div className="text-sm text-gray-700 font-semibold flex items-center">UserName<Image className=" block ml-1" src={"https://assets-global.website-files.com/61d72a2cda50bc679e28766b/6324000aa5b09cf5543c9909_tweet-verified_min.svg"} width={13} height={13} alt="logo" /> </div>
+                  <div className="text-xs text-gray-500">@username</div>
+                </div>
+              </div>
+            </div>
+            <p className=" text-left text-md text-gray-600 mt-3">From the intuitive design to its flawless performance, this product has set a new benchmark in the industry</p>
+          </div>
+          <div className="bg-white mb-6 w-full rounded-lg p-7 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Avatar>
+                  <AvatarImage src="https://avatars.githubusercontent.com/u/17011?v=4" alt="@shadcn" />
+                </Avatar>
+                <div className=" text-left ml-3">
+                  <div className="text-sm text-gray-700 font-semibold flex items-center">UserName<Image className=" block ml-1" src={"https://assets-global.website-files.com/61d72a2cda50bc679e28766b/6324000aa5b09cf5543c9909_tweet-verified_min.svg"} width={13} height={13} alt="logo" /> </div>
+                  <div className="text-xs text-gray-500">@username</div>
+                </div>
+              </div>
+            </div>
+            <p className=" text-left text-md text-gray-600 mt-3">It's not just an app; it's a revolution in how I interact with technology. Highly recommend!</p>
+          </div>
+          <div className="bg-white mb-6 w-full rounded-lg p-7 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Avatar>
+                  <AvatarImage src="https://avatars.githubusercontent.com/u/306134?v=4" alt="@shadcn" />
+                </Avatar>
+                <div className=" text-left ml-3">
+                  <div className="text-sm text-gray-700 font-semibold flex items-center">UserName<Image className=" block ml-1" src={"https://assets-global.website-files.com/61d72a2cda50bc679e28766b/6324000aa5b09cf5543c9909_tweet-verified_min.svg"} width={13} height={13} alt="logo" /> </div>
+                  <div className="text-xs text-gray-500">@username</div>
+                </div>
+              </div>
+            </div>
+            <p className=" text-left text-md text-gray-600 mt-3">Incredible ease of use with Touch Flow. It's an essential tool for me now!</p>
+          </div>
+          <div className="bg-white mb-6 w-full rounded-lg p-7 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Avatar>
+                  <AvatarImage src="https://avatars.githubusercontent.com/u/68232?s=100&v=4" alt="@shadcn" />
+                </Avatar>
+                <div className=" text-left ml-3">
+                  <div className="text-sm text-gray-700 font-semibold flex items-center">UserName<Image className=" block ml-1" src={"https://assets-global.website-files.com/61d72a2cda50bc679e28766b/6324000aa5b09cf5543c9909_tweet-verified_min.svg"} width={13} height={13} alt="logo" /> </div>
+                  <div className="text-xs text-gray-500">@username</div>
+                </div>
+              </div>
+            </div>
+            <p className=" text-left text-md text-gray-600 mt-3">I'm blown away by the elegance and simplicity of <span className=" text-blue">@touch_flow</span></p>
+          </div>
+          <div className="bg-white mb-6 w-full rounded-lg p-7 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Avatar>
+                  <AvatarImage src="https://avatars.githubusercontent.com/u/7474674?v=4" alt="@shadcn" />
+                </Avatar>
+                <div className=" text-left ml-3">
+                  <div className="text-sm text-gray-700 font-semibold flex items-center">UserName<Image className=" block ml-1" src={"https://assets-global.website-files.com/61d72a2cda50bc679e28766b/6324000aa5b09cf5543c9909_tweet-verified_min.svg"} width={13} height={13} alt="logo" /> </div>
+                  <div className="text-xs text-gray-500">@username</div>
+                </div>
+              </div>
+            </div>
+            <p className=" text-left text-md text-gray-600 mt-3">AIncredible ease of use with <span className="text-blue">@touch_flow</span> It's an essential tool for me now!</p>
+          </div>
+          <div className="bg-white mb-6 w-full rounded-lg p-7 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Avatar>
+                  <AvatarImage src="https://avatars.githubusercontent.com/u/1948812?v=4" alt="@shadcn" />
+                </Avatar>
+                <div className=" text-left ml-3">
+                  <div className="text-sm text-gray-700 font-semibold flex items-center">UserName<Image className=" block ml-1" src={"https://assets-global.website-files.com/61d72a2cda50bc679e28766b/6324000aa5b09cf5543c9909_tweet-verified_min.svg"} width={13} height={13} alt="logo" /> </div>
+                  <div className="text-xs text-gray-500">@username</div>
+                </div>
+              </div>
+            </div>
+            <p className=" text-left text-md text-gray-600 mt-3">A game-changer in its field. The ease of use and the results</p>
+          </div>
+          <div className="bg-white mb-6 w-full rounded-lg p-7 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Avatar>
+                  <AvatarImage src="https://avatars.githubusercontent.com/u/20180?s=100&v=4" alt="@shadcn" />
+                </Avatar>
+                <div className=" text-left ml-3">
+                  <div className="text-sm text-gray-700 font-semibold flex items-center">UserName<Image className=" block ml-1" src={"https://assets-global.website-files.com/61d72a2cda50bc679e28766b/6324000aa5b09cf5543c9909_tweet-verified_min.svg"} width={13} height={13} alt="logo" /> </div>
+                  <div className="text-xs text-gray-500">@username</div>
+                </div>
+              </div>
+            </div>
+            <p className=" text-left text-md text-gray-600 mt-3"><span className=" text-blue">@touch_flow</span> innovative approach to user interface design is truly impressive. It has increased my efficiency</p>
+          </div>
+          <div className="bg-white mb-6 w-full rounded-lg p-7 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Avatar>
+                  <AvatarImage src="https://avatars.githubusercontent.com/u/658?s=100&v=4" alt="@shadcn" />
+                </Avatar>
+                <div className=" text-left ml-3">
+                  <div className="text-sm text-gray-700 font-semibold flex items-center">UserName<Image className=" block ml-1" src={"https://assets-global.website-files.com/61d72a2cda50bc679e28766b/6324000aa5b09cf5543c9909_tweet-verified_min.svg"} width={13} height={13} alt="logo" /> </div>
+                  <div className="text-xs text-gray-500">@username</div>
+                </div>
+              </div>
+            </div>
+            <p className=" text-left text-md text-gray-600 mt-3"> I'm consistently amazed by the responsiveness and fluidity of their platform. </p>
+          </div>
+          <div className="bg-white mb-6 w-full rounded-lg p-7 shadow-lg">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center">
+                <Avatar>
+                  <AvatarImage src="https://avatars.githubusercontent.com/u/17310766?v=4" alt="@shadcn" />
+                </Avatar>
+                <div className=" text-left ml-3">
+                  <div className="text-sm text-gray-700 font-semibold flex items-center">UserName<Image className=" block ml-1" src={"https://assets-global.website-files.com/61d72a2cda50bc679e28766b/6324000aa5b09cf5543c9909_tweet-verified_min.svg"} width={13} height={13} alt="logo" /> </div>
+                  <div className="text-xs text-gray-500">@username</div>
+                </div>
+              </div>
+            </div>
+            <p className=" text-left text-md text-gray-600 mt-3"><span className=" text-blue">@touch_flow</span> has set a new benchmark in the industry. </p>
+          </div>
+        </div>
+      </section>
+      <footer className=" border-t w-full py-16 border-gray-400 mt-52">
+        <div className="flex items-center px-10 space-x-2">
+          <Image className=" rounded-3xl" src="/logo.png" alt="logo" width={35} height={35} />
+          <h1 className=" text-xl text-gray-900 font-black">TouchFlow</h1>
+        </div>
+      </footer>
     </main >
   );
 }
