@@ -1,6 +1,6 @@
 import z from 'zod';
 
-export const signupSchema = z
+export const SignupSchema = z
   .object({
     email: z.string().email({ message: '알맞지 않은 형식에 이메일 입니다.' }),
     username: z.string().min(4, { message: '유저이름은 최소 4글자 이상이여합니다' }),
@@ -23,7 +23,7 @@ export const signupSchema = z
     }
   });
 
-export const signinSchema = z.object({
+export const SigninSchema = z.object({
   email: z.string().email({ message: '알맞지 않은 형식에 이메일 입니다.' }),
   password: z.string().min(8, { message: '최소 8글자 이상이여야 합니다.' }),
 });

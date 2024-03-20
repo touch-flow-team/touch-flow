@@ -1,9 +1,9 @@
 import z from 'zod';
-import { signinSchema, signupSchema } from '../../schemata/auth/validation';
+import { SigninSchema, SignupSchema } from '../../schemata/auth/validation';
 import { UseFormRegister } from 'react-hook-form';
 
-export type SignupFormData = z.infer<typeof signupSchema>;
-export type SigninFormData = z.infer<typeof signinSchema>;
+export type SignupFormData = z.infer<typeof SignupSchema>;
+export type SigninFormData = z.infer<typeof SigninSchema>;
 
 export interface AuthFormProps {
   isSignup: boolean;

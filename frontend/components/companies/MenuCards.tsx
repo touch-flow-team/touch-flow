@@ -26,7 +26,7 @@ const MenuCards = ({ products, setCarts }: { products: KioskProductsArray, setCa
     };
     return (
         <>
-            {products.map((product) => (
+            {products?.map((product) => (
                 <Card key={product?.id} className="rounded-2xl px-8 py-8">
                     <CardContent className="flex">
                         <div className="bg-gray-50 min-w-32 rounded-lg overflow-hidden">

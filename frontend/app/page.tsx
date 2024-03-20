@@ -6,13 +6,11 @@ import { useEffect, useState } from "react";
 import { useAnimation } from 'framer-motion';
 import { FaLongArrowAltRight } from "react-icons/fa";
 import Slide from "@/components/main/Slide";
-import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu"
-import { onClickCheckSignUser } from "@/libs/errorHandler";
-import NavMenu from "@/components/main/NavMenu";
-import { Skeleton } from "@/components/ui/skeleton"
 import client from "@/libs/pocketbase";
-import { Combobox } from "@/components/main/Combobox";
 import { Companies } from "@/types/companies/type";
+import { Avatar, AvatarImage } from "@radix-ui/react-avatar";
+import Nav from "@/components/main/Nav";
+import { CheckSignUserMessage } from "@/libs/errorHandler";
 
 
 export default function Home() {
@@ -22,25 +20,23 @@ export default function Home() {
   const [currentCompany, setCurrentCompany] = useState<string>("")
   const controls = useAnimation();
 
-
+  CheckSignUserMessage()
   useEffect(() => {
     setIsIogin(client.authStore.isValid)
+    const defaultCompany = String(localStorage.getItem('currentCompany'))
     const userId = client.authStore.model?.id
+    setCurrentCompany(defaultCompany)
     const getIoginUserCompanies = async () => {
       try {
         const company = await client.collection('users').getOne(userId, { expand: "companies", fields: "expand.companies.id,expand.companies.name,expand.companies.logo" });
         setCompanies(company?.expand?.companies)
       }
       catch (error) {
-        console.error('Error fetching user wait:', error);
-        throw error;
+        return
       }
-
     }
     getIoginUserCompanies()
   }, [])
-
-  console.log(companies)
 
   useEffect(() => {
     /** 상단 메인 이미지 뒤에 있는 BG의 색상이 스크롤에 위치에 따라 생상 뚜렷하게 만드는 함수 **/
@@ -49,38 +45,13 @@ export default function Home() {
         setIsScrolled(true);
       }
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, [controls]);
 
   return (
     <main className="w-[1100px] mx-auto">
-      <nav className={`fixed z-50 w-screen left-0 top-0 transition duration-200 ease-in-out ${isScrolled ? ' border-b border-gray-300 bg-white/70 backdrop-blur-xl' : 'bg-white'}  `}>
-        <div className="w-[1100px] mx-auto py-8 px-10 flex justify-between">
-          <div className="flex items-center space-x-2">
-            <Image className=" rounded-3xl" src="/logo.png" alt="logo" width={35} height={35} />
-            <h1 className=" text-xl text-gray-900 font-black">TouchFlow</h1>
-          </div>
-          <NavMenu currentCompany={currentCompany} />
-          {isIogin == null && (
-            <div className=" flex items-center space-x-3">
-              <Skeleton className="w-[150px] bg-slate-200 h-[35px] rounded-full" />
-              <Skeleton className="w-[90px] bg-slate-200 h-[35px] rounded-full" />
-            </div>
-          )
-          }
-          {isIogin && (<Combobox companies={companies} setCurrentCompany={setCurrentCompany} />)}
-          {isIogin == false && (
-            <div className="space-x-1">
-              <Link href="/auth/signin" onClick={onClickCheckSignUser} className={navigationMenuTriggerStyle()}>sign in</Link>
-              <Link href="/auth/signup" onClick={onClickCheckSignUser} className={navigationMenuTriggerStyle() + "hover:bg-main focus:bg-main bg-main hover:text-white text-white "}>sign up</Link>
-            </div>
-          )}
-
-
-        </div>
-      </nav>
+      <Nav companies={companies} isIogin={isIogin} isScrolled={isScrolled} currentCompany={currentCompany} setCurrentCompany={setCurrentCompany} />
       <section className=" relative text-center mt-56">
         <div className="space-y-6">
           <h4 className=" text-6xl font-black tracking-[-0.5px]">Why pay more?  It's free.</h4>
@@ -188,7 +159,6 @@ export default function Home() {
             <p className=" mt-10 text-gray-400">"I would rather that everyone were betrayed by me<br /> instead of me being betrayed by everyone."</p>
           </div>
           <div className=" bg-slate-200 w-[500px] h-[500px] rounded-2xl"></div>
-
         </Slide>
       </section>
       <section className="mt-64 text-center">
