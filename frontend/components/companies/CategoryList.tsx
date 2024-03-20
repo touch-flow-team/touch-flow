@@ -1,7 +1,7 @@
 import { KioskCategoriseArray } from "@/types/product/type"
 
 const CategoryList = ({ categorise, selectedCategoryId, onCategorySelect }: { categorise: KioskCategoriseArray, selectedCategoryId: string, onCategorySelect: (categoryId: string) => void }) => {
-    const selectedCategoryName = categorise.find(category => category.id === selectedCategoryId)?.name;
+    const selectedCategoryName = categorise?.find(category => category.id === selectedCategoryId)?.name;
 
     return (
         <>

@@ -50,7 +50,7 @@ export async function middleware(request: NextRequest) {
   }
 
   if (isCurrentStartUrl(`/auth/`, request)) {
-    if (client.authStore.model) {
+    if (client.authStore.isValid) {
       const redirectUrl = new URL(`/`, request.url);
       const response = NextResponse.redirect(redirectUrl);
       response.cookies.set('message', MESSAGE_LOGOUT_PLS);

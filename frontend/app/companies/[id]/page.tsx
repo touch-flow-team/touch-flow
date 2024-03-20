@@ -40,7 +40,7 @@ export default function Company() {
                 setSelectedCategoryId(expand?.categories[0].id);
             }
         } catch (error) {
-            throw error;
+            return
         }
     }
 
@@ -67,7 +67,7 @@ export default function Company() {
         setTotalPrice(calculateTotal(carts));
     }, [carts]);
 
-    const filteredProducts = products.filter(product => product?.category === selectedCategoryId);
+    const filteredProducts = products?.filter(product => product?.category === selectedCategoryId);
 
     return (
         <>
@@ -77,10 +77,10 @@ export default function Company() {
                         <Search />
                     </div>
                     <div className='h-full px-14'>
-                        {categorise.length === 0 ? <CategorySkeletonCard /> : <CategoryList categorise={categorise} selectedCategoryId={selectedCategoryId} onCategorySelect={handleCategorySelect} />}
+                        {categorise?.length === 0 ? <CategorySkeletonCard /> : <CategoryList categorise={categorise} selectedCategoryId={selectedCategoryId} onCategorySelect={handleCategorySelect} />}
 
                         <div className='mt-5 grid grid-cols-2 gap-4'>
-                            {filteredProducts.length === 0 ? <ProductSkeletonCard /> : <MenuCards products={filteredProducts} setCarts={setCarts} />}
+                            {filteredProducts?.length === 0 ? <ProductSkeletonCard /> : <MenuCards products={filteredProducts} setCarts={setCarts} />}
                         </div>
                     </div>
                 </div>

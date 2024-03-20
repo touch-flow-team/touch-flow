@@ -1,14 +1,14 @@
 "use client"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
-import { z } from "zod"
-
 import { Button } from "@/components/ui/button"
 import {
     Form,
     FormControl,
+    FormDescription,
     FormField,
     FormItem,
+    FormLabel,
     FormMessage,
 } from "@/components/ui/form"
 import {
@@ -19,26 +19,22 @@ import {
     SelectValue,
 } from "@/components/ui/select"
 import { toast } from "@/components/ui/use-toast"
-import { Companies } from "@/types/companies/type"
+import { ComboboxFormData, Companies } from "@/types/companies/type"
+import { ComboboxSchema } from "@/schemata/companies/validation"
+import Link from "next/link"
 
-const FormSchema = z.object({
-    company: z.string({ required_error: "Please select an company to display.", })
-})
 
-export function Combobox({ setCurrentCompany, companies }: { setCurrentCompany: Function, companies: Companies }) {
-    const form = useForm<z.infer<typeof FormSchema>>({
-        resolver: zodResolver(FormSchema),
+export function Combobox({ currentCompany, setCurrentCompany, companies }: { currentCompany: string, setCurrentCompany: Function, companies: Companies }) {
+    const form = useForm<ComboboxFormData>({
+        resolver: zodResolver(ComboboxSchema),
     })
 
-    function onSubmit(data: z.infer<typeof FormSchema>) {
+    function onSubmit(data: ComboboxFormData) {
         setCurrentCompany(data.company)
+        localStorage.setItem("currentCompany", data.company)
+        if (data.company == currentCompany) return
         toast({
-            title: "You submitted the following values:",
-            description: (
-                <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-                    <code className="text-white">{JSON.stringify(data, null, 2)}</code>
-                </pre>
-            ),
+            title: `회사가 변경 되었습니다`,
         })
     }
 
@@ -51,26 +47,25 @@ export function Combobox({ setCurrentCompany, companies }: { setCurrentCompany: 
                         name="company"
                         render={({ field }) => (
                             <FormItem>
-                                <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <Select onValueChange={field.onChange} defaultValue={currentCompany}>
                                     <FormControl>
                                         <SelectTrigger>
-                                            <SelectValue placeholder="Choose a company" />
+                                            <SelectValue placeholder="Select your company" />
                                         </SelectTrigger>
                                     </FormControl>
                                     <SelectContent>
                                         {companies.map((company) => {
                                             return <SelectItem key={company.id} value={company.id}>{company.name}</SelectItem>
                                         })}
-
                                     </SelectContent>
                                 </Select>
                                 <FormMessage />
                             </FormItem>
                         )}
                     />
-                    <Button type="submit">Change</Button>
+                    <Button type="submit">Submit</Button>
                 </form>
             </Form>
-        </div>
+        </div >
     )
 }

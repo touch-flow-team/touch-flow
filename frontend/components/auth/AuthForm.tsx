@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
 import { AuthFormProps, SigninFormData, SignupFormData } from '@/types/auth/type';
-import { signinSchema, signupSchema } from '@/schemata/auth/validation';
+import { SigninSchema, SignupSchema } from '@/schemata/auth/validation';
 import { AuthInput } from './AuthInput';
 import { AiOutlineLoading3Quarters } from 'react-icons/ai';
 import useSignup from '@/hooks/auth/useSignup';
@@ -20,7 +20,7 @@ export default function AuthForm({ isSignup }: AuthFormProps) {
 
     const { handleSubmit, register, formState: { errors, isSubmitting } } = useForm<SignupFormData | SigninFormData>({
         mode: 'onChange',
-        resolver: zodResolver(isSignup ? signupSchema : signinSchema),
+        resolver: zodResolver(isSignup ? SignupSchema : SigninSchema),
     });
 
     const onSubmit = async (data: SignupFormData | SigninFormData) => {

@@ -42,17 +42,21 @@ const getProduct = async ({
   current_page: number;
   filtering: string;
 }) => {
-  const products: IResult<IProduct> = await client
-    .collection(PB_COLLECTIONS.PRODUCTS)
-    .getList(current_page, PRODUCT_PAGINATION_SIZE, {
-      filter: `category = "${filtering}"`,
-      expand: 'category',
-      sort: 'created',
-      cache: 'no-store',
-      next: { tags: [REVALIDATE_TAG.PRODUCT] },
-    });
-
-  return products;
+  try {
+    const products: IResult<IProduct> = await client
+      .collection(PB_COLLECTIONS.PRODUCTS)
+      .getList(current_page, PRODUCT_PAGINATION_SIZE, {
+        filter: `${PB_COLLECTIONS.CATEGORIES} = "${filtering}"`,
+        expand: `${PB_COLLECTIONS.CATEGORIES}`,
+        sort: 'created',
+        cache: 'no-store',
+        next: { tags: [REVALIDATE_TAG.PRODUCT] },
+      });
+    return products;
+  } catch (error) {
+    console.log(error, 'error in getProduct');
+    throw error;
+  }
 };
 
 const getAllProduct = async ({ current_page }: { current_page: number }) => {
@@ -64,7 +68,6 @@ const getAllProduct = async ({ current_page }: { current_page: number }) => {
       cache: 'no-store',
       next: { tags: [REVALIDATE_TAG.PRODUCT] },
     });
-
   return products;
 };
 
