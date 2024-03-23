@@ -1,32 +1,19 @@
-'use client';
-import { useMemo, useState } from 'react';
+"use client";
+import React, { useState, useMemo, FC } from 'react';
+import { format, addYears, subYears, startOfMonth, endOfMonth, startOfWeek, endOfWeek, addDays, differenceInCalendarDays, getMonth, isSunday } from 'date-fns';
 import { SlArrowUp, SlArrowDown } from 'react-icons/sl';
-import {
-  format,
-  addYears,
-  subYears,
-  startOfMonth,
-  endOfMonth,
-  startOfWeek,
-  endOfWeek,
-  addDays,
-  differenceInCalendarDays,
-  getMonth,
-  isSunday,
-} from 'date-fns';
-import { History } from '@/app/companies/[id]/(dashboard-admin)/calendar/page';
 import TotalRevenue from './TotalRevenue';
 import Header from './Header';
 import { Button } from '@/components/ui/button';
-
 import HistoryModal from './HistoryModal';
+import { History } from '@/types/companies/calendar/type';
 
-type MOCK_DATA = {
-  [key: string]: History[];
-};
+interface CalendarProps {
+  history: History[];
+}
 
-const Calendar = ({ history }: { history: History[] }) => {
-  const [currentDate, setCurrentDate] = useState(new Date());
+const Calendar: FC<CalendarProps> = ({ history }) => {
+  const [currentDate, setCurrentDate] = useState<Date>(new Date());
   const monthStart = startOfMonth(currentDate);
   const monthEnd = endOfMonth(currentDate);
   const startDate = startOfWeek(monthStart);
@@ -34,27 +21,30 @@ const Calendar = ({ history }: { history: History[] }) => {
   const weekMock = ['일', '월', '화', '수', '목', '금', '토'];
 
   const FILTER_DATA = history.filter((e) => {
-    return format(e.payment_time, 'yyyyMM') === format(currentDate, 'yyyyMM');
+    return format(new Date(e.transactionAt), 'yyyyMM') === format(currentDate, 'yyyyMM');
   });
 
-  const dateHandler = (func: Function) => {
+  const dateHandler = (func: (date: Date, amount: number) => Date) => {
     return () => {
-      setCurrentDate(func(currentDate, 1));
+      setCurrentDate(currDate => func(currDate, 1));
     };
   };
 
-  const MOCK_DATA: MOCK_DATA = {};
-  FILTER_DATA.forEach((e) => {
-    if (!MOCK_DATA[format(e.payment_time, 'dd')]) {
-      MOCK_DATA[format(e.payment_time, 'dd')] = [e];
+  type MOCK_DATA_TYPE = { [key: string]: History[] };
+
+  const MOCK_DATA: MOCK_DATA_TYPE = FILTER_DATA.reduce((acc: MOCK_DATA_TYPE, curr: History) => {
+    const day = format(new Date(curr.transactionAt), 'dd');
+    if (!acc[day]) {
+      acc[day] = [curr];
     } else {
-      MOCK_DATA[format(e.payment_time, 'dd')].push(e);
+      acc[day].push(curr);
     }
-  });
+    return acc;
+  }, {});
 
   const createMonth = useMemo(() => {
-    const monthArray = [];
-    let weekArray = [];
+    const monthArray: Date[][] = [];
+    let weekArray: Date[] = [];
     let day = startDate;
 
     while (differenceInCalendarDays(endDate, day) >= 0) {
@@ -66,7 +56,6 @@ const Calendar = ({ history }: { history: History[] }) => {
         weekArray = [];
       }
     }
-
     if (weekArray.length > 0) {
       monthArray.push(weekArray);
     }
@@ -106,7 +95,7 @@ const Calendar = ({ history }: { history: History[] }) => {
             <div className="flex h-full w-full flex-col gap-2 border-gray-200">
               {createMonth.map((week, i) => {
                 return (
-                  <div className="flex w-full h-full">
+                  <div key={`week${i}`} className="flex w-full h-full">
                     <div key={`week${i}`} className="flex w-full">
                       {week.map((v, j) => {
                         const isCurrentMonth = getMonth(v) === getMonth(currentDate);
@@ -114,13 +103,13 @@ const Calendar = ({ history }: { history: History[] }) => {
                         let DAY_REVENUE = null;
                         if (isCurrentMonth && MOCK_DATA[format(v, 'dd')]) {
                           DAY_REVENUE = MOCK_DATA[format(v, 'dd')].reduce(
-                            (total, item) => total + item.total_price,
+                            (total, item) => total + item.amount,
                             0,
                           );
                         }
-
                         return (
                           <HistoryModal
+                            key={format(v, 'd')}
                             isCurrentMonth={isCurrentMonth}
                             isToday={isToday}
                             DAY_REVENUE={DAY_REVENUE}
