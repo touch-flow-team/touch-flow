@@ -1,9 +1,10 @@
-import { History } from '@/app/companies/[id]/(dashboard-admin)/calendar/page';
+import { History } from "@/types/companies/calendar/type";
+
 
 const TotalRevenue = ({ data }: { data: History[] }) => {
   let TOTAL_REVENUE = 0;
   data.forEach((e) => {
-    TOTAL_REVENUE += e.total_price;
+    TOTAL_REVENUE += e.amount;
   });
   return (
     <div className="w-full flex justify-center">
