@@ -9,7 +9,7 @@ import {
 import React, { Dispatch, SetStateAction } from 'react';
 
 interface IProps {
-  trigger: React.ReactElement;
+  trigger?: React.ReactElement;
   title: string;
   InnerComponent: React.ReactElement;
   open?: boolean;
