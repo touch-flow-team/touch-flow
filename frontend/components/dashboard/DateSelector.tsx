@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { useState } from 'react';
 
 import {
   Select,
@@ -11,10 +12,19 @@ import {
 } from '@/components/ui/select';
 import { Button } from '../ui/button';
 
-const DateSeletor = ({ year, month }: { year: number; month: number }) => {
+const DateSelector = ({ year: initialYear, month: initialMonth }: { year: number; month: number }) => {
+  const [selectedYear, setSelectedYear] = useState(`${initialYear}년`);
+  const [selectedMonth, setSelectedMonth] = useState(`${initialMonth}월`);
+
+  const onSubmit = () => {
+    // console.log('Selected Year:', selectedYear);
+    // console.log('Selected Month:', selectedMonth);
+
+  };
+
   return (
     <div className="flex w-full gap-3">
-      <Select defaultValue={`${year}년`}>
+      <Select defaultValue={selectedYear} onValueChange={setSelectedYear}>
         <SelectTrigger className="w-[130px]">
           <SelectValue placeholder="Year" />
         </SelectTrigger>
@@ -26,24 +36,22 @@ const DateSeletor = ({ year, month }: { year: number; month: number }) => {
           </SelectGroup>
         </SelectContent>
       </Select>
-      <Select defaultValue={`${month}월`}>
+      <Select defaultValue={selectedMonth} onValueChange={setSelectedMonth}>
         <SelectTrigger className="w-[130px]">
           <SelectValue placeholder="Month" />
         </SelectTrigger>
         <SelectContent>
           <SelectGroup>
             <SelectLabel>Month</SelectLabel>
-            {Array(12)
-              .fill(0)
-              .map((_, idx) => (
-                <SelectItem value={`${idx + 1}월`}>{idx + 1}월</SelectItem>
-              ))}
+            {Array.from({ length: 12 }, (_, idx) => (
+              <SelectItem key={idx} value={`${idx + 1}월`}>{idx + 1}월</SelectItem>
+            ))}
           </SelectGroup>
         </SelectContent>
       </Select>
-      <Button>선택</Button>
+      <Button onClick={onSubmit}>선택</Button>
     </div>
   );
 };
 
-export default DateSeletor;
+export default DateSelector;
