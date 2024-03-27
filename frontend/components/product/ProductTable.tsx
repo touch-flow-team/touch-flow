@@ -30,7 +30,6 @@ const ProductTable = ({ products, categories, filter }: IProp) => {
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedProductId, setSelectedProductId] = useState<string>('');
-
   return (
     <>
       <Table>
@@ -63,7 +62,7 @@ const ProductTable = ({ products, categories, filter }: IProp) => {
                 </TableCell>
                 <TableCell className="font-medium">{product.name}</TableCell>
                 <TableCell>{product.description}</TableCell>
-                <TableCell>{product.expand.category.name}</TableCell>
+                {/* <TableCell>{product.expand.category.name}</TableCell> */}
                 <TableCell>{product.price.toLocaleString()}원</TableCell>
                 <TableCell>
                   <div className="flex gap-3 justify-end">

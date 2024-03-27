@@ -6,6 +6,7 @@ import { IResult } from '@/types/common/type';
 import { PRODUCT_PAGINATION_SIZE, REVALIDATE_TAG } from '@/constants/constants';
 import client from '@/libs/pocketbase';
 import { PB_COLLECTIONS } from '@/constants/constants';
+import { redirect } from 'next/navigation';
 
 interface ICreate {
   formData: FormData;
@@ -36,9 +37,11 @@ const deleteProduct = async ({ id }: IDelete) => {
 };
 
 const getProduct = async ({
+  id,
   current_page,
   filtering,
 }: {
+  id: string;
   current_page: number;
   filtering: string;
 }) => {
@@ -54,8 +57,7 @@ const getProduct = async ({
       });
     return products;
   } catch (error) {
-    console.log(error, 'error in getProduct');
-    throw error;
+    throw redirect(`/companies/${id}/product?page=1&category=all`);
   }
 };
 
@@ -63,7 +65,7 @@ const getAllProduct = async ({ current_page }: { current_page: number }) => {
   const products: IResult<IProduct> = await client
     .collection(PB_COLLECTIONS.PRODUCTS)
     .getList(current_page, PRODUCT_PAGINATION_SIZE, {
-      expand: 'category',
+      expand: 'categories',
       sort: 'created',
       cache: 'no-store',
       next: { tags: [REVALIDATE_TAG.PRODUCT] },
