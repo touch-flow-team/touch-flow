@@ -1,49 +1,591 @@
 'use client';
 import { useState } from 'react';
-import Box from '@/components/dashboard/Box';
-import MonthRevenue from '@/components/dashboard/MonthRevenue';
-import WeekRevenue from '@/components/dashboard/WeekRevenue';
-import TimeRevenue from '@/components/dashboard/TimeRevenue';
 import DateSelector from '@/components/dashboard/DateSelector';
+import SalesCharts from '@/components/dashboard/SalesCharts';
+import { History } from '@/types/companies/calendar/type';
+import Box from '@/components/dashboard/Box';
+
+const transactions: History[] = [
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "CB517965FFB20E7231E70F9CB79113FA",
+    "paymentKey": "EBECB2EB75BBC5919E400D8634B8F202DD255E68",
+    "orderId": "2B1A02DAC3A978F28E0D",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=CB517965FFB20E7231E70F9CB79113FA&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-01T01:00:00+09:00",
+    "currency": "KRW",
+    "amount": 3477
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "234BC53A96DDE9463546D7752B046676",
+    "paymentKey": "4EC122ED8DCB50F635C5D706C6A57ABAA12F22FC",
+    "orderId": "1E199DBE3EE9246BFC60",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=234BC53A96DDE9463546D7752B046676&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-22T17:59:00+09:00",
+    "currency": "KRW",
+    "amount": 6178
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "7150236C7C61E9E658F358EB75C49661",
+    "paymentKey": "BDAEFE8D72D9548B05A5107CA0233D907F1906B7",
+    "orderId": "08DB3AD4D0433E8D9C98",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=7150236C7C61E9E658F358EB75C49661&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-17T13:46:00+09:00",
+    "currency": "KRW",
+    "amount": 2717
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "03DA41D249B1094C86FC23530A353996",
+    "paymentKey": "6708CEE79F7273DA7C70B78C10A7A28219B81F25",
+    "orderId": "1B0DF6152E6FEFFCA861",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=03DA41D249B1094C86FC23530A353996&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-17T04:17:00+09:00",
+    "currency": "KRW",
+    "amount": 6143
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "955608850E467558223247A08252A79C",
+    "paymentKey": "5D339AA9DCE2E50757D942E4BFB79916C6DE394D",
+    "orderId": "6232D06FC313ADEA0B3F",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=955608850E467558223247A08252A79C&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-27T11:51:00+09:00",
+    "currency": "KRW",
+    "amount": 9818
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "1E22E15A8CF6681E44FF52F0E353875F",
+    "paymentKey": "387664319719982B3345000AFBCFE2BFE5967D0D",
+    "orderId": "18F0C809C7317E10D17F",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=1E22E15A8CF6681E44FF52F0E353875F&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-11T22:56:00+09:00",
+    "currency": "KRW",
+    "amount": 1133
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "CC45FED62BF97133E37A346100A728F8",
+    "paymentKey": "CC2318D8A5F2DACC8B57C1083EA105A62DF41E30",
+    "orderId": "99948F2A92A2E1B2CC10",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=CC45FED62BF97133E37A346100A728F8&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-03T01:04:00+09:00",
+    "currency": "KRW",
+    "amount": 5501
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "115B68822C8BAD1B338A5353DED8BF59",
+    "paymentKey": "409DC368A46F16F103A3F766BED92313458F328B",
+    "orderId": "95BC9BD78B1E1ADC7FBE",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=115B68822C8BAD1B338A5353DED8BF59&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-05T22:09:00+09:00",
+    "currency": "KRW",
+    "amount": 3891
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "E0087B535CD883D55E2CD66F0DE68C22",
+    "paymentKey": "CB8A7BFF3C5C7C5EA0E0B34615E1A87004CE1B16",
+    "orderId": "641C1A2139B56F61A0E2",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=E0087B535CD883D55E2CD66F0DE68C22&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-22T04:12:00+09:00",
+    "currency": "KRW",
+    "amount": 1029
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "707426342544B3C4FA02E2D24EC258B4",
+    "paymentKey": "DC3620F0FBB41C0A8871F154F1AD66253B0B3352",
+    "orderId": "5F2C9C2AAC29A7F37BE8",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=707426342544B3C4FA02E2D24EC258B4&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-08T03:37:00+09:00",
+    "currency": "KRW",
+    "amount": 1074
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "15E59EA7FA3FF94775ECD3DC29C2C0DF",
+    "paymentKey": "DE4FA629C8EC85A9279B186185D8817940B2F640",
+    "orderId": "17264639E0301CD47688",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=15E59EA7FA3FF94775ECD3DC29C2C0DF&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-29T21:45:00+09:00",
+    "currency": "KRW",
+    "amount": 9968
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "911BD0306EB59A24AD26AE60014398FD",
+    "paymentKey": "C69CC71E5E84500CFFF8DF0951D4ED39394580D3",
+    "orderId": "665930C801997D3D2CDC",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=911BD0306EB59A24AD26AE60014398FD&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-09T02:44:00+09:00",
+    "currency": "KRW",
+    "amount": 7497
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "95ADAEB0E8C076258F36069701530B78",
+    "paymentKey": "D04638AF7438E542C86887C89F0A3B4021F078F7",
+    "orderId": "B81717402FCDE7FBCFA9",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=95ADAEB0E8C076258F36069701530B78&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-20T13:00:00+09:00",
+    "currency": "KRW",
+    "amount": 1051
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "1271FC4CA71F45CC26BE86FBAA825051",
+    "paymentKey": "118AC486DF83C582DC1A446B0F8AE13E3BA4016C",
+    "orderId": "C45A62BDFB38BA96CBEC",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=1271FC4CA71F45CC26BE86FBAA825051&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-30T13:40:00+09:00",
+    "currency": "KRW",
+    "amount": 6364
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "5BFF6D2031F211095B44822B03810EDB",
+    "paymentKey": "8ABF0180EF831D70E7C8A4ABDF9A5A9FD44A0472",
+    "orderId": "48B4DCF397604FAAA81C",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=5BFF6D2031F211095B44822B03810EDB&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-02T07:38:00+09:00",
+    "currency": "KRW",
+    "amount": 9198
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "B8EF0EA6146FEC4945F24F01C44FF6DB",
+    "paymentKey": "5ADCCB8879B49C80243F2DF89BCEE94AD6B676D1",
+    "orderId": "D8C750C1F81A139F0A28",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=B8EF0EA6146FEC4945F24F01C44FF6DB&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-01T04:21:00+09:00",
+    "currency": "KRW",
+    "amount": 6992
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "009FBA640B6D7421BE7645AFE509A919",
+    "paymentKey": "54A4820CF0D99A64A4814646400932F058B72B5E",
+    "orderId": "5525699F4984FDEAC92D",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=009FBA640B6D7421BE7645AFE509A919&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-25T22:41:00+09:00",
+    "currency": "KRW",
+    "amount": 3541
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "B3371BC65972F2177CBEAFA73D9530E5",
+    "paymentKey": "CD4F322B46515999EAE6F0310E14F4F01DF89FFA",
+    "orderId": "55E89C30CC33ACAEAF53",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=B3371BC65972F2177CBEAFA73D9530E5&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-26T23:49:00+09:00",
+    "currency": "KRW",
+    "amount": 4823
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "DFD77D321CC38EFBF5A3BD7A46320252",
+    "paymentKey": "58477AC914D7269F1F88050BD7900C61CBDC7C9B",
+    "orderId": "60EA03C4E1189E8DAC24",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=DFD77D321CC38EFBF5A3BD7A46320252&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-30T20:21:00+09:00",
+    "currency": "KRW",
+    "amount": 5231
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "88024C1FC736A56AF5AFD262F66C9562",
+    "paymentKey": "3E4D9F0DD87162A517CC1951BBC60924E9D30B5B",
+    "orderId": "50F43E05A4DD54937177",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=88024C1FC736A56AF5AFD262F66C9562&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-16T15:19:00+09:00",
+    "currency": "KRW",
+    "amount": 1193
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "5DAAACB4BEF19AD0207B6177FF7471CA",
+    "paymentKey": "1D8B120196441CFDD03DFDFEC79B05E9716CE900",
+    "orderId": "874C56B5465625733AC2",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=5DAAACB4BEF19AD0207B6177FF7471CA&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-23T18:49:00+09:00",
+    "currency": "KRW",
+    "amount": 5503
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "D0CB7E4DCF59A0E00F496C5C22F1A157",
+    "paymentKey": "DA56CC9C704C08F469B7E8683A8FF9EFEEDEEA42",
+    "orderId": "7A089A2975A1126E6D96",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=D0CB7E4DCF59A0E00F496C5C22F1A157&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-27T14:44:00+09:00",
+    "currency": "KRW",
+    "amount": 6078
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "B4B779B66B161DF8E026AE37F08CA5AA",
+    "paymentKey": "2877DE8ACFCF8B6F0D3E2FC44C7FF50FD6823E85",
+    "orderId": "2D74964C3FC02CD107A6",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=B4B779B66B161DF8E026AE37F08CA5AA&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-13T22:07:00+09:00",
+    "currency": "KRW",
+    "amount": 8546
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "C76B42F8CB848E6A7C27AEA9F486BB99",
+    "paymentKey": "795DD3E5677C4A3B0C548EFC89ABFED5A67B7EA9",
+    "orderId": "E7E62A4F6827DD542097",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=C76B42F8CB848E6A7C27AEA9F486BB99&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-13T18:04:00+09:00",
+    "currency": "KRW",
+    "amount": 6867
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "AC5C2254A0F247E5EF13EB6778E37CBE",
+    "paymentKey": "2E609A395FC1F6AFCBCF0CBEE70499CA6B738121",
+    "orderId": "D3B054BEA7AC69C912F1",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=AC5C2254A0F247E5EF13EB6778E37CBE&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-07T18:05:00+09:00",
+    "currency": "KRW",
+    "amount": 5098
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "7BDF2422A717C10928D7477974779589",
+    "paymentKey": "4B0DFEB9905A4DBF3CBD5394EC9ED3A1F315A11B",
+    "orderId": "FA52F1FACD35C2BB945E",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=7BDF2422A717C10928D7477974779589&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-30T11:46:00+09:00",
+    "currency": "KRW",
+    "amount": 2470
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "8DA05D05204B4A513C193E5D9E53C92E",
+    "paymentKey": "2DA641B55F8DB195BFDDAC71493F707CE5E008A3",
+    "orderId": "A7864706D9218B1F2885",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=8DA05D05204B4A513C193E5D9E53C92E&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-13T00:31:00+09:00",
+    "currency": "KRW",
+    "amount": 6212
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "5F3DE55D2EE4B2B922E53286AE385709",
+    "paymentKey": "D45EE4D7FBA671FCBE3CE682351FB24768428243",
+    "orderId": "175E608E5984B200E92B",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=5F3DE55D2EE4B2B922E53286AE385709&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-14T19:25:00+09:00",
+    "currency": "KRW",
+    "amount": 7105
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "999DAAC0596238D3F6FEF909A13A57EC",
+    "paymentKey": "CC4F79371780CEC7063495334AA15A5EEA89A160",
+    "orderId": "06D7C574F9624D82B5CD",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=999DAAC0596238D3F6FEF909A13A57EC&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-28T13:38:00+09:00",
+    "currency": "KRW",
+    "amount": 3841
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "DEB035ECDFE2334E56A62ACDDFC9969E",
+    "paymentKey": "9225B99BEC8E3BDE74EE5CE8449D88447F755FA9",
+    "orderId": "718BDEE7F98303C20D94",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=DEB035ECDFE2334E56A62ACDDFC9969E&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-16T16:12:00+09:00",
+    "currency": "KRW",
+    "amount": 7991
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "095725BFC28BF4430637E25019D40B80",
+    "paymentKey": "E86A55719685CEBF38F72D364092FF43FD95A4C6",
+    "orderId": "9F9026F3BB9E994EEC95",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=095725BFC28BF4430637E25019D40B80&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-18T01:18:00+09:00",
+    "currency": "KRW",
+    "amount": 8593
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "BEAD562899F22E95BE6D98371960AE45",
+    "paymentKey": "839BCE457D3537B069211FC7D96012FDCC9195EF",
+    "orderId": "AD085E8FA013E4674650",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=BEAD562899F22E95BE6D98371960AE45&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-18T04:18:00+09:00",
+    "currency": "KRW",
+    "amount": 9362
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "61201C19A111842351D1831D6A3E8CC9",
+    "paymentKey": "BA3852A4DDAA8C25BFEBE9A7634B53E55B52E389",
+    "orderId": "B857646EC2E721DD07B7",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=61201C19A111842351D1831D6A3E8CC9&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-02T17:31:00+09:00",
+    "currency": "KRW",
+    "amount": 5990
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "F66123DC7A017206FA987CFDC28C9776",
+    "paymentKey": "7145B32DE41D3D1B270F35E05470DAE9A6F6EDDE",
+    "orderId": "A23DCF88CCE244599296",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=F66123DC7A017206FA987CFDC28C9776&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-26T02:55:00+09:00",
+    "currency": "KRW",
+    "amount": 5412
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "57CFEB7DF67CAAE4FC960E1EB055FE7D",
+    "paymentKey": "7DF953BB8D7FEE9B6F17F2D52FA29796529AB2D5",
+    "orderId": "0733386BAC4BCFF0F384",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=57CFEB7DF67CAAE4FC960E1EB055FE7D&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-10T20:58:00+09:00",
+    "currency": "KRW",
+    "amount": 4458
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "EE596CE294436701910B1BA4A8C7C007",
+    "paymentKey": "AA9B9BA88A3E39B0CD47ECBA1DF54FA0F6184BDD",
+    "orderId": "F8C16267EA4DB7AA76BE",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=EE596CE294436701910B1BA4A8C7C007&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-26T05:09:00+09:00",
+    "currency": "KRW",
+    "amount": 3985
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "150950CC4F6F7373D720E4692876D90E",
+    "paymentKey": "A3F2E8C15D8489D00ECE4485CB747B2709CB5A96",
+    "orderId": "FA748E2A86165418BF39",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=150950CC4F6F7373D720E4692876D90E&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-03T10:41:00+09:00",
+    "currency": "KRW",
+    "amount": 6922
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "4FEB5F2D87EBF6A7CA3C592C6A0C0F48",
+    "paymentKey": "DA55ABA491334C351E8014839BEDC37B219CEE62",
+    "orderId": "2956FB24779CC87CB35A",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=4FEB5F2D87EBF6A7CA3C592C6A0C0F48&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-16T14:15:00+09:00",
+    "currency": "KRW",
+    "amount": 2910
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "EA08BBBEE8917A79574C859936D4AE89",
+    "paymentKey": "D04B77435BA32010B16B3A0A08F0771ECF1FE816",
+    "orderId": "57570B9AEEBDC1B650D6",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=EA08BBBEE8917A79574C859936D4AE89&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-09T07:23:00+09:00",
+    "currency": "KRW",
+    "amount": 6557
+  },
+  {
+    "mId": "tvivarepublica",
+    "transactionKey": "453957B19E1E647B1515F4C2ECFEFA8B",
+    "paymentKey": "C1C4C0FC2BAA9840AA99B242A89EF655FD95C1AB",
+    "orderId": "D02465E2BF5AF69738D9",
+    "method": "간편결제",
+    "customerKey": "@@ANONYMOUS",
+    "useEscrow": false,
+    "receiptUrl": "https://dashboard.tosspayments.com/receipt/redirection?transactionId=453957B19E1E647B1515F4C2ECFEFA8B&ref=PX",
+    "status": "DONE",
+    "transactionAt": "2024-04-23T04:24:00+09:00",
+    "currency": "KRW",
+    "amount": 2524
+  }
+]
 
 export default function Dashboard() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [month, setMonth] = useState(new Date().getMonth() + 1);
-
   return (
     <div className="w-full">
       <header className="w-full p-6">
         <DateSelector year={year} month={month} />
       </header>
-      <section className="w-full flex flex-col items-center bg-gray-100 gap-5  pt-5 pb-5">
-        <div className="w-[90%] grid grid-rows-2 grid-flow-col gap-4">
-          <Box title="총 매출" data={10000000} />
-          <Box title="총 환불" data={10000} />
-          <Box title="총 할인" data={381123} />
-          <Box title="Best 메뉴" data={'아이스 아메리카노'} />
-        </div>
-        <div className="w-[90%] p-3 bg-white rounded-md ">
-          <strong>일자별 매출</strong>
-          <div className="w-full h-[300px] mt-3">
-            <MonthRevenue />
-          </div>
-        </div>
-
-        <div className="w-[90%] flex gap-2 flex-grow-1 ">
-          <div className="p-3 bg-white rounded-md flex-1">
-            <strong>요일별 평균 매출</strong>
-            <div className="w-full h-[300px] mt-3">
-              <WeekRevenue />
+      {document && (
+        <>
+          <section className="w-full bg-gray-100 gap-5  py-5 px-10">
+            <div className="w-full mb-5">
+              <Box title="총 매출" data={10000000} />
             </div>
-          </div>
-          <div className="p-3 bg-white rounded-md flex-1">
-            <strong>시간대별 매출</strong>
-            <div className="w-full h-[300px] mt-3">
-              <TimeRevenue />
-            </div>
-          </div>
-        </div>
-      </section>
+            <SalesCharts transactions={transactions} />
+          </section>
+        </>
+      )}
     </div>
   );
 }

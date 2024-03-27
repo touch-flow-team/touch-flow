@@ -10,12 +10,12 @@ interface ICustomTooltip {
 }
 
 const CustomTooltip = ({ active, payload, label }: ICustomTooltip) => {
-  if (active) {
+  if (active && payload && payload.length > 0) {
     return (
       <div className="custom-tooltip bg-black w-[100px] p-3 rounded-md">
         <p className="label text-white text-xs">{`${label}`}</p>
-        <p className="label text-blue-600 text-sm">
-          {payload ? payload[0].value.toLocaleString() + '원' : ''}
+        <p className="label text-white text-sm">
+          {payload[0].value.toLocaleString()}원
         </p>
       </div>
     );
@@ -25,3 +25,5 @@ const CustomTooltip = ({ active, payload, label }: ICustomTooltip) => {
 };
 
 export default CustomTooltip;
+
+
