@@ -21,7 +21,7 @@ import { IResult } from '@/types/common/type';
 import ProductPagination from './Pagination';
 
 interface IProp {
-  products: IResult<IProduct>;
+  products: IResult<IProduct> | null;
   categories: Pick<ICategory, 'name' | 'id'>[];
   filter: string;
 }
@@ -32,109 +32,115 @@ const ProductTable = ({ products, categories, filter }: IProp) => {
   const [selectedProductId, setSelectedProductId] = useState<string>('');
   return (
     <>
-      <Table>
-        <TableHeader>
-          <TableRow>
-            <TableHead>이미지</TableHead>
-            <TableHead>이름</TableHead>
-            <TableHead>설명</TableHead>
-            <TableHead>카테고리</TableHead>
-            <TableHead>가격</TableHead>
-            <TableHead className="text-center"></TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {products.items.map((product) => {
-            return (
-              <TableRow key={product.id}>
-                <TableCell className="font-medium">
-                  <div className="w-[100px] h-[100px] relative">
-                    <Image
-                      fill
-                      src={imageSrc({
-                        collection_id: 'products',
-                        record_id: product.id,
-                        file_name: product.image,
-                      })}
-                      alt={`${product.name}-image`}
-                    />
-                  </div>
-                </TableCell>
-                <TableCell className="font-medium">{product.name}</TableCell>
-                <TableCell>{product.description}</TableCell>
-                {/* <TableCell>{product.expand.category.name}</TableCell> */}
-                <TableCell>{product.price.toLocaleString()}원</TableCell>
-                <TableCell>
-                  <div className="flex gap-3 justify-end">
-                    <Modal
-                      open={isUpdateModalOpen && selectedProductId === product.id}
-                      setOpen={(isOpen) => {
-                        setIsUpdateModalOpen(isOpen);
-                        if (!isOpen) {
-                          setSelectedProductId('');
-                        }
-                      }}
-                      title="상품 수정"
-                      trigger={
-                        <Button
-                          text="수정"
-                          size="md"
-                          onClick={() => setSelectedProductId(product.id)}
+      {products == null ? ("hi") : (
+        <>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>이미지</TableHead >
+                <TableHead>이름</TableHead>
+                <TableHead>설명</TableHead>
+                <TableHead>카테고리</TableHead>
+                <TableHead>가격</TableHead>
+                <TableHead className="text-center"></TableHead>
+              </TableRow >
+            </TableHeader >
+            <TableBody>
+              {products?.items.map((product) => {
+                return (
+                  <TableRow key={product.id}>
+                    <TableCell className="font-medium">
+                      <div className="w-[100px] h-[100px] relative">
+                        <Image
+                          fill
+                          src={imageSrc({
+                            collection_id: 'products',
+                            record_id: product.id,
+                            file_name: product.image,
+                          })}
+                          alt={`${product.name}-image`}
                         />
-                      }
-                      InnerComponent={
-                        <ProductManageForm
-                          categories={categories}
-                          product={product}
-                          mode="update"
-                          setModalOpen={setIsUpdateModalOpen}
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-medium">{product.name}</TableCell>
+                    <TableCell>{product.description}</TableCell>
+                    <TableCell>{product.expand?.categories?.name}</TableCell>
+                    <TableCell>{product.price.toLocaleString()}원</TableCell>
+                    <TableCell>
+                      <div className="flex gap-3 justify-end">
+                        <Modal
+                          open={isUpdateModalOpen && selectedProductId === product.id}
+                          setOpen={(isOpen) => {
+                            setIsUpdateModalOpen(isOpen);
+                            if (!isOpen) {
+                              setSelectedProductId('');
+                            }
+                          }}
+                          title="상품 수정"
+                          trigger={
+                            <Button
+                              text="수정"
+                              size="md"
+                              onClick={() => setSelectedProductId(product.id)}
+                            />
+                          }
+                          InnerComponent={
+                            <ProductManageForm
+                              categories={categories}
+                              product={product}
+                              mode="update"
+                              setModalOpen={setIsUpdateModalOpen}
+                            />
+                          }
                         />
-                      }
-                    />
-                    <Modal
-                      open={isDeleteModalOpen && selectedProductId === product.id}
-                      setOpen={(isOpen) => {
-                        setIsDeleteModalOpen(isOpen);
-                        if (!isOpen) {
-                          setSelectedProductId('');
-                        }
-                      }}
-                      title="상품 삭제"
-                      trigger={
-                        <Button
-                          text="삭제"
-                          size="md"
-                          onClick={() => setSelectedProductId(product.id)}
+                        <Modal
+                          open={isDeleteModalOpen && selectedProductId === product.id}
+                          setOpen={(isOpen) => {
+                            setIsDeleteModalOpen(isOpen);
+                            if (!isOpen) {
+                              setSelectedProductId('');
+                            }
+                          }}
+                          title="상품 삭제"
+                          trigger={
+                            <Button
+                              text="삭제"
+                              size="md"
+                              onClick={() => setSelectedProductId(product.id)}
+                            />
+                          }
+                          InnerComponent={
+                            <DeleteModal
+                              id={product.id}
+                              name={product.name}
+                              mode="product"
+                              setModalOpen={setIsDeleteModalOpen}
+                            />
+                          }
                         />
-                      }
-                      InnerComponent={
-                        <DeleteModal
-                          id={product.id}
-                          name={product.name}
-                          mode="product"
-                          setModalOpen={setIsDeleteModalOpen}
-                        />
-                      }
-                    />
-                  </div>
-                </TableCell>
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-      {products.items.length === 0 ? (
-        <div className="text-3xl font-normal w-full h-[100px] flex justify-center items-center">
-          No Result
-        </div>
-      ) : (
-        <ProductPagination
-          current_page={products.page}
-          total_page={products.totalPages}
-          filter={filter}
-        />
-      )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableBody>
+          </Table >
+          {
+            products?.items.length === 0 ? (
+              <div className="text-3xl font-normal w-full h-[100px] flex justify-center items-center">
+                No Result
+              </div>
+            ) : (
+              <ProductPagination
+                current_page={products?.page}
+                total_page={products?.totalPages}
+                filter={filter}
+              />
+            )
+          }
+        </>)}
     </>
+
   );
 };
 

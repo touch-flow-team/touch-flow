@@ -72,7 +72,7 @@ const ProductManageForm: React.FC<IProps> = ({
     if (mode === 'create') {
       await createProduct({ formData })
         .then(() => Toast({ title: '등록완료', description: '완료', mode: 'success' }))
-        .catch(() => Toast({ title: '요청실패', description: '실패', mode: 'fail' }));
+        .catch((error) => Toast({ title: '요청실패', description: `실패사유: ${error}`, mode: 'fail' }));
     } else {
       await updateProduct({ formData, id: product!.id })
         .then(() => Toast({ title: '수정완료', description: '완료', mode: 'success' }))

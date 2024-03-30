@@ -6,7 +6,6 @@ import { IResult } from '@/types/common/type';
 import { PRODUCT_PAGINATION_SIZE, REVALIDATE_TAG } from '@/constants/constants';
 import client from '@/libs/pocketbase';
 import { PB_COLLECTIONS } from '@/constants/constants';
-import { redirect } from 'next/navigation';
 
 interface ICreate {
   formData: FormData;
@@ -22,10 +21,14 @@ interface IUpdate {
 }
 
 const createProduct = async ({ formData }: ICreate) => {
-  await client
-    .collection(PB_COLLECTIONS.PRODUCTS)
-    .create(formData)
-    .then(() => revalidateTag(REVALIDATE_TAG.PRODUCT));
+  try {
+    await client
+      .collection(PB_COLLECTIONS.PRODUCTS)
+      .create(formData)
+      .then(() => revalidateTag(REVALIDATE_TAG.PRODUCT));
+  } catch (error) {
+    throw error;
+  }
 };
 
 // revalidateTag 없으면 데이터 무효화가 안됨
@@ -45,32 +48,36 @@ const getProduct = async ({
   current_page: number;
   filtering: string;
 }) => {
+  console.log('filtering', filtering);
   try {
     const products: IResult<IProduct> = await client
       .collection(PB_COLLECTIONS.PRODUCTS)
       .getList(current_page, PRODUCT_PAGINATION_SIZE, {
-        filter: `${PB_COLLECTIONS.CATEGORIES} = "${filtering}"`,
+        filter: `${PB_COLLECTIONS.CATEGORIES}.id="${filtering}"`,
         expand: `${PB_COLLECTIONS.CATEGORIES}`,
+        sort: 'created',
+        cache: 'no-store',
+      });
+    return products;
+  } catch (error) {
+    return null;
+  }
+};
+
+const getAllProduct = async ({ current_page }: { current_page: number }) => {
+  try {
+    const products: IResult<IProduct> = await client
+      .collection(PB_COLLECTIONS.PRODUCTS)
+      .getList(current_page, PRODUCT_PAGINATION_SIZE, {
+        expand: 'categories',
         sort: 'created',
         cache: 'no-store',
         next: { tags: [REVALIDATE_TAG.PRODUCT] },
       });
     return products;
   } catch (error) {
-    throw redirect(`/companies/${id}/product?page=1&category=all`);
+    return null;
   }
-};
-
-const getAllProduct = async ({ current_page }: { current_page: number }) => {
-  const products: IResult<IProduct> = await client
-    .collection(PB_COLLECTIONS.PRODUCTS)
-    .getList(current_page, PRODUCT_PAGINATION_SIZE, {
-      expand: 'categories',
-      sort: 'created',
-      cache: 'no-store',
-      next: { tags: [REVALIDATE_TAG.PRODUCT] },
-    });
-  return products;
 };
 
 // revalidateTag 없으면 데이터 무효화가 안됨
