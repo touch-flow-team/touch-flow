@@ -1,6 +1,6 @@
 'use client';
 
-import { ProductSchema } from '@/schemata/categorys/validation';
+import { CreateProductSchema, ProductSchema } from '@/schemata/categorys/validation';
 import { getImageData } from '@/libs/getImageData';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -50,9 +50,10 @@ const ProductManageForm: React.FC<IProps> = ({
       ? imageSrc({ collection_id: 'products', record_id: product?.id!, file_name: product!.image })
       : '',
   );
+  const ProductSchemaResolver = CreateProductSchema({ mode: mode ?? 'create' });
   const form = useForm<z.infer<typeof ProductSchema>>({
     mode: 'onChange',
-    resolver: zodResolver(ProductSchema),
+    resolver: zodResolver(ProductSchemaResolver),
     defaultValues: {
       name: mode && product?.name,
       price: mode && product?.price,
@@ -66,7 +67,7 @@ const ProductManageForm: React.FC<IProps> = ({
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('price', data.price.toString());
-    formData.append('category', data.category);
+    formData.append('categories', data.category);
     formData.append('description', data.description);
     formData.append('image', data.image);
     if (mode === 'create') {

@@ -32,7 +32,11 @@ const ProductTable = ({ products, categories, filter }: IProp) => {
   const [selectedProductId, setSelectedProductId] = useState<string>('');
   return (
     <>
-      {products == null ? ("hi") : (
+      {products == null ? (
+        <div className="text-3xl font-normal w-full h-[100px] flex justify-center items-center">
+          No Result
+        </div>
+      ) : (
         <>
           <Table>
             <TableHeader>
@@ -62,10 +66,10 @@ const ProductTable = ({ products, categories, filter }: IProp) => {
                         />
                       </div>
                     </TableCell>
-                    <TableCell className="font-medium">{product.name}</TableCell>
-                    <TableCell>{product.description}</TableCell>
-                    <TableCell>{product.expand?.categories?.name}</TableCell>
-                    <TableCell>{product.price.toLocaleString()}원</TableCell>
+                    <TableCell className="font-medium">{product?.name}</TableCell>
+                    <TableCell>{product?.description}</TableCell>
+                    <TableCell>{product?.expand?.categories?.name}</TableCell>
+                    <TableCell>{product?.price?.toLocaleString()}원</TableCell>
                     <TableCell>
                       <div className="flex gap-3 justify-end">
                         <Modal

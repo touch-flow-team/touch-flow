@@ -48,7 +48,6 @@ const getProduct = async ({
   current_page: number;
   filtering: string;
 }) => {
-  console.log('filtering', filtering);
   try {
     const products: IResult<IProduct> = await client
       .collection(PB_COLLECTIONS.PRODUCTS)
@@ -78,6 +77,21 @@ const getAllProduct = async ({ current_page }: { current_page: number }) => {
   } catch (error) {
     return null;
   }
+};
+
+const getAllProductMy = async ({ current_page }: { current_page: number }) => {
+  try {
+    const products: IResult<IProduct> = await client
+      .collection(PB_COLLECTIONS.COMPANIES)
+      .getOne(String(current_page), {
+        expand: 'products',
+        sort: 'created',
+        cache: 'no-store',
+        fields: 'expand.products',
+        next: { tags: [REVALIDATE_TAG.PRODUCT] },
+      });
+    return products;
+  } catch (error) {}
 };
 
 // revalidateTag 없으면 데이터 무효화가 안됨

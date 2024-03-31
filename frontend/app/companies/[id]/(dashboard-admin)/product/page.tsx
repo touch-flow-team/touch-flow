@@ -13,8 +13,8 @@ export default async function Product({ searchParams, params }: { searchParams: 
         current_page: Number(1),
         filtering: searchParams.category,
       });
-
   const categories = await getCategories();
+
   return (
     <div className="w-full flex justify-center h-[100%]">
       <div className="w-[80%] flex p-10 flex-col gap-10">
