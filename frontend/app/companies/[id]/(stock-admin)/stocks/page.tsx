@@ -1,4 +1,5 @@
 'use client'
+import BreadcrumbDynamic from "@/components/common/BreadcrumbDynamic"
 import StockList from "@/components/companies/stocks/StockList"
 import { Button } from "@/components/ui/button"
 import { useParams, useRouter } from "next/navigation"
@@ -25,6 +26,17 @@ const Stocks = () => {
                     </div>
                 </div>
 
+            </div>
+            {document && (
+                <BreadcrumbDynamic
+                    routes={[
+                        { name: '홈', path: '/' },
+                        { name: '제품목록' },
+                    ]}
+                />
+            )}
+            <div className="flex flex-col space-y-2 mb-7">
+                <div className="w-full h-[1px] bg-border"></div>
             </div>
             <StockList />
         </div>

@@ -1,14 +1,17 @@
 "use client"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import WaitingListCard from "../waitings/WaitingListCard"
 import useFetchStocksHistory from "@/hooks/stocks/useFetchStocksHistory"
 import StockHistoryCard from "./StockHistoryCard"
+import BreadcrumbDynamic from "@/components/common/BreadcrumbDynamic"
+import { useParams } from "next/navigation"
 
 const StockHistoryList = () => {
     const { action, stocks } = useFetchStocksHistory()
+    const params = useParams()
     const inData = stocks?.filter((item) => item.mode === "in")
     const outData = stocks?.filter((item) => item.mode === "out")
-    
+    const stocksURL = `/companies/${String(params?.id)}/stocks`
+
     return (
         <div className="flex flex-col w-full">
             <div className="flex flex-row space-x-2 items-center">
@@ -30,6 +33,15 @@ const StockHistoryList = () => {
                     </div>
                 </button>
             </div>
+            {document && (
+                <BreadcrumbDynamic
+                    routes={[
+                        { name: '홈', path: '/' },
+                        { name: '제품목록', path: stocksURL },
+                        { name: '입출고내역' },
+                    ]}
+                />
+            )}
             <Tabs defaultValue="전체" className="w-full">
                 <TabsList className="w-full">
                     <TabsTrigger className="w-full" value="전체">
