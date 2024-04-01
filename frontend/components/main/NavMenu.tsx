@@ -45,7 +45,7 @@ const NavMenu = ({ currentCompany }: { currentCompany: string }) => {
                                     <p className=" text-gray-500 text-xs">You can test the dashboard.</p>
                                 </div>
                             </NavigationMenuLink>
-                            <NavigationMenuLink href={`/companies/${currentCompany}/product`} className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
+                            <NavigationMenuLink href={`/companies/${currentCompany}/product?page=1&category=all`} className="w-72 rounded-sm items-center space-x-3 flex hover:bg-gray-50 p-3">
                                 <div className="w-10 h-10 rounded-md bg-slate-200 flex items-center">
                                     <LiaShoppingBasketSolid className=" w-6 h-6 text-slate-600 m-auto" />
                                 </div>

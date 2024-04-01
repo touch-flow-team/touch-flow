@@ -1,6 +1,6 @@
 'use client';
 
-import { ProductSchema } from '@/schemata/categorys/validation';
+import { CreateProductSchema, ProductSchema } from '@/schemata/categorys/validation';
 import { getImageData } from '@/libs/getImageData';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useForm } from 'react-hook-form';
@@ -50,14 +50,16 @@ const ProductManageForm: React.FC<IProps> = ({
       ? imageSrc({ collection_id: 'products', record_id: product?.id!, file_name: product!.image })
       : '',
   );
+  console.log(product, mode);
+  const ProductSchemaResolver = CreateProductSchema({ mode: mode ?? 'create' });
   const form = useForm<z.infer<typeof ProductSchema>>({
     mode: 'onChange',
-    resolver: zodResolver(ProductSchema),
+    resolver: zodResolver(ProductSchemaResolver),
     defaultValues: {
       name: mode && product?.name,
       price: mode && product?.price,
       description: mode && product?.description,
-      category: mode && product?.category,
+      category: mode && product?.expand.categories.id,
       image: mode && product?.image,
     },
   });
@@ -66,13 +68,13 @@ const ProductManageForm: React.FC<IProps> = ({
     const formData = new FormData();
     formData.append('name', data.name);
     formData.append('price', data.price.toString());
-    formData.append('category', data.category);
+    formData.append('categories', data.category);
     formData.append('description', data.description);
     formData.append('image', data.image);
     if (mode === 'create') {
       await createProduct({ formData })
         .then(() => Toast({ title: '등록완료', description: '완료', mode: 'success' }))
-        .catch(() => Toast({ title: '요청실패', description: '실패', mode: 'fail' }));
+        .catch((error) => Toast({ title: '요청실패', description: `실패사유: ${error}`, mode: 'fail' }));
     } else {
       await updateProduct({ formData, id: product!.id })
         .then(() => Toast({ title: '수정완료', description: '완료', mode: 'success' }))

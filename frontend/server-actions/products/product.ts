@@ -21,10 +21,14 @@ interface IUpdate {
 }
 
 const createProduct = async ({ formData }: ICreate) => {
-  await client
-    .collection(PB_COLLECTIONS.PRODUCTS)
-    .create(formData)
-    .then(() => revalidateTag(REVALIDATE_TAG.PRODUCT));
+  try {
+    await client
+      .collection(PB_COLLECTIONS.PRODUCTS)
+      .create(formData)
+      .then(() => revalidateTag(REVALIDATE_TAG.PRODUCT));
+  } catch (error) {
+    throw error;
+  }
 };
 
 // revalidateTag 없으면 데이터 무효화가 안됨
@@ -36,9 +40,11 @@ const deleteProduct = async ({ id }: IDelete) => {
 };
 
 const getProduct = async ({
+  id,
   current_page,
   filtering,
 }: {
+  id: string;
   current_page: number;
   filtering: string;
 }) => {
@@ -46,31 +52,33 @@ const getProduct = async ({
     const products: IResult<IProduct> = await client
       .collection(PB_COLLECTIONS.PRODUCTS)
       .getList(current_page, PRODUCT_PAGINATION_SIZE, {
-        filter: `${PB_COLLECTIONS.CATEGORIES} = "${filtering}"`,
+        filter: `${PB_COLLECTIONS.CATEGORIES}.id="${filtering}"`,
         expand: `${PB_COLLECTIONS.CATEGORIES}`,
+        sort: 'created',
+        cache: 'no-store',
+      });
+    return products;
+  } catch (error) {
+    return null;
+  }
+};
+
+const getAllProduct = async ({ current_page, id }: { current_page: number; id: string }) => {
+  try {
+    const products: IResult<IProduct> = await client
+      .collection(PB_COLLECTIONS.PRODUCTS)
+      .getList(current_page, PRODUCT_PAGINATION_SIZE, {
+        expand: 'categories',
+        filter: `company.id="${id}"`,
         sort: 'created',
         cache: 'no-store',
         next: { tags: [REVALIDATE_TAG.PRODUCT] },
       });
     return products;
   } catch (error) {
-    console.log(error, 'error in getProduct');
-    throw error;
+    return null;
   }
 };
-
-const getAllProduct = async ({ current_page }: { current_page: number }) => {
-  const products: IResult<IProduct> = await client
-    .collection(PB_COLLECTIONS.PRODUCTS)
-    .getList(current_page, PRODUCT_PAGINATION_SIZE, {
-      expand: 'category',
-      sort: 'created',
-      cache: 'no-store',
-      next: { tags: [REVALIDATE_TAG.PRODUCT] },
-    });
-  return products;
-};
-
 // revalidateTag 없으면 데이터 무효화가 안됨
 const updateProduct = async ({ id, formData }: IUpdate) => {
   await client

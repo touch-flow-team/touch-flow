@@ -12,7 +12,7 @@ export interface IProduct {
   price: number;
   updated: string;
   expand: {
-    category: {
+    categories: {
       name: string;
       id: string;
     };
