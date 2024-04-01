@@ -63,12 +63,13 @@ const getProduct = async ({
   }
 };
 
-const getAllProduct = async ({ current_page }: { current_page: number }) => {
+const getAllProduct = async ({ current_page, id }: { current_page: number; id: string }) => {
   try {
     const products: IResult<IProduct> = await client
       .collection(PB_COLLECTIONS.PRODUCTS)
       .getList(current_page, PRODUCT_PAGINATION_SIZE, {
         expand: 'categories',
+        filter: `company.id="${id}"`,
         sort: 'created',
         cache: 'no-store',
         next: { tags: [REVALIDATE_TAG.PRODUCT] },
@@ -78,22 +79,6 @@ const getAllProduct = async ({ current_page }: { current_page: number }) => {
     return null;
   }
 };
-
-const getAllProductMy = async ({ current_page }: { current_page: number }) => {
-  try {
-    const products: IResult<IProduct> = await client
-      .collection(PB_COLLECTIONS.COMPANIES)
-      .getOne(String(current_page), {
-        expand: 'products',
-        sort: 'created',
-        cache: 'no-store',
-        fields: 'expand.products',
-        next: { tags: [REVALIDATE_TAG.PRODUCT] },
-      });
-    return products;
-  } catch (error) {}
-};
-
 // revalidateTag 없으면 데이터 무효화가 안됨
 const updateProduct = async ({ id, formData }: IUpdate) => {
   await client

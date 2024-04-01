@@ -3,21 +3,21 @@ migrate((db) => {
   const dao = new Dao(db)
   const collection = dao.findCollectionByNameOrId("6olizo2qxaityn3")
 
-  // update
+  // add
   collection.schema.addField(new SchemaField({
     "system": false,
-    "id": "b1yje9ms",
-    "name": "image",
-    "type": "file",
+    "id": "iaoprbr6",
+    "name": "company",
+    "type": "relation",
     "required": false,
     "presentable": false,
     "unique": false,
     "options": {
-      "mimeTypes": [],
-      "thumbs": [],
+      "collectionId": "1sdz4kqevf3n1ur",
+      "cascadeDelete": false,
+      "minSelect": null,
       "maxSelect": 1,
-      "maxSize": 5242880,
-      "protected": false
+      "displayFields": null
     }
   }))
 
@@ -26,23 +26,8 @@ migrate((db) => {
   const dao = new Dao(db)
   const collection = dao.findCollectionByNameOrId("6olizo2qxaityn3")
 
-  // update
-  collection.schema.addField(new SchemaField({
-    "system": false,
-    "id": "b1yje9ms",
-    "name": "field",
-    "type": "file",
-    "required": false,
-    "presentable": false,
-    "unique": false,
-    "options": {
-      "mimeTypes": [],
-      "thumbs": [],
-      "maxSelect": 1,
-      "maxSize": 5242880,
-      "protected": false
-    }
-  }))
+  // remove
+  collection.schema.removeField("iaoprbr6")
 
   return dao.saveCollection(collection)
 })

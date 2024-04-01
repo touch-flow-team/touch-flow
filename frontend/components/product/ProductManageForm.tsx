@@ -50,6 +50,7 @@ const ProductManageForm: React.FC<IProps> = ({
       ? imageSrc({ collection_id: 'products', record_id: product?.id!, file_name: product!.image })
       : '',
   );
+  console.log(product, mode);
   const ProductSchemaResolver = CreateProductSchema({ mode: mode ?? 'create' });
   const form = useForm<z.infer<typeof ProductSchema>>({
     mode: 'onChange',
@@ -58,7 +59,7 @@ const ProductManageForm: React.FC<IProps> = ({
       name: mode && product?.name,
       price: mode && product?.price,
       description: mode && product?.description,
-      category: mode && product?.category,
+      category: mode && product?.expand.categories.id,
       image: mode && product?.image,
     },
   });

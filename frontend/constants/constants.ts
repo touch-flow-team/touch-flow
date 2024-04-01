@@ -21,7 +21,9 @@ export const REVALIDATE_TAG = {
 export const PRODUCT_PAGINATION_SIZE = 4;
 export const SIGNIN_URL = '/auth/signin';
 export const COOKIE_MESSAGE_ID = 'message';
-
+export const COLLECTION_IDS = {
+  PRODUCTS: 'products',
+};
 export const ORDER_DISPLAY_PAGINATION_SIZE = 4;
 
 export const MAX_FILE_SIZE = 5000000;
